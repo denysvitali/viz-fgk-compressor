@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #define DEBUG 1
 #define VERSION "0.0.1"
@@ -31,9 +32,33 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
 
-	int i;
-	for(i = 0; i< argc; i++){
-		printf("Argument %d: %s\n", i, argv[i]);
+	if(DEBUG){
+		int i;
+		for(i = 0; i< argc; i++){
+			printf("Argument %d: %s\n", i, argv[i]);
+		}
+	}
+
+	if(strcmp(argv[1],"-c") == 0){
+		// Argument max length defined by OS
+		// (getconf ARG_MAX results in 2097152 (2M) on my PC, YMMV)
+
+		if(argc != 4){
+			usage();
+			return 1;
+		}
+
+		char* file_input[_POSIX_ARG_MAX];
+		char* file_output[_POSIX_ARG_MAX];
+		if(DEBUG) { 
+			printf("Compression\n");
+		}
+		strcpy(file_input, argv[2]);	
+		strcpy(file_output, argv[3]);	
+
+		printf("Input: %s\n", file_input);
+		printf("Output: %s", file_output);
+
 	}
 
 	return 0;
