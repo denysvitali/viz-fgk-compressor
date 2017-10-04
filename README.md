@@ -14,12 +14,14 @@ Compression is performed with `viz -c input-file output-file.viz`, where `input-
 
 ## Decompression
 You can decompress a `.viz` file with `viz -d input-file.viz`.
+
+
+## Usage
 ```
 VIZ compressor v0.0.1 (659a-dirty)
 Compress:        viz -c input output.viz
 Extract:         viz -d input.viz output
 ```
-
 ## Resources
 [Adaptive Huffman Coding - FGK - Stringology.org](http://www.stringology.org/DataCompression/fgk/index_en.html)  
 [Adaptive Huffman Coding - Wikipedia](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding)  
