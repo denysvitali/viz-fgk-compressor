@@ -49,8 +49,8 @@ int main(int argc, char *argv[]){
 			return 1;
 		}
 
-		char* file_input[_POSIX_ARG_MAX];
-		char* file_output[_POSIX_ARG_MAX];
+		char file_input[_POSIX_ARG_MAX];
+		char file_output[_POSIX_ARG_MAX];
 		if(DEBUG) { 
 			printf("Compression\n");
 		}
