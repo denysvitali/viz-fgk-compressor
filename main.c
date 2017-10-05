@@ -26,6 +26,9 @@
 #define STYLE_COLOR_CYAN    "\x1b[36m"
 #define STYLE_COLOR_RESET   "\x1b[0m"
 
+/* Compressor Magic Number */
+#define MAGIC_NUMBER 0x517D3C0
+
 void usage(){
 	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
 	//printf("%sUsage%s\n", STYLE_UNDERLINE, STYLE_NO_UNDERLINE);
