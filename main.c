@@ -16,6 +16,16 @@
 #define STYLE_UNDERLINE    "\033[4m"
 #define STYLE_NO_UNDERLINE "\033[24m"
 
+// https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+
+#define STYLE_COLOR_RED     "\x1b[31m"
+#define STYLE_COLOR_GREEN   "\x1b[32m"
+#define STYLE_COLOR_YELLOW  "\x1b[33m"
+#define STYLE_COLOR_BLUE    "\x1b[34m"
+#define STYLE_COLOR_MAGENTA "\x1b[35m"
+#define STYLE_COLOR_CYAN    "\x1b[36m"
+#define STYLE_COLOR_RESET   "\x1b[0m"
+
 void usage(){
 	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
 	//printf("%sUsage%s\n", STYLE_UNDERLINE, STYLE_NO_UNDERLINE);
@@ -23,10 +33,14 @@ void usage(){
 	printf("Extract: \t viz -d input.viz output\n");
 }
 
-int main(int argc, char *argv[]){
+void debug(char* string){
 	if(DEBUG){
-		//printf("%d arguments\n", argc);
+		printf("%s[D] %s%s",STYLE_COLOR_BLUE, string, STYLE_COLOR_RESET);
 	}
+}
+
+int main(int argc, char *argv[]){
+	char debug_buffer[500];
 
 	if(argc == 1){
 		usage();
@@ -36,29 +50,31 @@ int main(int argc, char *argv[]){
 	if(DEBUG){
 		int i;
 		for(i = 0; i< argc; i++){
-			printf("Argument %d: %s\n", i, argv[i]);
+			char buffer[500];
+			sprintf(buffer, "Argument %d: %s\n", i, argv[i]);
+			debug(buffer);
 		}
 	}
 
 	if(strcmp(argv[1],"-c") == 0){
-		// Argument max length defined by OS
-		// (getconf ARG_MAX results in 2097152 (2M) on my PC, YMMV)
-
 		if(argc != 4){
 			usage();
 			return 1;
 		}
 
-		char file_input[_POSIX_ARG_MAX];
-		char file_output[_POSIX_ARG_MAX];
-		if(DEBUG) { 
-			printf("Compression\n");
-		}
-		strcpy(file_input, argv[2]);	
-		strcpy(file_output, argv[3]);	
+		debug("Compression\n");
 
-		printf("Input: %s\n", file_input);
-		printf("Output: %s", file_output);
+		char* file_input = (char*) malloc(strlen(argv[2]));
+		char* file_output = (char*) malloc(strlen(argv[3]));
+		strcpy(file_input, argv[2]);	
+		strcpy(file_output, argv[3]);
+
+		if(DEBUG){
+			sprintf(debug_buffer, "Input: %s\n", file_input);
+			debug(debug_buffer);
+			sprintf(debug_buffer, "Output: %s\n", file_output);
+			debug(debug_buffer);
+		}
 
 	}
 
