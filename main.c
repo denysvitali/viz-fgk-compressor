@@ -3,6 +3,11 @@
 #include <string.h>
 #include <limits.h>
 
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
 #define DEBUG 1
 #define VERSION "0.0.1"
 
@@ -32,14 +37,18 @@
 void usage(){
 	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
 	//printf("%sUsage%s\n", STYLE_UNDERLINE, STYLE_NO_UNDERLINE);
-	printf("Compress: \t viz -c input output.viz\n");
-	printf("Extract: \t viz -d input.viz output\n");
+	printf("Compress: \t viz -c output.viz inputfile\n");
+	printf("Extract: \t viz -d input.viz\n");
 }
 
 void debug(char* string){
 	if(DEBUG){
-		printf("%s[D] %s%s",STYLE_COLOR_BLUE, string, STYLE_COLOR_RESET);
+		printf("%s[D] %s%s\n",STYLE_COLOR_BLUE, string, STYLE_COLOR_RESET);
 	}
+}
+
+void error(char* string){
+	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
 
 int main(int argc, char *argv[]){
@@ -54,7 +63,7 @@ int main(int argc, char *argv[]){
 		int i;
 		for(i = 0; i< argc; i++){
 			char buffer[500];
-			sprintf(buffer, "Argument %d: %s\n", i, argv[i]);
+			sprintf(buffer, "Argument %d: %s", i, argv[i]);
 			debug(buffer);
 		}
 	}
@@ -65,19 +74,74 @@ int main(int argc, char *argv[]){
 			return 1;
 		}
 
-		debug("Compression\n");
+		debug("Compression");
 
-		char* file_input = (char*) malloc(strlen(argv[2]));
-		char* file_output = (char*) malloc(strlen(argv[3]));
-		strcpy(file_input, argv[2]);	
-		strcpy(file_output, argv[3]);
+		char* file_output = (char*) malloc(strlen(argv[2]));
+		char* file_input = (char*) malloc(strlen(argv[3]));
+		strcpy(file_output, argv[2]);
+		strcpy(file_input, argv[3]);	
 
 		if(DEBUG){
-			sprintf(debug_buffer, "Input: %s\n", file_input);
+			sprintf(debug_buffer, "Input: %s", file_input);
 			debug(debug_buffer);
-			sprintf(debug_buffer, "Output: %s\n", file_output);
+			sprintf(debug_buffer, "Output: %s", file_output);
 			debug(debug_buffer);
 		}
+
+		// Check if file exists
+		struct stat stat_result;
+		int result = stat(file_input, &stat_result);
+
+		if(result != 0){
+			// File doesn't exist!
+			char buffer[500];
+			if(DEBUG){
+				sprintf(buffer,"%s does not exist (E: %d).", file_input, result);
+			} else {
+				sprintf(buffer,"%s does not exist.", file_input);
+			}
+			error(buffer);
+			return 1;
+		}
+
+		result = access(file_output, W_OK);
+		if(result != 0){
+			// Cannot write file!
+			char buffer[500];
+			if(DEBUG){
+				sprintf(buffer,"Unable to write %s: permission denied (E: %d).", file_output, result);
+			} else {
+				sprintf(buffer,"Unable to write %s: permission denied.", file_output);
+			}
+			error(buffer);
+			return 1;
+		}
+
+		// Input exists, Output can be written
+
+		FILE *fh = fopen(file_input, "rb");
+		
+		// Ends 0x00!
+		/*char c;
+		while((c = fgetc(fh))){
+			printf("%02x ", c & 0xff);
+		}*/
+
+		// Goes after End Of File!
+		char buf[501];
+		for(int i=0; i<500; i++){
+			buf[i] = '\0';
+		}
+
+		fread(buf, 1, 500, fh);
+		buf[(sizeof buf)-1] = 0;
+		for(int i=0; i<500; i++){
+			printf("%02x ", buf[i] & 0xff);
+		}
+		printf("\n");
+
+		fclose(fh);
+		
 
 	}
 
