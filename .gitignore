@@ -34,3 +34,6 @@
 
 # Binary files
 /viz
+
+# Archive files
+/*.viz
