@@ -128,7 +128,7 @@ int main(int argc, char *argv[]){
 		}
 		while(!feof(fh));
 
-		print("\n");
+		printf("\n");
 		fclose(fh);
 		
 
