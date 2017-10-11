@@ -1,5 +1,5 @@
 # algoritmi-fgk-compression
-
+![Build Status](https://jenkins.mastodonti.co/job/dvitali-algoritmi-fgk-compression/badge/icon)  
 A C compressor, based on Adaptive Huffman Coding (FGK)
 
 ## Compilation
