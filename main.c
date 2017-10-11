@@ -121,25 +121,14 @@ int main(int argc, char *argv[]){
 
 		FILE *fh = fopen(file_input, "rb");
 		
-		// Ends 0x00!
-		/*char c;
-		while((c = fgetc(fh))){
+		char c = fgetc(fh);
+		do {
 			printf("%02x ", c & 0xff);
-		}*/
-
-		// Goes after End Of File!
-		char buf[501];
-		for(int i=0; i<500; i++){
-			buf[i] = '\0';
+			c=fgetc(fh);
 		}
+		while(!feof(fh));
 
-		fread(buf, 1, 500, fh);
-		buf[(sizeof buf)-1] = 0;
-		for(int i=0; i<500; i++){
-			printf("%02x ", buf[i] & 0xff);
-		}
-		printf("\n");
-
+		print("\n");
 		fclose(fh);
 		
 
