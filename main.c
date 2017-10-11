@@ -120,13 +120,13 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
-		
-		char c = fgetc(fh);
-		do {
+
+		for(;;){
+			char c = fgetc(fh);
+			if(feof(fh)) break;
+			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
-			c=fgetc(fh);
 		}
-		while(!feof(fh));
 
 		printf("\n");
 		fclose(fh);
