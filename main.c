@@ -7,8 +7,13 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "minunit.h"
+
 
 #define DEBUG 1
+#ifndef TEST
+	#define TEST 0
+#endif
 #define VERSION "0.0.1"
 
 #ifndef GIT_VERSION
@@ -34,6 +39,8 @@
 /* Compressor Magic Number */
 #define MAGIC_NUMBER 0x517D3C0
 
+int tests_run = 0;
+
 void usage(){
 	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
 	//printf("%sUsage%s\n", STYLE_UNDERLINE, STYLE_NO_UNDERLINE);
@@ -51,7 +58,35 @@ void error(char* string){
 	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
 
+
+#if TEST == 1
+
+static char * test_foo(){
+	mu_assert("Error, DEBUG is not enabled", TEST==1);
+	return 0;
+}
+
+static char * all_tests(){
+	mu_run_test(test_foo);
+	return 0;
+}
+#endif
+
+
 int main(int argc, char *argv[]){
+
+	#if TEST == 1
+		char *result = all_tests();
+		if (result != 0) {
+			printf("%s\n", result);
+		}
+		else {
+			printf("ALL TESTS PASSED\n");
+		}
+		printf("Tests run: %d\n", tests_run);
+		return 0;
+	#endif
+	
 	char debug_buffer[500];
 
 	if(argc == 1){
