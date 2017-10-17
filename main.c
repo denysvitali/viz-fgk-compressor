@@ -72,7 +72,28 @@ static char * all_tests(){
 }
 #endif
 
+struct Node{
+	int node_number;
+	int weight;
+	char element;
+	struct Node* left;
+	struct Node* right;
+};
 
+struct Node* insert_element(struct Node* root, char c){
+	if(root->element == c){
+		root->weight++;
+		return root;
+	}
+	else{
+		if(root->left != NULL){
+			//insert_element(root.left);
+		}
+		else
+			return NULL;
+	}
+	return root;
+}
 int main(int argc, char *argv[]){
 
 	#if TEST == 1
@@ -155,7 +176,12 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+		struct Node zero;
+		struct Node* pzero = &zero;
 
+		zero.node_number = 0;
+		zero.weight = 0;
+		zero.element = '\0';
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
@@ -166,8 +192,6 @@ int main(int argc, char *argv[]){
 		printf("\n");
 		fclose(fh);
 		
-
+		return 0;
 	}
-
-	return 0;
 }
