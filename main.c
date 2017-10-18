@@ -129,8 +129,11 @@ static char * all_tests(){
 	return 0;
 }
 #endif
+/*
+int move_element_to_last(){
 
-
+}
+*/
 int add_weight_to_element(struct Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
