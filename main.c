@@ -67,6 +67,8 @@ struct Node{
 };
 
 int add_weight_to_element(struct Node* node, char c);
+struct Node createNode(int node_number, int weight, char element, struct Node* left, struct Node* right);
+struct Node* add_new_element(struct Node* node, char c);	
 
 #if TEST == 1
 
@@ -107,9 +109,23 @@ static char * test_add_weight_to_element(){
 	return 0;
 }
 
+static char * test_add_new_element(){
+	struct Node root;
+	struct Node* pr;
+	root = createNode(0, 0, '\0', NULL, NULL);
+	pr = add_new_element(&root, 'a');
+	root = *pr;
+	mu_assert("Element not added (right issue).", root.right->element == 'a' && root.right->weight == 1);
+	mu_assert("Left not copied (left issue).", root.left->element == '\0' && root.left->weight == 0);
+	mu_assert("Root not changed (actual node issue).", root.weight == 1 && root.node_number == 2);
+	return 0;
+}
+
 static char * all_tests(){
 	mu_run_test(test_foo);
 	mu_run_test(test_add_weight_to_element);
+	mu_run_test(test_add_new_element);
+
 	return 0;
 }
 #endif
@@ -118,12 +134,7 @@ static char * all_tests(){
 int add_weight_to_element(struct Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
-<<<<<<< HEAD
-		// Leaf, our root is a char
-=======
 		// Leaf, our node is an element
-
->>>>>>> 74ad1c70e202ab4dd51821d398a105e0653a57d2
 		if(node->element == c){
 			node->weight++;
 			return 1;
@@ -159,21 +170,19 @@ struct Node createNode(int node_number, int weight, char element, struct Node* l
 }
 
 struct Node* add_new_element(struct Node* node, char c){
-	
+
 		if(node->left == NULL && node->right == NULL){
 			// Leaf, our node is an element
 	
 			if(node->element == '\0'){
 				struct Node l, r;
 				l = *node;
-				r.weight = 1;
-				r.element = c;
-				r.node_number = 1;
-				r.left = NULL;
-				r.right = NULL;
+				r = createNode(1, 1, c, NULL, NULL);
 				node->weight = r.weight + l.weight;
 				node->element = node->weight+'0';
 				node->node_number = 2;
+				node->right = &r;
+				node->left = &l;
 				return node;
 			}
 			return NULL;
@@ -240,10 +249,10 @@ int main(int argc, char *argv[]){
 		struct Node c1 = createNode(1, 2, '\0', NULL, NULL);*/
 
 
-		struct Node root;
+		/*struct Node root;
 		root.element = 2;
 		root.left = NULL;
-		return 0;
+		return 0;*/
 	}
 
 	if(strcmp(argv[1],"-c") == 0){
