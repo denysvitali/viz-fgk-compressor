@@ -80,19 +80,26 @@ struct Node{
 	struct Node* right;
 };
 
-struct Node* insert_element(struct Node* root, char c){
+int insert_element(struct Node* root, char c){
 	if(root->element == c){
 		root->weight++;
-		return root;
+		return 1;
 	}
-	else{
-		if(root->left != NULL){
-			//insert_element(root.left);
-		}
-		else
-			return NULL;
+	int res;
+	if(root->left != NULL){
+		res = insert_element(root->left, c);
+		if(res == 1)
+			return 1;
 	}
-	return root;
+	else {
+		return 0;
+	}
+	if(root->right != NULL){
+		res = insert_element(root->right, c);
+		if(res == 1)
+			return 1;
+	}
+	return 0;
 }
 int main(int argc, char *argv[]){
 
