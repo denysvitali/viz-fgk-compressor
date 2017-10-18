@@ -118,7 +118,12 @@ static char * all_tests(){
 int add_weight_to_element(struct Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
+<<<<<<< HEAD
 		// Leaf, our root is a char
+=======
+		// Leaf, our node is an element
+
+>>>>>>> 74ad1c70e202ab4dd51821d398a105e0653a57d2
 		if(node->element == c){
 			node->weight++;
 			return 1;
@@ -152,6 +157,48 @@ struct Node createNode(int node_number, int weight, char element, struct Node* l
 	n.right = right;
 	return n;
 }
+
+struct Node* add_new_element(struct Node* node, char c){
+	
+		if(node->left == NULL && node->right == NULL){
+			// Leaf, our node is an element
+	
+			if(node->element == '\0'){
+				struct Node l, r;
+				l = *node;
+				r.weight = 1;
+				r.element = c;
+				r.node_number = 1;
+				r.left = NULL;
+				r.right = NULL;
+				node->weight = r.weight + l.weight;
+				node->element = node->weight+'0';
+				node->node_number = 2;
+				return node;
+			}
+			return NULL;
+		}
+	
+		struct Node* res;
+		if(node->left != NULL){
+			res = add_new_element(node->left, c);
+			if(res != NULL){
+				node->left = res;
+				return node;
+			}
+		}
+		else {
+			return NULL;
+		}
+		if(node->right != NULL){
+			res = add_new_element(node->right, c);
+			if(res != NULL){
+				node->right = res;
+				return node;
+			}
+		}
+		return NULL;
+	}
 
 int main(int argc, char *argv[]){
 
@@ -251,15 +298,17 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+		
 		/*
-		struct Node zero;
-		struct Node* pzero = &zero;
+		struct Node root;
 
-		zero.node_number = 0;
-		zero.weight = 0;
-		zero.element = '\0';
+		root.node_number = 0;
+		root.weight = 0;
+		root.element = '\0';
+		root.left = NULL;
+		root.right = NULL;
 		*/
-
+		
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
