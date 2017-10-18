@@ -8,6 +8,7 @@
 #include <sys/types.h>
 
 #include "minunit.h"
+#include "colors.h"
 
 
 #define DEBUG 1
@@ -19,22 +20,6 @@
 #ifndef GIT_VERSION
 #define GIT_VERSION "NO GIT VERSION PROVIDED!"
 #endif
-
-// https://gist.github.com/s4y/2396238#file-mdtest-c-L4-L8
-#define STYLE_BOLD    "\033[1m"
-#define STYLE_NO_BOLD "\033[22m"
-#define STYLE_UNDERLINE    "\033[4m"
-#define STYLE_NO_UNDERLINE "\033[24m"
-
-// https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
-
-#define STYLE_COLOR_RED     "\x1b[31m"
-#define STYLE_COLOR_GREEN   "\x1b[32m"
-#define STYLE_COLOR_YELLOW  "\x1b[33m"
-#define STYLE_COLOR_BLUE    "\x1b[34m"
-#define STYLE_COLOR_MAGENTA "\x1b[35m"
-#define STYLE_COLOR_CYAN    "\x1b[36m"
-#define STYLE_COLOR_RESET   "\x1b[0m"
 
 /* Compressor Magic Number */
 #define MAGIC_NUMBER 0x517D3C0
@@ -61,10 +46,23 @@ void error(char* string){
 struct Node{
 	int node_number;
 	int weight;
-	char element;
+	int element;
 	struct Node* left;
 	struct Node* right;
+	struct Node* parent;
 };
+
+/* Node Functions */
+struct Node createNode(int node_number, int weight, char element, struct Node* left, struct Node* right, struct Node* parent){
+	struct Node n;
+	n.node_number = node_number;
+	n.weight = weight;
+	n.element = element;
+	n.left = left;
+	n.right = right;
+	n.parent = parent;
+	return n;
+}
 
 int add_weight_to_element(struct Node* node, char c);
 
@@ -97,10 +95,10 @@ static char * test_add_weight_to_element(){
 	child.node_number = 2;
 	child.left = NULL;
 	child.right = NULL;
-
+	
 	root.left = &nullel;
 	root.right = &child;
-
+	
 	add_weight_to_element(&root, 'a');
 
 	mu_assert("Inserted element isn't in the right place", root.right->weight == a_original_weight + 1);
@@ -118,12 +116,8 @@ static char * all_tests(){
 int add_weight_to_element(struct Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
-<<<<<<< HEAD
-		// Leaf, our root is a char
-=======
 		// Leaf, our node is an element
 
->>>>>>> 74ad1c70e202ab4dd51821d398a105e0653a57d2
 		if(node->element == c){
 			node->weight++;
 			return 1;
@@ -148,57 +142,73 @@ int add_weight_to_element(struct Node* node, char c){
 	return 0;
 }
 
-struct Node createNode(int node_number, int weight, char element, struct Node* left, struct Node* right){
-	struct Node n;
-	n.node_number = node_number;
-	n.weight = weight;
-	n.element = element;
-	n.left = left;
-	n.right = right;
-	return n;
-}
-
 struct Node* add_new_element(struct Node* node, char c){
-	
-		if(node->left == NULL && node->right == NULL){
-			// Leaf, our node is an element
-	
-			if(node->element == '\0'){
-				struct Node l, r;
-				l = *node;
-				r.weight = 1;
-				r.element = c;
-				r.node_number = 1;
-				r.left = NULL;
-				r.right = NULL;
-				node->weight = r.weight + l.weight;
-				node->element = node->weight+'0';
-				node->node_number = 2;
-				return node;
-			}
-			return NULL;
-		}
-	
-		struct Node* res;
-		if(node->left != NULL){
-			res = add_new_element(node->left, c);
-			if(res != NULL){
-				node->left = res;
-				return node;
-			}
-		}
-		else {
-			return NULL;
-		}
-		if(node->right != NULL){
-			res = add_new_element(node->right, c);
-			if(res != NULL){
-				node->right = res;
-				return node;
-			}
+	if(node->left == NULL && node->right == NULL){
+		// Leaf, our node is an element
+
+		if(node->element == '\0'){
+			struct Node l, r;
+			l = *node;
+			r.weight = 1;
+			r.element = c;
+			r.node_number = 1;
+			r.left = NULL;
+			r.right = NULL;
+			node->weight = r.weight + l.weight;
+			node->element = node->weight+'0';
+			node->node_number = 2;
+			return node;
 		}
 		return NULL;
 	}
+
+	struct Node* res;
+	if(node->left != NULL){
+		res = add_new_element(node->left, c);
+		if(res != NULL){
+			node->left = res;
+			return node;
+		}
+	}
+	else {
+		return NULL;
+	}
+	if(node->right != NULL){
+		res = add_new_element(node->right, c);
+		if(res != NULL){
+			node->right = res;
+			return node;
+		}
+	}
+	return NULL;
+}
+
+void printTree(struct Node* root, int level, int left){
+	int tabs = 5;
+
+	if(left == 1){
+		tabs += 2;
+	}
+
+	if(root == NULL){
+		return;
+	}
+
+	int i;
+	for(i = 0; i<= tabs-level; i++){
+		printf("\t");
+	}
+
+	if(root->element == -1){
+		printf("%d (%d)", root->weight, root->node_number);
+	} else {
+		printf("%c  (%d)",root->element, root->node_number);
+	}
+	printf("\n");
+
+	printTree(root->left, level+1, 1);
+	printTree(root->right, level+1, 0);
+}
 
 int main(int argc, char *argv[]){
 
@@ -233,16 +243,48 @@ int main(int argc, char *argv[]){
 	if(strcmp(argv[1], "-t") == 0){
 		// Tree test
 		
-		/*struct Node c2 = createNode(1, 2, '\0', NULL, NULL);
-		struct Node c1 = createNode(1, 2, '\0', NULL, NULL);
-		struct Node nyt = createNode(1, 0, '\0', NULL, NULL);
-		struct Node c1 = createNode(1, 2, '\0', NULL, NULL);
-		struct Node c1 = createNode(1, 2, '\0', NULL, NULL);*/
+		// First level
+		struct Node root = createNode(11, 32, -1, NULL, NULL, NULL);
+
+		// Second Level
+		struct Node n_9 = createNode(9,11, 'f', NULL, NULL, &root);
+		struct Node n_10 = createNode(10,21, -1, NULL, NULL, &root);
+
+		// Third level
+		struct Node n_7 = createNode(7, 10, -1, NULL, NULL, &n_10);
+		struct Node n_8 = createNode(8, 11, -1, NULL, NULL, &n_10);
+
+		// Fourth Level
+		struct Node n_3 = createNode(3, 5, 'c', NULL, NULL, &n_7);
+		struct Node n_4 = createNode(4, 5, -1, NULL, NULL, &n_7);
+		struct Node n_5 = createNode(5, 5, 'd', NULL, NULL, &n_8);
+		struct Node n_6 = createNode(6, 6, 'e', NULL, NULL, &n_8);
+
+		// Fifth Level
+		struct Node n_1 = createNode(1, 2, 'a', NULL, NULL, &n_4);
+		struct Node n_2 = createNode(2, 3, 'b', NULL, NULL, &n_4);
+
+		root.left = &n_9;
+		root.right = &n_10;
+
+		n_10.left = &n_7;
+		n_10.right = &n_8;
+
+		n_5.left = &n_2;
+		n_5.right = &n_3;
+
+		n_7.left = &n_5;
+		n_7.right = &n_4;
+
+		n_8.left = &n_5;
+		n_8.right = &n_6;
+
+		n_4.left = &n_1;
+		n_4.right = &n_2;
+
+		printTree(&root, 0, 0);
 
 
-		struct Node root;
-		root.element = 2;
-		root.left = NULL;
 		return 0;
 	}
 
@@ -309,6 +351,9 @@ int main(int argc, char *argv[]){
 		root.right = NULL;
 		*/
 		
+
+		// We'll eventually switch to a buffer for better performances,
+		// for now, we stick to our fgetc function since we're working w/ small files
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
