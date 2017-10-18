@@ -58,20 +58,6 @@ void error(char* string){
 	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
 
-
-#if TEST == 1
-
-static char * test_foo(){
-	mu_assert("Error, DEBUG is not enabled", TEST==1);
-	return 0;
-}
-
-static char * all_tests(){
-	mu_run_test(test_foo);
-	return 0;
-}
-#endif
-
 struct Node{
 	int node_number;
 	int weight;
@@ -80,22 +66,79 @@ struct Node{
 	struct Node* right;
 };
 
-int insert_element(struct Node* root, char c){
-	if(root->element == c){
-		root->weight++;
-		return 1;
+int add_weight_to_element(struct Node* node, char c);
+
+#if TEST == 1
+
+static char * test_foo(){
+	mu_assert("Error, DEBUG is not enabled", TEST==1);
+	return 0;
+}
+
+static char * test_add_weight_to_element(){
+
+	int a_original_weight = 1;
+
+	struct Node root;
+	root.element = 1;
+	root.weight = 1;
+	root.node_number = 3;
+
+	struct Node nullel;
+
+	nullel.element = '\0';
+	nullel.weight = 0;
+	nullel.node_number = 1;
+	nullel.left = NULL;
+	nullel.right = NULL;
+	
+	struct Node child;
+	child.element = 'a';
+	child.weight = a_original_weight;
+	child.node_number = 2;
+	child.left = NULL;
+	child.right = NULL;
+
+	root.left = &nullel;
+	root.right = &child;
+
+	add_weight_to_element(&root, 'a');
+
+	mu_assert("Inserted element isn't in the right place", root.right->weight == a_original_weight + 1);
+	return 0;
+}
+
+static char * all_tests(){
+	mu_run_test(test_foo);
+	mu_run_test(test_add_weight_to_element);
+	return 0;
+}
+#endif
+
+
+int add_weight_to_element(struct Node* node, char c){
+
+	if(node->left == NULL && node->right == NULL){
+		// Leaf, our root is a char
+
+		if(node->element == c){
+			node->weight++;
+			return 1;
+		}
+		return 0;
 	}
+
 	int res;
-	if(root->left != NULL){
-		res = insert_element(root->left, c);
+	if(node->left != NULL){
+		res = add_weight_to_element(node->left, c);
 		if(res == 1)
 			return 1;
 	}
 	else {
 		return 0;
 	}
-	if(root->right != NULL){
-		res = insert_element(root->right, c);
+	if(node->right != NULL){
+		res = add_weight_to_element(node->right, c);
 		if(res == 1)
 			return 1;
 	}
@@ -183,12 +226,15 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+		/*
 		struct Node zero;
 		struct Node* pzero = &zero;
 
 		zero.node_number = 0;
 		zero.weight = 0;
 		zero.element = '\0';
+		*/
+
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
