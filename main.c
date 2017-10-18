@@ -135,7 +135,7 @@ int add_weight_to_element(struct Node* node, char c){
 			return 1;
 	}
 	else {
-		return 0;
+		return 0; 
 	}
 	if(node->right != NULL){
 		res = add_weight_to_element(node->right, c);
