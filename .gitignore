@@ -38,3 +38,7 @@
 
 # Archive files
 /*.viz
+
+# Intellij / CLion
+/.idea
+/cmake-build-debug
