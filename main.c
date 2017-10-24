@@ -43,18 +43,18 @@ void error(char* string){
 	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
 
-struct Node{
+typedef struct Node {
 	int node_number;
 	int weight;
 	int element;
-	struct Node* left;
+    struct Node* left;
 	struct Node* right;
 	struct Node* parent;
-};
+} Node;
 
 /* Node Functions */
-struct Node createNode(int node_number, int weight, char element, struct Node* left, struct Node* right, struct Node* parent){
-	struct Node n;
+Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent){
+	Node n;
 	n.node_number = node_number;
 	n.weight = weight;
 	n.element = element;
@@ -64,9 +64,14 @@ struct Node createNode(int node_number, int weight, char element, struct Node* l
 	return n;
 }
 
-int add_weight_to_element(struct Node* node, char c);
-struct Node createNode(int node_number, int weight, char element, struct Node* left, struct Node* right, struct Node* parent);
-struct Node* add_new_element(struct Node* node, char c);	
+Node* createEmptyNode(){
+    Node * n = malloc(sizeof(Node));
+    return n;
+}
+
+int add_weight_to_element(Node* node, char c);
+Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
+Node* add_new_element(Node* node, char c);
 
 #if TEST == 1
 
@@ -110,7 +115,7 @@ static char * test_add_weight_to_element(){
 static char * test_add_new_element(){
 	struct Node root;
 	struct Node* pr;
-	root = createNode(0, 0, '\0', NULL, NULL);
+	root = createNode(0, 0, '\0', NULL, NULL, NULL);
 	pr = add_new_element(&root, 'a');
 	root = *pr;
 	mu_assert("Element not added (right issue).", root.right->element == 'a' && root.right->weight == 1);
@@ -132,7 +137,7 @@ int move_element_to_last(){
 
 }
 */
-int add_weight_to_element(struct Node* node, char c){
+int add_weight_to_element(Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
 		// Leaf, our node is an element
@@ -160,13 +165,13 @@ int add_weight_to_element(struct Node* node, char c){
 	return 0;
 }
 
-struct Node* add_new_element(struct Node* node, char c){
+Node* add_new_element(Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
 		// Leaf, our node is an element
 
 		if(node->element == '\0'){
-			struct Node l, r;
+			Node l, r;
 			l = *node;
 			r = createNode(1, 1, c, NULL, NULL, NULL);
 			node->weight = r.weight + l.weight;
@@ -179,7 +184,7 @@ struct Node* add_new_element(struct Node* node, char c){
 		return NULL;
 	}
 
-	struct Node* res;
+	Node* res;
 	if(node->left != NULL){
 		res = add_new_element(node->left, c);
 		if(res != NULL){
@@ -193,7 +198,7 @@ struct Node* add_new_element(struct Node* node, char c){
 	return NULL;
 }
 
-void printTree(struct Node* root, int level, int left){
+void printTree(Node* root, int level, int left){
 	int tabs = 5;
 
 	if(left == 1){
@@ -254,25 +259,25 @@ int main(int argc, char *argv[]){
 		// Tree test
 		
 		// First level
-		struct Node root = createNode(11, 32, -1, NULL, NULL, NULL);
+		Node root = createNode(11, 32, -1, NULL, NULL, NULL);
 
 		// Second Level
-		struct Node n_9 = createNode(9,11, 'f', NULL, NULL, &root);
-		struct Node n_10 = createNode(10,21, -1, NULL, NULL, &root);
+		Node n_9 = createNode(9,11, 'f', NULL, NULL, &root);
+		Node n_10 = createNode(10,21, -1, NULL, NULL, &root);
 
 		// Third level
-		struct Node n_7 = createNode(7, 10, -1, NULL, NULL, &n_10);
-		struct Node n_8 = createNode(8, 11, -1, NULL, NULL, &n_10);
+		Node n_7 = createNode(7, 10, -1, NULL, NULL, &n_10);
+		Node n_8 = createNode(8, 11, -1, NULL, NULL, &n_10);
 
 		// Fourth Level
-		struct Node n_3 = createNode(3, 5, 'c', NULL, NULL, &n_7);
-		struct Node n_4 = createNode(4, 5, -1, NULL, NULL, &n_7);
-		struct Node n_5 = createNode(5, 5, 'd', NULL, NULL, &n_8);
-		struct Node n_6 = createNode(6, 6, 'e', NULL, NULL, &n_8);
+		Node n_3 = createNode(3, 5, 'c', NULL, NULL, &n_7);
+		Node n_4 = createNode(4, 5, -1, NULL, NULL, &n_7);
+		Node n_5 = createNode(5, 5, 'd', NULL, NULL, &n_8);
+		Node n_6 = createNode(6, 6, 'e', NULL, NULL, &n_8);
 
 		// Fifth Level
-		struct Node n_1 = createNode(1, 2, 'a', NULL, NULL, &n_4);
-		struct Node n_2 = createNode(2, 3, 'b', NULL, NULL, &n_4);
+		Node n_1 = createNode(1, 2, 'a', NULL, NULL, &n_4);
+		Node n_2 = createNode(2, 3, 'b', NULL, NULL, &n_4);
 
 		root.left = &n_9;
 		root.right = &n_10;
