@@ -217,7 +217,7 @@ void printElement(Node* root){
     }
 }
 
-int printTree(Node* root, int level, int left){
+void printTree(Node* root, int level, int left){
 
     /* Expected output
      *
@@ -232,10 +232,11 @@ int printTree(Node* root, int level, int left){
      *
      */
 
-    int tabs = 5;
+    // View online w/ any DOT visualizer (graphviz?).
+    // We use webgraphviz.com
 
     if(root == NULL){
-        return -1;
+        return;
     }
 
     if(level == 0){
@@ -261,7 +262,6 @@ int printTree(Node* root, int level, int left){
     if(level == 0){
         printf("}\n");
     }
-    return 1;
 }
 
 
