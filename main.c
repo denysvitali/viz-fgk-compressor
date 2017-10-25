@@ -133,35 +133,35 @@ static char * all_tests(){
 }
 #endif
 
-sruct node_to_check(Node* node, char c, int wtc, ){
+struct Node* node_to_check(Node* node, char c){
 	if(node->left == NULL && node->right == NULL){
 		// Leaf, our node is an element
 		if(node->element == c){
-			return node->weight;
+			return node;
 		}
-		return 0;
+		return NULL;
 	}
 
-	int res;
+	struct Node* res;
 	if(node->left != NULL){
-		res = add_weight_to_element(node->left, c);
-		if(res == 1)
-			return 1;
+		res = node_to_check(node->left, c);
+		if(res != NULL)
+			return res;
 	}
 	else {
-		return 0;
+		return NULL;
 	}
 	if(node->right != NULL){
-		res = add_weight_to_element(node->right, c);
-		if(res == 1)
-			return 1;
+		res = node_to_check(node->right, c);
+		if(res != NULL)
+			return res;
 	}
-	return 0;
+	return NULL;
 }
 
 
-int check_if_in_need_of_movements(Node* node, char c, int weight_obj){
-
+int check_for_movements(Node* node, char c){
+	return 0;
 }
 
 int add_weight_to_element(Node* node, char c){
