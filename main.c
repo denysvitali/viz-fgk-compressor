@@ -205,6 +205,18 @@ void padding ( char ch, int n ){
         putchar ( ch );
 }
 
+void printElement(Node* root){
+
+    // Node:
+    // character (weight, node number)
+
+    if(root->element == -1){
+        printf("\"(%d,%d)\"", root->weight, root->node_number);
+    } else {
+        printf("\"%c (%d, %d)\"",root->element, root->weight, root->node_number);
+    }
+}
+
 int printTree(Node* root, int level, int left){
 
     /* Expected output
@@ -230,22 +242,24 @@ int printTree(Node* root, int level, int left){
         printf("graph G {\n");
     }
 
-    if(root->element == -1){
-        printf("%d", root->weight, root->node_number);
-    } else {
-        printf("%c",root->element, root->node_number);
+    printElement(root);
+
+    if(root->left == NULL && root->right == NULL){
+        printf(";\n");
     }
-    printf("-");
-    printTree(root->left, level+1, 1);
-    int hasRight = printTree(root->right, level+1, 1);
-    if(hasRight){
-        //printf("--");
+    else{
+        printf(" -- ");
+        printTree(root->left, level+1, 1);
+        printElement(root);
+        if(root->right != NULL) {
+            printf(" -- ");
+            printTree(root->right, level + 1, 1);
+        }
+
     }
 
     if(level == 0){
         printf("}\n");
-    } else {
-        printf("\n");
     }
     return 1;
 }
@@ -311,17 +325,14 @@ int main(int argc, char *argv[]){
 		n_10.left = &n_7;
 		n_10.right = &n_8;
 
-		n_5.left = &n_2;
-		n_5.right = &n_3;
+		n_7.left = &n_3;
+        n_7.right = &n_4;
 
-		n_7.left = &n_5;
-		n_7.right = &n_4;
+        n_4.left = &n_1;
+        n_4.right = &n_2;
 
-		n_8.left = &n_5;
-		n_8.right = &n_6;
-
-		n_4.left = &n_1;
-		n_4.right = &n_2;
+        n_8.left = &n_5;
+        n_8.right = &n_6;
 
 		printTree(&root, 0, 1);
 
