@@ -132,11 +132,38 @@ static char * all_tests(){
 	return 0;
 }
 #endif
-/*
-int move_element_to_last(){
 
+struct Node* node_to_check(Node* node, char c){
+	if(node->left == NULL && node->right == NULL){
+		// Leaf, our node is an element
+		if(node->element == c){
+			return node;
+		}
+		return NULL;
+	}
+
+	struct Node* res;
+	if(node->left != NULL){
+		res = node_to_check(node->left, c);
+		if(res != NULL)
+			return res;
+	}
+	else {
+		return NULL;
+	}
+	if(node->right != NULL){
+		res = node_to_check(node->right, c);
+		if(res != NULL)
+			return res;
+	}
+	return NULL;
 }
-*/
+
+
+int check_for_movements(Node* node, char c){
+	return 0;
+}
+
 int add_weight_to_element(Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
