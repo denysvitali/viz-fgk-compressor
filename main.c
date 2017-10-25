@@ -225,32 +225,58 @@ Node* add_new_element(Node* node, char c){
 	return NULL;
 }
 
-void printTree(Node* root, int level, int left){
-	int tabs = 5;
+void padding ( char ch, int n ){
+    int i;
 
-	if(left == 1){
-		tabs += 2;
-	}
-
-	if(root == NULL){
-		return;
-	}
-
-	int i;
-	for(i = 0; i<= tabs-level; i++){
-		printf("\t");
-	}
-
-	if(root->element == -1){
-		printf("%d (%d)", root->weight, root->node_number);
-	} else {
-		printf("%c  (%d)",root->element, root->node_number);
-	}
-	printf("\n");
-
-	printTree(root->left, level+1, 1);
-	printTree(root->right, level+1, 0);
+    for ( i = 0; i < n; i++ )
+        putchar ( ch );
 }
+
+int printTree(Node* root, int level, int left){
+
+    /* Expected output
+     *
+     * graph G {
+        32 -- "f (11)";
+        32 -- 21 -- 10 -- "c (5)";
+        10 -- 5 -- "a (2)";
+        5 -- "b (3)";
+        21 -- 11 -- "d (5)";
+        11 -- "e (6)";
+       }
+     *
+     */
+
+    int tabs = 5;
+
+    if(root == NULL){
+        return -1;
+    }
+
+    if(level == 0){
+        printf("graph G {\n");
+    }
+
+    if(root->element == -1){
+        printf("%d", root->weight, root->node_number);
+    } else {
+        printf("%c",root->element, root->node_number);
+    }
+    printf("-");
+    printTree(root->left, level+1, 1);
+    int hasRight = printTree(root->right, level+1, 1);
+    if(hasRight){
+        //printf("--");
+    }
+
+    if(level == 0){
+        printf("}\n");
+    } else {
+        printf("\n");
+    }
+    return 1;
+}
+
 
 int main(int argc, char *argv[]){
 
@@ -324,7 +350,7 @@ int main(int argc, char *argv[]){
 		n_4.left = &n_1;
 		n_4.right = &n_2;
 
-		printTree(&root, 0, 0);
+		printTree(&root, 0, 1);
 
 
 		return 0;
