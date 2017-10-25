@@ -132,11 +132,38 @@ static char * all_tests(){
 	return 0;
 }
 #endif
-/*
-int move_element_to_last(){
+
+sruct node_to_check(Node* node, char c, int wtc, ){
+	if(node->left == NULL && node->right == NULL){
+		// Leaf, our node is an element
+		if(node->element == c){
+			return node->weight;
+		}
+		return 0;
+	}
+
+	int res;
+	if(node->left != NULL){
+		res = add_weight_to_element(node->left, c);
+		if(res == 1)
+			return 1;
+	}
+	else {
+		return 0;
+	}
+	if(node->right != NULL){
+		res = add_weight_to_element(node->right, c);
+		if(res == 1)
+			return 1;
+	}
+	return 0;
+}
+
+
+int check_if_in_need_of_movements(Node* node, char c, int weight_obj){
 
 }
-*/
+
 int add_weight_to_element(Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
