@@ -499,19 +499,6 @@ int main(int argc, char *argv[]){
 
 		FILE *fh = fopen(file_input, "rb");
 
-        createHuffmanTree();
-		
-		/*
-		struct Node root;
-
-		root.node_number = 0;
-		root.weight = 0;
-		root.element = '\0';
-		root.left = NULL;
-		root.right = NULL;
-		*/
-		
-
 		// We'll eventually switch to a buffer for better performances,
 		// for now, we stick to our fgetc function since we're working w/ small files
 		for(;;){
@@ -519,7 +506,12 @@ int main(int argc, char *argv[]){
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
-		}
+
+            // Do the Huffman Coding Thing
+            Node* root = createHuffmanTree();
+
+
+        }
 
 		printf("\n");
 		fclose(fh);
