@@ -43,6 +43,10 @@ void error(char* string){
 	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
 
+void warn(char* string){
+    printf("%s[W] %s%s\n", STYLE_COLOR_YELLOW, string, STYLE_COLOR_RESET);
+}
+
 typedef struct Node {
 	int node_number;
 	int weight;
@@ -64,14 +68,12 @@ Node createNode(int node_number, int weight, char element, Node* left, Node* rig
 	return n;
 }
 
-Node* createEmptyNode(){
-    Node * n = malloc(sizeof(Node));
-    return n;
-}
-
 int add_weight_to_element(Node* node, char c);
 Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
 Node* add_new_element(Node* node, char c);
+int isNYT(Node *pNode);
+
+Node *createNYT(int i);
 
 #if TEST == 1
 
@@ -132,7 +134,6 @@ static char * all_tests(){
 	return 0;
 }
 #endif
-
 Node* find_node(Node *root, char c){
 	if(root->left == NULL && root->right == NULL){
 		// Leaf, our root is an element
@@ -210,7 +211,7 @@ Node* check_and_move(Node* root, char c){
 int calculate_children_weight(Node* node){
     if(node->left == NULL && node->right == NULL)
         return node->weight;
-
+    /*
     int res, res2;
     if(node->left != NULL){
         res = calculate_children_weight(node->left);
@@ -219,10 +220,10 @@ int calculate_children_weight(Node* node){
         return 0;
     }
     if(node->right != NULL){
-        res = add_weight_to_element(node->right, c);
+        res = add_weight_to_element(node->right);
         if(res == 1)
             return 1;
-    }
+    }*/
     return 0;
 }
 
@@ -256,6 +257,43 @@ int add_weight_to_element(Node* node, char c){
 			return 1;
 	}
 	return 0;
+}
+
+Node *createNYT(int i) {
+    Node* root = malloc(sizeof(Node));
+    root->weight = 0;
+    root->element = 256;
+    return root;
+}
+
+Node* createHuffmanTree(){
+    return createNYT(256);
+}
+
+Node* findNYT(Node* root){
+    if(isNYT(root)){
+        return root;
+    }
+    Node *left = findNYT(root->left);
+    if(isNYT(left)){
+        return left;
+    }
+
+    Node *right = findNYT(root->right);
+    if(isNYT(right)){
+        return right;
+    }
+
+    return NULL; // NYT not found (It should *NEVER* happen)
+}
+
+int isNYT(Node *pNode) {
+    if(pNode == NULL){
+        return 0;
+    }
+    if(pNode->weight == 0 && pNode->element == 256){
+        return 1;
+    }
 }
 
 Node* add_new_element(Node* node, char c){
@@ -469,22 +507,33 @@ int main(int argc, char *argv[]){
 			return 1;
 		}
 
-		result = access(file_output, W_OK);
-		if(result != 0){
-			// Cannot write file!
-			char buffer[500];
-			if(DEBUG){
-				sprintf(buffer,"Unable to write %s: permission denied (E: %d).", file_output, result);
-			} else {
-				sprintf(buffer,"Unable to write %s: permission denied.", file_output);
-			}
-			error(buffer);
-			return 1;
-		}
+		result = access(file_output, F_OK);
+        if(result == -1){
+            if(DEBUG){
+                char buffer[500];
+                sprintf(buffer,"File %s doesn't exist. This is normal.", file_output, result);
+                warn(buffer);
+            }
+        }
+
+        result = access(file_output, W_OK);
+        if (result != 0) {
+            // Cannot write file!
+            char buffer[500];
+            if (DEBUG) {
+                sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output, result);
+            } else {
+                sprintf(buffer, "Unable to write %s: permission denied.", file_output);
+            }
+            error(buffer);
+            return 1;
+        }
 
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+
+        createHuffmanTree();
 		
 		/*
 		struct Node root;
