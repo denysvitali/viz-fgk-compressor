@@ -134,27 +134,26 @@ static char * all_tests(){
 	return 0;
 }
 #endif
-
-Node* node_to_check(Node* node, char c){
-	if(node->left == NULL && node->right == NULL){
-		// Leaf, our node is an element
-		if(node->element == c){
-			return node;
+Node* find_node(Node *root, char c){
+	if(root->left == NULL && root->right == NULL){
+		// Leaf, our root is an element
+		if(root->element == c){
+			return root;
 		}
 		return NULL;
 	}
 
-	struct Node* res;
-	if(node->left != NULL){
-		res = node_to_check(node->left, c);
+    Node* res;
+	if(root->left != NULL){
+		res = find_node(root->left, c);
 		if(res != NULL)
 			return res;
 	}
 	else {
 		return NULL;
 	}
-	if(node->right != NULL){
-		res = node_to_check(node->right, c);
+	if(root->right != NULL){
+		res = find_node(root->right, c);
 		if(res != NULL)
 			return res;
 	}
@@ -162,19 +161,19 @@ Node* node_to_check(Node* node, char c){
 }
 
 
-struct Node* last_of_weight(Node* node, char c, int wtc, int* last){
-    if(node->left == NULL && node->right == NULL){
-        // Leaf, our node is an element
-        if(node->weight == wtc && node->node_number > last){
-            last = node->node_number;
-            return node;
+Node* last_of_weight(Node* root, int wtc, int* last){
+    if(root->left == NULL && root->right == NULL){
+        // Leaf, our root is an element
+        if(root->weight == wtc && root->node_number > last){
+            last = root->node_number;
+            return root;
         }
         return NULL;
     }
 
-    struct Node* res;
-    if(node->left != NULL){
-        res = last_of_weight(node->left, c, wtc, last);
+    Node* res;
+    if(root->left != NULL){
+        res = last_of_weight(root->left, wtc, last);
         if(res != NULL) {
             if(res->node_number > last)
                 return res;
@@ -183,18 +182,53 @@ struct Node* last_of_weight(Node* node, char c, int wtc, int* last){
     else {
         return NULL;
     }
-    if(node->right != NULL){
-        res = last_of_weight(node->left, c, wtc, last);
+    if(root->right != NULL){
+        res = last_of_weight(root->left, wtc, last);
         if(res->node_number > last)
             return res;
     }
     return NULL;
 }
 
-struct Node* check_and_move(Node* node, char c){
+Node* check_and_move(Node* root, char c){
+    Node* first;
+    Node* last;
+    first = find_node(root, c);
+    int l = 0;
+    last = last_of_weight(root, first->weight, &l);
+    if(first == last)
+        return NULL;
+    else{
+        Node* aus = first;
+        first = last;
+        last = aus;
+        add_weight_to_element(root, c);
+        //update_tree(last->parent);
+    }
 
+}
 
+int calculate_children_weight(Node* node){
+    if(node->left == NULL && node->right == NULL)
+        return node->weight;
+    /*
+    int res, res2;
+    if(node->left != NULL){
+        res = calculate_children_weight(node->left);
+    }
+    else {
+        return 0;
+    }
+    if(node->right != NULL){
+        res = add_weight_to_element(node->right);
+        if(res == 1)
+            return 1;
+    }*/
     return 0;
+}
+
+void update_tree(Node* start){
+
 }
 
 int add_weight_to_element(Node* node, char c){
