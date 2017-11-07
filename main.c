@@ -164,8 +164,8 @@ Node* find_node(Node *root, char c){
 Node* last_of_weight(Node* root, int wtc, int* last){
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
-        if(root->weight == wtc && root->node_number > last){
-            last = root->node_number;
+        if(root->weight == wtc && root->node_number > *last){
+            *last = root->node_number;
             return root;
         }
         return NULL;
@@ -175,7 +175,7 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     if(root->left != NULL){
         res = last_of_weight(root->left, wtc, last);
         if(res != NULL) {
-            if(res->node_number > last)
+            if(res->node_number > *last)
                 return res;
         }
     }
@@ -184,7 +184,7 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     }
     if(root->right != NULL){
         res = last_of_weight(root->left, wtc, last);
-        if(res->node_number > last)
+        if(res->node_number > *last)
             return res;
     }
     return NULL;
@@ -535,16 +535,18 @@ int main(int argc, char *argv[]){
 
 		// We'll eventually switch to a buffer for better performances,
 		// for now, we stick to our fgetc function since we're working w/ small files
+
+        // Do the Huffman Coding Thing
+        Node* root = createHuffmanTree();
+
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
 
-            // Do the Huffman Coding Thing
-            Node* root = createHuffmanTree();
-
-
+            add_new_element(root, c);
+            break;
         }
 
 		printf("\n");
