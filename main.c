@@ -162,8 +162,39 @@ Node* node_to_check(Node* node, char c){
 }
 
 
-int check_for_movements(Node* node, char c){
-	return 0;
+struct Node* last_of_weight(Node* node, char c, int wtc, int* last){
+    if(node->left == NULL && node->right == NULL){
+        // Leaf, our node is an element
+        if(node->weight == wtc && node->node_number > last){
+            last = node->node_number;
+            return node;
+        }
+        return NULL;
+    }
+
+    struct Node* res;
+    if(node->left != NULL){
+        res = last_of_weight(node->left, c, wtc, last);
+        if(res != NULL) {
+            if(res->node_number > last)
+                return res;
+        }
+    }
+    else {
+        return NULL;
+    }
+    if(node->right != NULL){
+        res = last_of_weight(node->left, c, wtc, last);
+        if(res->node_number > last)
+            return res;
+    }
+    return NULL;
+}
+
+struct Node* check_and_move(Node* node, char c){
+
+
+    return 0;
 }
 
 int add_weight_to_element(Node* node, char c){
