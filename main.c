@@ -56,6 +56,12 @@ typedef struct Node {
 	struct Node* parent;
 } Node;
 
+typedef struct{
+    Node* root;
+    Node* tree[511];
+    Node* nyt;
+} HuffmanTree;
+
 /* Node Functions */
 Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent){
 	Node n;
@@ -282,8 +288,12 @@ Node *createNYT(int i) {
     return root;
 }
 
-Node* createHuffmanTree(){
-    return createNYT(256);
+HuffmanTree createHuffmanTree(){
+    HuffmanTree* ht = malloc(sizeof(HuffmanTree));
+    ht->root = createNYT(511);
+    ht->nyt = ht->root;
+    ht->tree[0] = ht->root;
+    return *ht;
 }
 
 Node* findNYT(Node* root){
@@ -553,7 +563,7 @@ int main(int argc, char *argv[]){
 		// for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        Node* root = createHuffmanTree();
+        HuffmanTree ht = createHuffmanTree();
 
 		for(;;){
 			char c = fgetc(fh);
@@ -561,7 +571,7 @@ int main(int argc, char *argv[]){
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
 
-            add_new_element(root, c);
+            add_new_element(ht.root, c);
             break;
         }
 
