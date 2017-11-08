@@ -80,7 +80,7 @@ Node* add_new_element(Node* node, char c);
 int isNYT(Node *pNode);
 void update_weights(Node* start);
 
-Node *createNYT(int i);
+Node createNYT(int i);
 
 #if TEST == 1
 
@@ -281,16 +281,20 @@ int add_weight_to_element(Node* node, char c){
 	return 0;
 }
 
-Node *createNYT(int i) {
-    Node* root = malloc(sizeof(Node));
-    root->weight = 0;
-    root->element = 256;
+Node createNYT(int i) {
+    Node root;
+    root.weight = 0;
+    root.element = i;
+    root.left = NULL;
+    root.right = NULL;
     return root;
 }
 
+
 HuffmanTree createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    ht->root = createNYT(511);
+    Node tmp_nyt = createNYT(511);
+    ht->root = &tmp_nyt;
     ht->nyt = ht->root;
     ht->tree[0] = ht->root;
     return *ht;
@@ -374,7 +378,7 @@ void printElement(Node* root){
     }
 }
 
-void printTree(Node* root, int level, int left){
+void printTree(Node* root, int level){
 
     /* Expected output
      *
@@ -407,11 +411,11 @@ void printTree(Node* root, int level, int left){
     }
     else{
         printf(" -- ");
-        printTree(root->left, level+1, 1);
+        printTree(root->left, level+1);
         printElement(root);
         if(root->right != NULL) {
             printf(" -- ");
-            printTree(root->right, level + 1, 1);
+            printTree(root->right, level + 1);
         }
 
     }
@@ -491,7 +495,7 @@ int main(int argc, char *argv[]){
         n_8.left = &n_5;
         n_8.right = &n_6;
 
-		printTree(&root, 0, 1);
+		printTree(&root, 0);
 
 
 		return 0;
@@ -565,6 +569,7 @@ int main(int argc, char *argv[]){
         // Do the Huffman Coding Thing
         HuffmanTree ht = createHuffmanTree();
 
+        printf("Tree printed\n");
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
