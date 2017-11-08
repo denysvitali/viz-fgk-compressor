@@ -73,7 +73,7 @@ Node createNode(int node_number, int weight, char element, Node* left, Node* rig
 Node* add_new_element(Node* node, char c);
 int isNYT(Node *pNode);
 
-Node *createNYT(int i);
+Node createNYT(int i);
 
 #if TEST == 1
 
@@ -259,14 +259,16 @@ int add_weight_to_element(Node* node, char c){
 	return 0;
 }
 
-Node *createNYT(int i) {
-    Node* root = malloc(sizeof(Node));
-    root->weight = 0;
-    root->element = 256;
+Node createNYT(int i) {
+    Node root;
+    root.weight = 0;
+    root.element = i;
+    root.left = NULL;
+    root.right = NULL;
     return root;
 }
 
-Node* createHuffmanTree(){
+Node createHuffmanTree(){
     return createNYT(256);
 }
 
@@ -348,7 +350,7 @@ void printElement(Node* root){
     }
 }
 
-void printTree(Node* root, int level, int left){
+void printTree(Node* root, int level){
 
     /* Expected output
      *
@@ -381,11 +383,11 @@ void printTree(Node* root, int level, int left){
     }
     else{
         printf(" -- ");
-        printTree(root->left, level+1, 1);
+        printTree(root->left, level+1);
         printElement(root);
         if(root->right != NULL) {
             printf(" -- ");
-            printTree(root->right, level + 1, 1);
+            printTree(root->right, level + 1);
         }
 
     }
@@ -465,7 +467,7 @@ int main(int argc, char *argv[]){
         n_8.left = &n_5;
         n_8.right = &n_6;
 
-		printTree(&root, 0, 1);
+		printTree(&root, 0);
 
 
 		return 0;
@@ -537,17 +539,21 @@ int main(int argc, char *argv[]){
 		// for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        Node* root = createHuffmanTree();
+        Node root = createHuffmanTree();
+        printTree(&root, 0);
 
+        printf("Tree printed\n");
 		for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
 
-            add_new_element(root, c);
+            add_new_element(&root, c);
             break;
         }
+
+        printTree(&root, 0);
 
 		printf("\n");
 		fclose(fh);
