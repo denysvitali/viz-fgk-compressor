@@ -72,6 +72,7 @@ int add_weight_to_element(Node* node, char c);
 Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
 Node* add_new_element(Node* node, char c);
 int isNYT(Node *pNode);
+void update_weights(Node* start);
 
 Node *createNYT(int i);
 
@@ -190,6 +191,12 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     return NULL;
 }
 
+void swap_nodes(Node* node, Node* node2){
+    Node* aus = node;
+    node = node2;
+    node2 = aus;
+}
+
 void check_and_move(Node* root, char c){
     Node* first;
     Node* last;
@@ -197,11 +204,21 @@ void check_and_move(Node* root, char c){
     int l = 0;
     last = last_of_weight(root, first->weight, &l);
     if(first != last){
-        Node* aus = first;
-        first = last;
-        last = aus;
-        add_weight_to_element(root, c);
-        //update_weights(last->parent);
+        swap_nodes(first, last);
+    }
+
+}
+
+void check_move_and_weight(Node* root, char c){
+    Node* first;
+    Node* last;
+    first = find_node(root, c);
+    int l = 0;
+    last = last_of_weight(root, first->weight, &l);
+    if(first != last){
+        swap_nodes(first, last);
+        add_weight_to_element(first, c);
+        update_weights(last->parent);
     }
 
 }
@@ -221,8 +238,13 @@ int calculate_weight(Node* node){
 }
 
 void update_weights(Node* start){
+    check_and_move(start, start->element);
     start->weight = calculate_weight(start);
-    //check_and_move(start);
+    update_weights(start->parent);
+}
+
+void update_numbers(Node* root){
+
 }
 
 int add_weight_to_element(Node* node, char c){
