@@ -72,6 +72,7 @@ int add_weight_to_element(Node* node, char c);
 Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
 Node* add_new_element(Node* node, char c);
 int isNYT(Node *pNode);
+void update_weights(Node* start);
 
 Node createNYT(int i);
 
@@ -190,44 +191,59 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     return NULL;
 }
 
-Node* check_and_move(Node* root, char c){
+void swap_nodes(Node* node, Node* node2){
+    Node* aus = node;
+    node = node2;
+    node2 = aus;
+}
+
+void check_and_move(Node* root, char c){
     Node* first;
     Node* last;
     first = find_node(root, c);
     int l = 0;
     last = last_of_weight(root, first->weight, &l);
-    if(first == last)
-        return NULL;
-    else{
-        Node* aus = first;
-        first = last;
-        last = aus;
-        add_weight_to_element(root, c);
-        //update_tree(last->parent);
+    if(first != last){
+        swap_nodes(first, last);
     }
 
 }
 
-int calculate_children_weight(Node* node){
+void check_move_and_weight(Node* root, char c){
+    Node* first;
+    Node* last;
+    first = find_node(root, c);
+    int l = 0;
+    last = last_of_weight(root, first->weight, &l);
+    if(first != last){
+        swap_nodes(first, last);
+        add_weight_to_element(first, c);
+        update_weights(last->parent);
+    }
+
+}
+
+int calculate_weight(Node* node){
     if(node->left == NULL && node->right == NULL)
         return node->weight;
-    /*
-    int res, res2;
+
+    int res = 0, res2 = 0;
     if(node->left != NULL){
-        res = calculate_children_weight(node->left);
-    }
-    else {
-        return 0;
+        res = calculate_weight(node->left);
     }
     if(node->right != NULL){
-        res = add_weight_to_element(node->right);
-        if(res == 1)
-            return 1;
-    }*/
-    return 0;
+        res2 = calculate_weight(node->right);
+    }
+    return res+res2;
 }
 
-void update_tree(Node* start){
+void update_weights(Node* start){
+    check_and_move(start, start->element);
+    start->weight = calculate_weight(start);
+    update_weights(start->parent);
+}
+
+void update_numbers(Node* root){
 
 }
 
