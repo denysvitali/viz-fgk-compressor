@@ -249,15 +249,15 @@ void update_weights(Node* start){
     update_weights(start->parent);
 }
 
-void update_numbers(Node* root){
-
+void update_numbers(HuffmanTree* ht){
+    
 }
 
 int add_weight_to_element(Node* node, char c){
 
 	if(node->left == NULL && node->right == NULL){
 		// Leaf, our node is an element
-		if(node->element == c){
+	    	if(node->element == c){
 			node->weight++;
 			return 1;
 		}
