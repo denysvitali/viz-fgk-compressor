@@ -324,6 +324,8 @@ int isNYT(Node *pNode) {
     if(pNode->weight == 0 && pNode->element == 256){
         return 1;
     }
+
+    return 0;
 }
 
 Node* add_new_element(Node* node, char c){
@@ -541,7 +543,7 @@ int main(int argc, char *argv[]){
         if(result == -1){
             if(DEBUG){
                 char buffer[500];
-                sprintf(buffer,"File %s doesn't exist. This is normal.", file_output, result);
+                sprintf(buffer,"File %s doesn't exist. This is normal. (E%d)", file_output, result);
                 warn(buffer);
             }
         }
