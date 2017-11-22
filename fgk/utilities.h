@@ -13,3 +13,4 @@
 
 void printTree(Node* root, int level);
 void printElement(Node* root);
+void printHuffmanTreeInfo(HuffmanTree *ht);

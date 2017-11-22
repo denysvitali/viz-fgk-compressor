@@ -7,6 +7,15 @@
 
 // Utilities Functions
 
+/* Prints some information about the Huffman Tree
+ * like HT address, Tree address, Root Node Number, Root Element, isNYT(root)
+ */
+void printHuffmanTreeInfo(HuffmanTree *ht){
+    printf("HT:\t %p\n", ht);
+    printf("Tree:\t %p\n", ht->tree);
+    printf("Root:\t %p (NN: %d, Element: %d, isNYT: %d), \n", ht->root, ht->root->node_number, ht->root->element, isNYT(ht->root));
+}
+
 void printTree(Node* root, int level){
 
     /* Expected output

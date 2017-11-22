@@ -9,7 +9,7 @@
 
 #define DEBUG 1
 #ifndef TEST
-#define TEST 0
+    #define TEST 0
 #endif
 #define VERSION "0.0.1"
 

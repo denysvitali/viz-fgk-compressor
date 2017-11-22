@@ -6,6 +6,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(SOURCE_FILES
         colors.h
         main.c
-        minunit.h)
+        minunit.h
+        defines.h
+        fgk/huffmantree.c
+        fgk/huffmantree.h
+        fgk/utilities.h
+        fgk/utlities.c
+        )
 
 add_executable(algoritmi_fgk_compression ${SOURCE_FILES})

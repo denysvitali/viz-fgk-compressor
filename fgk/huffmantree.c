@@ -99,13 +99,13 @@ Node createNode(int node_number, int weight, int element, Node* left, Node* righ
     return n;
 }
 
-HuffmanTree createHuffmanTree(){
+HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
     Node tmp_nyt = createNYT(511);
     ht->root = &tmp_nyt;
     ht->nyt = ht->root;
     ht->tree[0] = ht->root;
-    return *ht;
+    return ht;
 }
 
 
