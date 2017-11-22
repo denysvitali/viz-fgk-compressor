@@ -103,12 +103,6 @@ static char * all_tests(){
 }
 #endif
 
-
-
-
-
-
-
 int main(int argc, char *argv[]){
 
 	#if TEST == 1
@@ -258,6 +252,7 @@ int main(int argc, char *argv[]){
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
+
 
             add_new_element(&ht, c);
             break;
