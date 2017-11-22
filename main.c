@@ -245,7 +245,7 @@ int calculate_weight(Node* node){
 
 void update_weights(Node* start){
     check_and_move(start, start->element);
-    start->weight = calculate_weight(start);
+    start->weight++;
     update_weights(start->parent);
 }
 
@@ -342,6 +342,8 @@ Node* add_new_element(Node* node, char c){
 			node->node_number = 2;
 			node->right = &r;
 			node->left = &l;
+            if(node->parent->parent != NULL)
+                update_weights(node->parent->parent);
 			return node;
 		}
 		return NULL;
