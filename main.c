@@ -13,7 +13,7 @@
 
 #define DEBUG 1
 #ifndef TEST
-	#define TEST 0
+	#define TEST 1
 #endif
 #define VERSION "0.0.1"
 
@@ -65,20 +65,11 @@ typedef struct{
 } HuffmanTree;
 
 /* Node Functions */
-Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent){
-	Node n;
-	n.node_number = node_number;
-	n.weight = weight;
-	n.element = element;
-	n.left = left;
-	n.right = right;
-	n.parent = parent;
-	return n;
-}
 
 int add_weight_to_element(Node* node, char c);
-Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
-Node* add_new_element(HuffmanTree* ht, char c);
+Node createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
+HuffmanTree* add_new_element(HuffmanTree* ht, char c);
+HuffmanTree createHuffmanTree();
 int isNYT(Node *pNode);
 void update_weights(Node* start);
 
@@ -123,27 +114,38 @@ static char * test_add_weight_to_element(){
 	return 0;
 }
 
-static char * test_add_new_element(){
-	struct Node root;
-	struct Node* pr;
-	root = createNode(0, 0, '\0', NULL, NULL, NULL);
-	pr = add_new_element(&root, 'a');
-	root = *pr;
-	mu_assert("Element not added (right issue).", root.right->element == 'a' && root.right->weight == 1);
-	mu_assert("Left not copied (left issue).", root.left->element == '\0' && root.left->weight == 0);
-	mu_assert("Root not changed (actual node issue).", root.weight == 1 && root.node_number == 2);
+static char * test_create_huffman_tree(){
+	HuffmanTree ht = createHuffmanTree();
+    mu_assert("HT has no NYT", ht.nyt != NULL);
+    mu_assert("Tree is NULL!", ht.tree != NULL);
+    mu_assert("HT doesn't have a root!", ht.root != NULL);
 	return 0;
 }
 
 static char * all_tests(){
 	mu_run_test(test_foo);
 	mu_run_test(test_add_weight_to_element);
-	mu_run_test(test_add_new_element);
+	mu_run_test(test_create_huffman_tree);
 
 	return 0;
 }
 #endif
+
+Node createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent){
+    Node n;
+    n.node_number = node_number;
+    n.weight = weight;
+    n.element = element;
+    n.left = left;
+    n.right = right;
+    n.parent = parent;
+    return n;
+}
+
 Node* find_node(Node *root, char c){
+    if(root == NULL){
+        return NULL;
+    }
 	if(root->left == NULL && root->right == NULL){
 		// Leaf, our root is an element
 		if(root->element == c){
@@ -331,7 +333,7 @@ int isNYT(Node *pNode) {
     return 0;
 }
 
-Node* add_new_element(HuffmanTree* ht, char c){
+HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
     if(target != NULL) {
@@ -339,7 +341,7 @@ Node* add_new_element(HuffmanTree* ht, char c){
     } else {
         Node* new_char = ht->nyt;
         Node new_nyt = createNYT(new_char->node_number-2);
-        Node new_char_parent = createNode(new_char->node_number, 1, NULL, &new_nyt, new_char, ht->nyt->parent);
+        Node new_char_parent = createNode(new_char->node_number, 1, -1, &new_nyt, new_char, ht->nyt->parent);
         ht->nyt = &new_nyt;
         new_nyt.parent = &new_char_parent;
         new_char->parent = &new_char_parent;
