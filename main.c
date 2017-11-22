@@ -41,12 +41,6 @@ void warn(char* string){
 
 /* Node Functions */
 
-int add_weight_to_element(Node* node, char c);
-Node createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
-HuffmanTree* add_new_element(HuffmanTree* ht, char c);
-HuffmanTree createHuffmanTree();
-void update_weights(Node* start);
-
 #if TEST == 1
 
 static char * test_foo(){
@@ -87,10 +81,10 @@ static char * test_foo(){
 }*/
 
 static char * test_create_huffman_tree(){
-	HuffmanTree ht = createHuffmanTree();
-    mu_assert("HT has no NYT", ht.nyt != NULL);
-    mu_assert("Tree is NULL!", ht.tree != NULL);
-    mu_assert("HT doesn't have a root!", ht.root != NULL);
+	HuffmanTree* ht = createHuffmanTree();
+    mu_assert("HT has no NYT", ht->nyt != NULL);
+    mu_assert("Tree is NULL!", ht->tree != NULL);
+    mu_assert("HT doesn't have a root!", ht->root != NULL);
 	return 0;
 }
 
@@ -244,7 +238,7 @@ int main(int argc, char *argv[]){
 		// for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        HuffmanTree ht = createHuffmanTree();
+        HuffmanTree* ht = createHuffmanTree();
 
         printf("Tree printed\n");
 		for(;;){
@@ -252,9 +246,9 @@ int main(int argc, char *argv[]){
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
+            printHuffmanTreeInfo(ht);
 
-
-            add_new_element(&ht, c);
+            add_new_element(ht, c);
             break;
         }
 

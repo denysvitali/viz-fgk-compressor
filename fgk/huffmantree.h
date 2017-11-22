@@ -20,7 +20,7 @@ typedef struct{
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
-HuffmanTree createHuffmanTree();
+HuffmanTree* createHuffmanTree();
 Node* find_node(Node *root, char c);
 Node createNYT(int i);
 Node createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
