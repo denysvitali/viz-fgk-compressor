@@ -23,6 +23,8 @@
 
 /* Compressor Magic Number */
 #define MAGIC_NUMBER 0x517D3C0
+#define NYT_ELEMENT 256
+
 
 int tests_run = 0;
 
@@ -76,7 +78,7 @@ Node createNode(int node_number, int weight, char element, Node* left, Node* rig
 
 int add_weight_to_element(Node* node, char c);
 Node createNode(int node_number, int weight, char element, Node* left, Node* right, Node* parent);
-Node* add_new_element(Node* node, char c);
+Node* add_new_element(HuffmanTree* ht, char c);
 int isNYT(Node *pNode);
 void update_weights(Node* start);
 
@@ -198,9 +200,9 @@ Node* last_of_weight(Node* root, int wtc, int* last){
 }
 
 void swap_nodes(Node* node, Node* node2){
-    Node* aus = node;
+    Node* aux = node;
     node = node2;
-    node2 = aus;
+    node2 = aux;
 }
 
 void check_and_move(Node* root, char c){
@@ -209,10 +211,9 @@ void check_and_move(Node* root, char c){
     first = find_node(root, c);
     int l = 0;
     last = last_of_weight(root, first->weight, &l);
-    if(first != last){
+    if(first != last) {
         swap_nodes(first, last);
     }
-
 }
 
 void check_move_and_weight(Node* root, char c){
@@ -226,7 +227,6 @@ void check_move_and_weight(Node* root, char c){
         add_weight_to_element(first, c);
         update_weights(last->parent);
     }
-
 }
 
 int calculate_weight(Node* node){
@@ -244,6 +244,9 @@ int calculate_weight(Node* node){
 }
 
 void update_weights(Node* start){
+    if(start == NULL){
+        return;
+    }
     check_and_move(start, start->element);
     start->weight = calculate_weight(start);
     update_weights(start->parent);
@@ -284,7 +287,8 @@ int add_weight_to_element(Node* node, char c){
 Node createNYT(int i) {
     Node root;
     root.weight = 0;
-    root.element = i;
+    root.element = NYT_ELEMENT;
+    root.node_number = i;
     root.left = NULL;
     root.right = NULL;
     return root;
@@ -321,51 +325,30 @@ int isNYT(Node *pNode) {
     if(pNode == NULL){
         return 0;
     }
-    if(pNode->weight == 0 && pNode->element == 256){
+    if(pNode->weight == 0 && pNode->element == NYT_ELEMENT){
         return 1;
     }
-
     return 0;
 }
 
-Node* add_new_element(Node* node, char c){
-
-	if(node->left == NULL && node->right == NULL){
-		// Leaf, our node is an element
-
-		if(node->element == '\0'){
-			Node l, r;
-			l = *node;
-			r = createNode(1, 1, c, NULL, NULL, NULL);
-			node->weight = r.weight + l.weight;
-			node->element = node->weight+'0';
-			node->node_number = 2;
-			node->right = &r;
-			node->left = &l;
-			return node;
-		}
-		return NULL;
-	}
-
-	Node* res;
-	if(node->left != NULL){
-		res = add_new_element(node->left, c);
-		if(res != NULL){
-			node->left = res;
-			return node;
-		}
-	}
-	else {
-		return NULL;
-	}
+Node* add_new_element(HuffmanTree* ht, char c){
+    Node* node = ht->root;
+    Node* target = find_node(node, c);
+    if(target != NULL) {
+        // Add weight
+    } else {
+        Node* new_char = ht->nyt;
+        Node new_nyt = createNYT(new_char->node_number-2);
+        Node new_char_parent = createNode(new_char->node_number, 1, NULL, &new_nyt, new_char, ht->nyt->parent);
+        ht->nyt = &new_nyt;
+        new_nyt.parent = &new_char_parent;
+        new_char->parent = &new_char_parent;
+        new_char->element = c;
+        new_char->weight = 1;
+        new_char->right = NULL;
+        new_char->left = NULL;
+    }
 	return NULL;
-}
-
-void padding ( char ch, int n ){
-    int i;
-
-    for ( i = 0; i < n; i++ )
-        putchar ( ch );
 }
 
 void printElement(Node* root){
@@ -578,7 +561,7 @@ int main(int argc, char *argv[]){
 			if(ferror(fh)) break;
 			printf("%02x ", c & 0xff);
 
-            add_new_element(ht.root, c);
+            add_new_element(&ht, c);
             break;
         }
 
