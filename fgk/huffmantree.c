@@ -121,7 +121,14 @@ void check_and_move(Node* root, char c){
 }
 
 void check_move_and_weight(Node* root, char c){
-    check_and_move(root, c);
+    Node* first;
+    Node* last;
+    first = find_node(root, c);
+    int l = 0;
+    last = last_of_weight(root, first->weight, &l);
+    if(first != last) {
+        swap_nodes(first, last);
+    }
     last->weight++;
     update_weights(last->parent);
 }
