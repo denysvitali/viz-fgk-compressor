@@ -131,42 +131,42 @@ int main(int argc, char *argv[]){
 		// Tree test
 		
 		// First level
-		Node root = createNode(11, 32, -1, NULL, NULL, NULL);
+		Node* root = createNode(11, 32, -1, NULL, NULL, NULL);
 
 		// Second Level
-		Node n_9 = createNode(9,11, 'f', NULL, NULL, &root);
-		Node n_10 = createNode(10,21, -1, NULL, NULL, &root);
+		Node* n_9 = createNode(9,11, 'f', NULL, NULL, root);
+		Node* n_10 = createNode(10,21, -1, NULL, NULL, root);
 
 		// Third level
-		Node n_7 = createNode(7, 10, -1, NULL, NULL, &n_10);
-		Node n_8 = createNode(8, 11, -1, NULL, NULL, &n_10);
+		Node* n_7 = createNode(7, 10, -1, NULL, NULL, n_10);
+		Node* n_8 = createNode(8, 11, -1, NULL, NULL, n_10);
 
 		// Fourth Level
-		Node n_3 = createNode(3, 5, 'c', NULL, NULL, &n_7);
-		Node n_4 = createNode(4, 5, -1, NULL, NULL, &n_7);
-		Node n_5 = createNode(5, 5, 'd', NULL, NULL, &n_8);
-		Node n_6 = createNode(6, 6, 'e', NULL, NULL, &n_8);
+		Node* n_3 = createNode(3, 5, 'c', NULL, NULL, n_7);
+		Node* n_4 = createNode(4, 5, -1, NULL, NULL, n_7);
+		Node* n_5 = createNode(5, 5, 'd', NULL, NULL, n_8);
+		Node* n_6 = createNode(6, 6, 'e', NULL, NULL, n_8);
 
 		// Fifth Level
-		Node n_1 = createNode(1, 2, 'a', NULL, NULL, &n_4);
-		Node n_2 = createNode(2, 3, 'b', NULL, NULL, &n_4);
+		Node* n_1 = createNode(1, 2, 'a', NULL, NULL, n_4);
+		Node* n_2 = createNode(2, 3, 'b', NULL, NULL, n_4);
 
-		root.left = &n_9;
-		root.right = &n_10;
+		root->left = n_9;
+		root->right = n_10;
 
-		n_10.left = &n_7;
-		n_10.right = &n_8;
+		n_10->left = n_7;
+		n_10->right = n_8;
 
-		n_7.left = &n_3;
-        n_7.right = &n_4;
+		n_7->left = n_3;
+        n_7->right = n_4;
 
-        n_4.left = &n_1;
-        n_4.right = &n_2;
+        n_4->left = n_1;
+        n_4->right = n_2;
 
-        n_8.left = &n_5;
-        n_8.right = &n_6;
+        n_8->left = n_5;
+        n_8->right = n_6;
 
-		printTree(&root, 0);
+		printTree(root, 0);
 
 
 		return 0;
@@ -240,8 +240,7 @@ int main(int argc, char *argv[]){
         // Do the Huffman Coding Thing
         HuffmanTree* ht = createHuffmanTree();
 
-        printf("Tree printed\n");
-		for(;;){
+        for(;;){
 			char c = fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "../defines.h"
 #include "huffmantree.h"
 
@@ -9,11 +10,11 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         // Add weight
     } else {
         Node* new_char = ht->nyt;
-        Node new_nyt = createNYT(new_char->node_number-2);
-        Node new_char_parent = createNode(new_char->node_number, 1, -1, &new_nyt, new_char, ht->nyt->parent);
-        ht->nyt = &new_nyt;
-        new_nyt.parent = &new_char_parent;
-        new_char->parent = &new_char_parent;
+        Node* new_nyt = createNYT(new_char->node_number-2);
+        Node* new_char_parent = createNode(new_char->node_number, 1, -1, new_nyt, new_char, ht->nyt->parent);
+        ht->nyt = new_nyt;
+        new_nyt->parent = new_char_parent;
+        new_char->parent = new_char_parent;
         new_char->element = c;
         new_char->weight = 1;
         new_char->right = NULL;
@@ -53,6 +54,7 @@ Node* find_node(Node *root, char c){
     if(root == NULL){
         return NULL;
     }
+    printf("Node: %p", root);
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
         if(root->element == c){
@@ -78,31 +80,31 @@ Node* find_node(Node *root, char c){
     return NULL;
 }
 
-Node createNYT(int i) {
-    Node root;
-    root.weight = 0;
-    root.element = NYT_ELEMENT;
-    root.node_number = i;
-    root.left = NULL;
-    root.right = NULL;
+Node* createNYT(int i) {
+    Node* root = malloc(sizeof(Node));
+    root->weight = 0;
+    root->element = NYT_ELEMENT;
+    root->node_number = i;
+    root->left = NULL;
+    root->right = NULL;
     return root;
 }
 
-Node createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent){
-    Node n;
-    n.node_number = node_number;
-    n.weight = weight;
-    n.element = element;
-    n.left = left;
-    n.right = right;
-    n.parent = parent;
+Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent){
+    Node* n = malloc(sizeof(Node));
+    n->node_number = node_number;
+    n->weight = weight;
+    n->element = element;
+    n->left = left;
+    n->right = right;
+    n->parent = parent;
     return n;
 }
 
 HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node tmp_nyt = createNYT(511);
-    ht->root = &tmp_nyt;
+    Node* tmp_nyt = createNYT(511);
+    ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->tree[0] = ht->root;
     return ht;
