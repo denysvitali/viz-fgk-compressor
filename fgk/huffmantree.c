@@ -54,7 +54,7 @@ Node* find_node(Node *root, char c){
     if(root == NULL){
         return NULL;
     }
-    printf("Node: %p", root);
+    printf("Node: %p\n", root);
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
         if(root->element == c){

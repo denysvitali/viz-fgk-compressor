@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
 #include "minunit.h"
 #include "colors.h"
 
 #include "defines.h"
+#include "console.h"
 #include "fgk/huffmantree.h"
 #include "fgk/utilities.h"
 
@@ -19,23 +18,8 @@ int tests_run = 0;
 
 void usage(){
 	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
-	//printf("%sUsage%s\n", STYLE_UNDERLINE, STYLE_NO_UNDERLINE);
 	printf("Compress: \t viz -c output.viz inputfile\n");
 	printf("Extract: \t viz -d input.viz\n");
-}
-
-void debug(char* string){
-	if(DEBUG){
-		printf("%s[D] %s%s\n",STYLE_COLOR_BLUE, string, STYLE_COLOR_RESET);
-	}
-}	
-
-void error(char* string){
-	printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
-}
-
-void warn(char* string){
-    printf("%s[W] %s%s\n", STYLE_COLOR_YELLOW, string, STYLE_COLOR_RESET);
 }
 
 
@@ -240,15 +224,22 @@ int main(int argc, char *argv[]){
         // Do the Huffman Coding Thing
         HuffmanTree* ht = createHuffmanTree();
 
+        int i = 0;
         for(;;){
-			char c = fgetc(fh);
+			char c = (char) fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
-			printf("%02x ", c & 0xff);
-            printHuffmanTreeInfo(ht);
+            if(DEBUG) {
+                // DEBUG ONLY!
+                if (i == 3) break;
+            }
 
+            char buffer[200];
+            sprintf(buffer, "Parsing byte %02x", c & 0xff);
+            debug(buffer);
+            printHuffmanTreeInfo(ht);
             add_new_element(ht, c);
-            break;
+            i++;
         }
 
 		printf("\n");

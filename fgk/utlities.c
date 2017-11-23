@@ -1,6 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include "utilities.h"
+
 #ifndef ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
     #include "huffmantree.h"
 #endif
@@ -14,6 +14,11 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
     printf("HT:\t %p\n", ht);
     printf("Tree:\t %p\n", ht->tree);
     printf("Root:\t %p (NN: %d, Element: %d, isNYT: %d), \n", ht->root, ht->root->node_number, ht->root->element, isNYT(ht->root));
+    printHuffmanTree(ht);
+}
+
+void printHuffmanTree(HuffmanTree *ht){
+    printTree(ht->root, 0);
 }
 
 void printTree(Node* root, int level){
@@ -70,6 +75,6 @@ void printElement(Node* root){
     if(root->element == -1){
         printf("\"(%d,%d)\"", root->weight, root->node_number);
     } else {
-        printf("\"%c (%d, %d)\"",root->element, root->weight, root->node_number);
+        printf("\"%X (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
     }
 }

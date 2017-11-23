@@ -12,6 +12,6 @@ set(SOURCE_FILES
         fgk/huffmantree.h
         fgk/utilities.h
         fgk/utlities.c
-        )
+        console.c console.h)
 
 add_executable(algoritmi_fgk_compression ${SOURCE_FILES})
