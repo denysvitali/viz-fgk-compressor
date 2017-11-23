@@ -21,32 +21,15 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         Node* old_nyt = ht->nyt;
         Node* new_nyt = createNYT(old_nyt->node_number-2);
         Node* new_char = createNode(old_nyt->node_number-1, 1, c, NULL, NULL, old_nyt);
-        /**old_nyt = *createNode(old_nyt->node_number, 1, -1, new_nyt, new_char, old_nyt->parent);*/
 
+        // OLD NYT becomes our new parent for the new NYT and the new element
         old_nyt->left = new_nyt;
         old_nyt->right = new_char;
         old_nyt->element = -1;
         old_nyt->weight = 1;
 
+        // Set the new NYT pointer
         ht->nyt = new_nyt;
-
-        /*new_nyt->parent = new_char_parent;
-        old_nyt->parent = new_char_parent;
-        old_nyt->element = c;
-        old_nyt->node_number = new_char_parent->node_number-1;
-        old_nyt->weight = 1;
-        old_nyt->right = NULL;
-        old_nyt->left = NULL;
-
-        ht->nyt = new_nyt;
-        */
-
-        /*Node* low = last_of_weight(node, 1, 0);
-        printf("LOW: %p", low);*/
-
-        printf("Root L: %p\n", ht->root->left);
-        printf("Root R: %p\n", ht->root->right);
-        printf("Root parent: %p\n", ht->root->parent);
 
         return ht;
     }
