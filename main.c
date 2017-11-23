@@ -237,8 +237,8 @@ int main(int argc, char *argv[]){
             char buffer[200];
             sprintf(buffer, "Parsing byte %02x", c & 0xff);
             debug(buffer);
-            printHuffmanTreeInfo(ht);
             add_new_element(ht, c);
+            printHuffmanTreeInfo(ht);
             i++;
         }
 
