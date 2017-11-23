@@ -111,7 +111,7 @@ HuffmanTree* createHuffmanTree(){
 }
 
 
-void check_and_move(Node* root, char c){
+Node* check_move(Node *root, char c){
     Node* first;
     Node* last;
     first = find_node(root, c);
@@ -120,17 +120,11 @@ void check_and_move(Node* root, char c){
     if(first != last) {
         swap_nodes(first, last);
     }
+    return last;
 }
 
-void check_move_and_weight(Node* root, char c){
-    Node* first;
-    Node* last;
-    first = find_node(root, c);
-    int l = 0;
-    last = last_of_weight(root, first->weight, &l);
-    if(first != last) {
-        swap_nodes(first, last);
-    }
+void check_move_weight(Node* root, char c){
+    Node* last = check_move(root, c);
     last->weight++;
     update_weights(last->parent);
 }
@@ -190,7 +184,7 @@ void update_weights(Node* start){
     if(start == NULL){
         return;
     }
-    check_and_move(start, start->element);
+    check_move(start, start->element);
     start->weight++;
     update_weights(start->parent);
 }
