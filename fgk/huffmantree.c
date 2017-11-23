@@ -1,24 +1,54 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../defines.h"
+#include "../console.h"
 #include "huffmantree.h"
+
+#ifndef ALGORITMI_FGK_COMPRESSION_UTILITIES_H
+    #include "utilities.h"
+#endif
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
     if(target != NULL) {
         // Add weight
+        char string[50];
+        sprintf(string, "Target = %p", target);
+        debug(string);
     } else {
-        Node* new_char = ht->nyt;
-        Node* new_nyt = createNYT(new_char->node_number-2);
-        Node* new_char_parent = createNode(new_char->node_number, 1, -1, new_nyt, new_char, ht->nyt->parent);
+        debug("Character not found");
+        Node* old_nyt = ht->nyt;
+        Node* new_nyt = createNYT(old_nyt->node_number-2);
+        Node* new_char = createNode(old_nyt->node_number-1, 1, c, NULL, NULL, old_nyt);
+        /**old_nyt = *createNode(old_nyt->node_number, 1, -1, new_nyt, new_char, old_nyt->parent);*/
+
+        old_nyt->left = new_nyt;
+        old_nyt->right = new_char;
+        old_nyt->element = -1;
+        old_nyt->weight = 1;
+
         ht->nyt = new_nyt;
-        new_nyt->parent = new_char_parent;
-        new_char->parent = new_char_parent;
-        new_char->element = c;
-        new_char->weight = 1;
-        new_char->right = NULL;
-        new_char->left = NULL;
+
+        /*new_nyt->parent = new_char_parent;
+        old_nyt->parent = new_char_parent;
+        old_nyt->element = c;
+        old_nyt->node_number = new_char_parent->node_number-1;
+        old_nyt->weight = 1;
+        old_nyt->right = NULL;
+        old_nyt->left = NULL;
+
+        ht->nyt = new_nyt;
+        */
+
+        /*Node* low = last_of_weight(node, 1, 0);
+        printf("LOW: %p", low);*/
+
+        printf("Root L: %p\n", ht->root->left);
+        printf("Root R: %p\n", ht->root->right);
+        printf("Root parent: %p\n", ht->root->parent);
+
+        return ht;
     }
     return NULL;
 }
@@ -162,8 +192,8 @@ Node* last_of_weight(Node* root, int wtc, int* last){
 
 void swap_nodes(Node* node, Node* node2){
     Node* aux = node;
-    node = node2;
-    node2 = aux;
+    *node = *node2;
+    *node2 = *aux;
 }
 /*
 int calculate_weight(Node* node){

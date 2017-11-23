@@ -72,7 +72,10 @@ void printElement(Node* root){
     // Node:
     // character (weight, node number)
 
-    if(root->element == -1){
+    if(isNYT(root)){
+        printf("\"NYT (%d,%d)\"", root->weight, root->node_number);
+    }
+    else if(root->element == -1){
         printf("\"(%d,%d)\"", root->weight, root->node_number);
     } else {
         printf("\"%X (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
