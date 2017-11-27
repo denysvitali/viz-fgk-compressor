@@ -30,11 +30,13 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         old_nyt->weight = 1;
         new_nyt->parent = old_nyt;
 
-        //ht->root = old_nyt;
-        //ht->root->weight++;
-
         // Set the new NYT pointer
         ht->nyt = new_nyt;
+
+        if(ht->nyt == ht->root){
+            ht->root = old_nyt;
+            ht->root->weight++;
+        }
         printElement(ht->root);
         printf("\n");
 
@@ -42,12 +44,18 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         int i = 0;
         printf("LOW params: %p, %d, %d\n", ht->root, old_nyt->weight, i);
         Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
-        printf("Node: %p, NN: %d\n", n, n->node_number);
+        if(n != NULL) {
+            printf("Node: %p, NN: %d\n", n, n->node_number);
+        }
         //printf("LOW NN: %d\n", i);
         printf("Root: %p\n", ht->root);
         printf("Parent: %p\n", ht->nyt->parent);
 
-        update_weights(ht->nyt->parent);
+        //update_weights(ht->nyt->parent);
+        if(new_char->parent->parent != NULL){
+            debug("Calling Update weights");
+            update_weights(ht->root, new_char->parent);
+        }
 
         return ht;
     }
@@ -201,42 +209,51 @@ int calculate_weight(Node* node){
     return res+res2;
 }
 */
-void update_weights(Node* start){
+void update_weights(Node* root, Node* start){
     if(start == NULL){
         warn("Update Weights called w/ start = NULL");
         return;
+    } else {
+        debug("Non è null");
     }
-    check_move(start, start->element);
+
+    if(root == start->parent)
+    {
+        root->weight++;
+        return;
+    }
+    check_move(root, start);
     if(!isNYT(start->left))
     {
         start->weight++;
     }
-    update_weights(start->parent);
+    update_weights(root, start->parent);
 }
 
-Node* check_move(Node *root, int c){
-    Node* first;
+Node* check_move(Node* root, Node* node){
+    /*first = find_node(root, c);
+    if(first == NULL){
+        return NULL;
+    }*/
     Node* last;
-    first = find_node(root, c);
     int l = 0;
-    if(first != NULL) {
-        printf("Found %p (NN: %d)\n", first, first->node_number);
-        last = last_of_weight(root, first->weight, &l);
-        if (first != last) {
-            swap_nodes(first, last);
-        }
-        return last;
+    last = last_of_weight(root, node->weight, &l);
+    printf("Last: %p %d\n", last, last->node_number);
+    printf("Node: %p %d\n", node, node->node_number);
+    if(node != last && last != NULL) {
+        printf("Swapping %d w/ %d\n", node->node_number, last->node_number);
+        //swap_nodes(node, last);
     }
-    return NULL;
+    return last;
 }
 
-void check_move_weight(Node* root, int c){
-    Node* last = check_move(root, c);
-    if(!isNYT(root->left))
-    {
-        last->weight++;
+void check_move_weight(Node* root, Node* node){
+    Node* last = check_move(root, node);
+    if(last == NULL){
+        return;
     }
-    update_weights(last->parent);
+    last->weight++;
+    update_weights(root,last->parent);
 }
 
 /*
