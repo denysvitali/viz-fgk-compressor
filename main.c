@@ -70,8 +70,10 @@ static char * test_last_of_weight(){
 
     printHuffmanTree(ht);
 
-    int a = 512;
+    int a = 0;
     Node* node = last_of_weight(ht->root, 2, &a);
+
+    mu_assert("Last of Weight returned NULL", node != NULL);
     printf("A: %d\n", a);
     printf("Node: %p\n\n", node);
     mu_assert("Last Of Weight is not correct", a == 510);
