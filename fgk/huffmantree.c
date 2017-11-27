@@ -220,7 +220,7 @@ Node* check_move(Node *root, int c){
     first = find_node(root, c);
     int l = 0;
     if(first != NULL) {
-            printf("Found %p (NN: %d)\n", first, first->node_number);
+        printf("Found %p (NN: %d)\n", first, first->node_number);
         last = last_of_weight(root, first->weight, &l);
         if (first != last) {
             swap_nodes(first, last);
