@@ -6,6 +6,7 @@
 
 #ifndef ALGORITMI_FGK_COMPRESSION_UTILITIES_H
     #include "utilities.h"
+
 #endif
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
@@ -28,8 +29,19 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         old_nyt->element = -1;
         old_nyt->weight = 1;
 
+        //ht->root = old_nyt;
+        //ht->root->weight++;
+
         // Set the new NYT pointer
         ht->nyt = new_nyt;
+        printElement(ht->root);
+        printf("\n");
+
+        // Fix Weights
+        int i = 0;
+        Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
+        printf("Node: %p\n", n);
+        printf("Root: %p\n", ht->root);
 
         return ht;
     }
@@ -147,28 +159,36 @@ void check_move_weight(Node* root, char c){
 Node* last_of_weight(Node* root, int wtc, int* last){
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
+        debug("LOW: 1");
         if(root->weight == wtc && root->node_number > *last){
             *last = root->node_number;
             return root;
         }
+        printf("Root weight: %d\nWTC: %d\nRoot NN: %d, *last: %d\n", root->weight, wtc, root->node_number, *last);
+        debug("Returning NULL");
         return NULL;
     }
 
     Node* res;
     if(root->left != NULL){
+        debug("LOW: 2");
         res = last_of_weight(root->left, wtc, last);
         if(res != NULL) {
             if(res->node_number > *last)
                 return res;
+        } else{
+            warn("Res is null [2]");
         }
     }
-    else {
-        return NULL;
-    }
     if(root->right != NULL){
+        debug("LOW: 3");
         res = last_of_weight(root->left, wtc, last);
-        if(res->node_number > *last)
-            return res;
+        if(res != NULL) {
+            if (res->node_number > *last)
+                return res;
+        } else{
+            warn("Res is null [3]");
+        }
     }
     return NULL;
 }

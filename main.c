@@ -32,38 +32,6 @@ static char * test_foo(){
 	return 0;
 }
 
-/*static char * test_add_weight_to_element(){
-	int a_original_weight = 1;
-
-	struct Node root;
-	root.element = 1;
-	root.weight = 1;
-	root.node_number = 3;
-
-	struct Node nullel;
-	
-	nullel.element = '\0';
-	nullel.weight = 0;
-	nullel.node_number = 1;
-	nullel.left = NULL;
-	nullel.right = NULL;
-	
-	struct Node child;
-	child.element = 'a';
-	child.weight = a_original_weight;
-	child.node_number = 2;
-	child.left = NULL;
-	child.right = NULL;
-	
-	root.left = &nullel;
-	root.right = &child;
-	
-	add_weight_to_element(&root, 'a');
-
-	mu_assert("Inserted element isn't in the right place", root.right->weight == a_original_weight + 1);
-	return 0;
-}*/
-
 static char * test_create_huffman_tree(){
 	HuffmanTree* ht = createHuffmanTree();
     mu_assert("HT has no NYT", ht->nyt != NULL);
@@ -72,10 +40,46 @@ static char * test_create_huffman_tree(){
 	return 0;
 }
 
+static char * test_last_of_weight(){
+    HuffmanTree* ht = createHuffmanTree();
+    Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
+    Node* two_one = createNode(509, 3, -1, NULL, NULL, root);
+    Node* two_two = createNode(510, 1, 'A', NULL, NULL, root);
+
+    root->left = two_one;
+    root->right = two_two;
+
+    Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
+    Node* three_two = createNode(508, 2, 'B', NULL, NULL, two_one);
+
+    two_one->left = three_one;
+    two_one->right = three_two;
+
+    Node* four_one = createNYT(505);
+    Node* four_two = createNode(506, 1, 'C', NULL, NULL, three_one);
+
+    three_one->left = four_one;
+    three_one->right = four_two;
+
+    ht->nyt = four_one;
+
+    ht->root = root;
+
+    printf("Root L: %p\n", root->left);
+    printf("Root D: %p\n", root->right);
+
+    printHuffmanTree(ht);
+
+    //last_of_weight(ht->root,
+
+    return 0;
+}
+
 static char * all_tests(){
 	mu_run_test(test_foo);
 	//mu_run_test(test_add_weight_to_element);
 	mu_run_test(test_create_huffman_tree);
+    mu_run_test(test_last_of_weight);
 
 	return 0;
 }
