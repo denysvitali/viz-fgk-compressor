@@ -43,14 +43,14 @@ static char * test_create_huffman_tree(){
 static char * test_last_of_weight(){
     HuffmanTree* ht = createHuffmanTree();
     Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
-    Node* two_one = createNode(509, 3, -1, NULL, NULL, root);
-    Node* two_two = createNode(510, 1, 'A', NULL, NULL, root);
+    Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
+    Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
 
     root->left = two_one;
     root->right = two_two;
 
     Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
-    Node* three_two = createNode(508, 2, 'B', NULL, NULL, two_one);
+    Node* three_two = createNode(508, 1, 'A', NULL, NULL, two_one);
 
     two_one->left = three_one;
     two_one->right = three_two;
@@ -70,7 +70,10 @@ static char * test_last_of_weight(){
 
     printHuffmanTree(ht);
 
-    //last_of_weight(ht->root,
+    int a = 512;
+    Node* node = last_of_weight(ht->root, 2, &a);
+    printf("A: %d\n", a);
+    printf("Node: %p\n\n", node);
 
     return 0;
 }

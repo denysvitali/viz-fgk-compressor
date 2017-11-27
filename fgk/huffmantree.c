@@ -160,7 +160,7 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
         debug("LOW: 1");
-        if(root->weight == wtc && root->node_number > *last){
+        if(root->weight == wtc && root->node_number < *last){
             *last = root->node_number;
             return root;
         }
@@ -174,7 +174,7 @@ Node* last_of_weight(Node* root, int wtc, int* last){
         debug("LOW: 2");
         res = last_of_weight(root->left, wtc, last);
         if(res != NULL) {
-            if(res->node_number > *last)
+            if(res->node_number < *last)
                 return res;
         } else{
             warn("Res is null [2]");
@@ -182,9 +182,9 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     }
     if(root->right != NULL){
         debug("LOW: 3");
-        res = last_of_weight(root->left, wtc, last);
+        res = last_of_weight(root->right, wtc, last);
         if(res != NULL) {
-            if (res->node_number > *last)
+            if (res->node_number < *last)
                 return res;
         } else{
             warn("Res is null [3]");
