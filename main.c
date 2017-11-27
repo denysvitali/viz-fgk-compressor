@@ -75,6 +75,7 @@ static char * test_last_of_weight(){
     printf("A: %d\n", a);
     printf("Node: %p\n\n", node);
     mu_assert("Last Of Weight is not correct", a == 510);
+    mu_assert("Node Number isn't equal to pointed value", node->node_number == a);
     return 0;
 }
 

@@ -38,9 +38,10 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         printf("\n");
 
         // Fix Weights
-        int i = 0;
+        int i = 512;
         Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
-        printf("Node: %p\n", n);
+        printf("Node: %p, NN: %d\n", n, n->node_number);
+        printf("LOW NN: %d\n", i);
         printf("Root: %p\n", ht->root);
 
         return ht;
@@ -159,35 +160,33 @@ void check_move_weight(Node* root, char c){
 Node* last_of_weight(Node* root, int wtc, int* last){
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
-        debug("LOW: 1");
+        //debug("LOW: 1");
         if(root->weight == wtc && root->node_number < *last){
             *last = root->node_number;
             return root;
         }
-        printf("Root weight: %d\nWTC: %d\nRoot NN: %d, *last: %d\n", root->weight, wtc, root->node_number, *last);
-        debug("Returning NULL");
+        //printf("Root weight: %d\nWTC: %d\nRoot NN: %d, *last: %d\n", root->weight, wtc, root->node_number, *last);
+        //debug("Returning NULL");
         return NULL;
     }
 
     Node* res;
     if(root->left != NULL){
-        debug("LOW: 2");
+        //debug("LOW: 2");
         res = last_of_weight(root->left, wtc, last);
         if(res != NULL) {
-            if(res->node_number < *last)
                 return res;
         } else{
-            warn("Res is null [2]");
+            //warn("Res is null [2]");
         }
     }
     if(root->right != NULL){
-        debug("LOW: 3");
+        //debug("LOW: 3");
         res = last_of_weight(root->right, wtc, last);
         if(res != NULL) {
-            if (res->node_number < *last)
                 return res;
         } else{
-            warn("Res is null [3]");
+            //warn("Res is null [3]");
         }
     }
     return NULL;
