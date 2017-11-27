@@ -21,13 +21,13 @@ typedef struct{
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
 HuffmanTree* createHuffmanTree();
-Node* find_node(Node *root, char c);
+Node* find_node(Node *root, int c);
 Node* createNYT(int i);
 Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
 Node* findNYT(Node* root);
 int isNYT(Node *pNode);
-Node* check_move(Node *root, char c);
-void check_move_and_weight(Node* root, char c);
+Node* check_move(Node *root, int c);
+void check_move_and_weight(Node* root, int c);
 Node* last_of_weight(Node* root, int wtc, int* last);
 void swap_nodes(Node* node, Node* node2);
 void update_weights(Node* start);

@@ -28,6 +28,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         old_nyt->right = new_char;
         old_nyt->element = -1;
         old_nyt->weight = 1;
+        new_nyt->parent = old_nyt;
 
         //ht->root = old_nyt;
         //ht->root->weight++;
@@ -44,6 +45,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         printf("Node: %p, NN: %d\n", n, n->node_number);
         //printf("LOW NN: %d\n", i);
         printf("Root: %p\n", ht->root);
+        printf("Parent: %p\n", ht->nyt->parent);
+
+        update_weights(ht->nyt->parent);
 
         return ht;
     }
@@ -77,11 +81,11 @@ int isNYT(Node *pNode) {
     return 0;
 }
 
-Node* find_node(Node *root, char c){
+Node* find_node(Node *root, int c){
     if(root == NULL){
         return NULL;
     }
-    printf("Node: %p\n", root);
+    //printf("Node: %p\n", root);
     if(root->left == NULL && root->right == NULL){
         // Leaf, our root is an element
         if(root->element == c){
@@ -135,25 +139,6 @@ HuffmanTree* createHuffmanTree(){
     ht->nyt = ht->root;
     ht->tree[0] = ht->root;
     return ht;
-}
-
-
-Node* check_move(Node *root, char c){
-    Node* first;
-    Node* last;
-    first = find_node(root, c);
-    int l = 0;
-    last = last_of_weight(root, first->weight, &l);
-    if(first != last) {
-        swap_nodes(first, last);
-    }
-    return last;
-}
-
-void check_move_weight(Node* root, char c){
-    Node* last = check_move(root, c);
-    last->weight++;
-    update_weights(last->parent);
 }
 
 
@@ -218,12 +203,42 @@ int calculate_weight(Node* node){
 */
 void update_weights(Node* start){
     if(start == NULL){
+        warn("Update Weights called w/ start = NULL");
         return;
     }
     check_move(start, start->element);
-    start->weight++;
+    if(!isNYT(start->left))
+    {
+        start->weight++;
+    }
     update_weights(start->parent);
 }
+
+Node* check_move(Node *root, int c){
+    Node* first;
+    Node* last;
+    first = find_node(root, c);
+    int l = 0;
+    if(first != NULL) {
+            printf("Found %p (NN: %d)\n", first, first->node_number);
+        last = last_of_weight(root, first->weight, &l);
+        if (first != last) {
+            swap_nodes(first, last);
+        }
+        return last;
+    }
+    return NULL;
+}
+
+void check_move_weight(Node* root, int c){
+    Node* last = check_move(root, c);
+    if(!isNYT(root->left))
+    {
+        last->weight++;
+    }
+    update_weights(last->parent);
+}
+
 /*
 void update_numbers(HuffmanTree* ht){
 
