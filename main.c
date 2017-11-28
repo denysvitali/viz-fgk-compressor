@@ -27,7 +27,7 @@ void usage(){
 
 #if TEST == 1
 
-static char * test_foo(){
+static char * test_debug(){
 	mu_assert("Error, DEBUG is not enabled", TEST==1);
 	return 0;
 }
@@ -150,10 +150,28 @@ static char * test_huffman_coding(){
     return 0;
 }
 
+static char* test_utility_get_node_position(){
+    // Test getNodeLevel && getNodePosition on an empty HT
+    HuffmanTree* ht = createHuffmanTree();
+    mu_assert("NYT node level is not 0", getNodeLevel(ht->nyt) == 0);
+    mu_assert("NYT node is not at position 0", getNodePosition(ht, ht->nyt) == 0);
+
+    // Test getNodeLevel && getNodePosition on a 3 element HT
+    add_new_element(ht, 'A');
+    // getNodeLevel tests
+    mu_assert("A is not at Node Level 1", getNodeLevel(ht->root->right) == 1);
+    mu_assert("NYT is not at Node Level 1", getNodeLevel(ht->nyt) == 1);
+    // getNodePosition tests
+    mu_assert("NYT isn't at position 1 (Root->Left, 0-based index)", getNodePosition(ht, ht->nyt) == 1);
+    mu_assert("Root -> Right isn't at position 2 (0-based index)", getNodePosition(ht, ht->root->right) == 2);
+    return 0;
+}
+
 static char * all_tests(){
-	mu_run_test(test_foo);
-	//mu_run_test(test_add_weight_to_element);
+	mu_run_test(test_debug);
 	mu_run_test(test_create_huffman_tree);
+    mu_run_test(test_utility_get_node_position);
+	//mu_run_test(test_add_weight_to_element);
     mu_run_test(test_create_ht_array);
     mu_run_test(test_last_of_weight);
     mu_run_test(test_huffman_coding);
@@ -167,10 +185,11 @@ int main(int argc, char *argv[]){
 	#if TEST == 1
 		char *result = all_tests();
 		if (result != 0) {
-			printf("%s\n", result);
+			//printf("%s\n", result);
+            printf("Test failed.\n");
 		}
 		else {
-			printf("ALL TESTS PASSED\n");
+			test_successful("ALL TESTS PASSED");
 		}
 		printf("Tests run: %d\n", tests_run);
 		return 0;

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "../defines.h"
 #include "../console.h"
 #include "huffmantree.h"
@@ -23,6 +24,22 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         Node* new_nyt = createNYT(old_nyt->node_number-2);
         Node* new_char = createNode(old_nyt->node_number-1, 1, c, NULL, NULL, old_nyt);
 
+
+        // Fix HT Array
+        /*
+         *       (1)               OLD NYT              --- OLD NYT LEVEL
+         *  (N)      (C)    NEW NYT     NEW CHAR        --- NEW NYT LEVEL = NEW CHAR LEVEL = OLD NYT LEVEL + 1
+         */
+        int old_nyt_position = getNodePosition(ht, ht->nyt);
+        // int old_nyt_level = getNodeLevel(ht->nyt);
+
+        // int new_nyt_level = old_nyt_level+1;
+        int new_nyt_position = 2*(old_nyt_position+1)-1;
+        int new_char_position = new_nyt_position + 1;
+
+
+        printf("NNPOS: %d\n", new_nyt_position);
+
         // OLD NYT becomes our new parent for the new NYT and the new element
         old_nyt->left = new_nyt;
         old_nyt->right = new_char;
@@ -30,13 +47,18 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         old_nyt->weight = 1;
         new_nyt->parent = old_nyt;
 
+        ht->tree[old_nyt_position] = old_nyt;
+        ht->tree[new_nyt_position] = new_nyt;
+        ht->tree[new_char_position] = new_char;
+
+
         // Set the new NYT pointer
         ht->nyt = new_nyt;
 
-        if(ht->nyt == ht->root){
+        if(ht->nyt == ht->root) {
             ht->root = old_nyt;
         }
-        printElement(ht->root);
+        printHuffmanTree(ht);
         printf("\n");
 
         // Fix Weights
@@ -46,6 +68,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         if(n != NULL) {
             printf("Node: %p, NN: %d\n", n, n->node_number);
         }
+
+
+
         //printf("LOW NN: %d\n", i);
         printf("Root: %p\n", ht->root);
         printf("Parent: %p\n", ht->nyt->parent);
