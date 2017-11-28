@@ -28,3 +28,11 @@ void warn(char* string){
 void test_successful(char* string){
     printf("%s%s✓ %s%s%s\n", STYLE_COLOR_GREEN, STYLE_BOLD, string, STYLE_NO_BOLD, STYLE_COLOR_RESET);
 }
+
+void test_info(char* string){
+    printf("%s%s➡ Testing \"%s\"%s%s\n", STYLE_COLOR_CYAN, STYLE_BOLD, string, STYLE_NO_BOLD, STYLE_COLOR_RESET);
+}
+
+void test_info_end(){
+    printf("%s%s⬆️ Test completed%s%s\n\n", STYLE_COLOR_GREEN, STYLE_BOLD, STYLE_NO_BOLD, STYLE_COLOR_RESET);
+}
