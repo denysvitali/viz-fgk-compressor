@@ -359,6 +359,22 @@ void check_move_weight(Node* root, Node* node){
     update_weights(root,last->parent);
 }
 
+void* siblings(HuffmanTree* ht, int level, int* size){
+    // Slice of ht->array from 2^(level) - 1 to 2^(level+1)-2
+    // Size = 2^(level)
+    int array_size = (int) pow(2,level);
+    *size = array_size;
+
+    Node **siblings = malloc(sizeof(Node) * array_size);
+    int i;
+
+    for(i=0; i<*size; i++){
+        siblings[i] = ht->tree[*size - 1 + i];
+    }
+
+    return siblings;
+}
+
 /*
 void update_numbers(HuffmanTree* ht){
 

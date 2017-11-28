@@ -167,10 +167,38 @@ static char* test_utility_get_node_position(){
     return 0;
 }
 
+static char* test_utility_siblings(){
+    HuffmanTree* ht = createHuffmanTree();
+    add_new_element(ht, 'A');
+
+    int sibling_size;
+    Node** node_siblings = siblings(ht, 1, &sibling_size);
+    /*
+    int i;
+    for(i=0; i<sibling_size; i++){
+        Node s_el = *node_siblings[i];
+        printf("Sibling Node: %d\n", s_el.node_number);
+    }*/
+    mu_assert("Sibling Size is not 2", sibling_size == 2);
+
+    mu_assert("Sibiling 1 is NULL", node_siblings[0] != NULL);
+    mu_assert("Sibiling 1 is not NN 509", node_siblings[0]->node_number == 509);
+    mu_assert("Sibiling 1 is not the NYT", isNYT(node_siblings[0]));
+
+    mu_assert("Sibiling 2 is NULL", node_siblings[1] != NULL);
+    mu_assert("Sibiling 2 is not NN 510", node_siblings[1]->node_number == 510);
+    mu_assert("Sibiling 2 is not 'A'", node_siblings[1]->element == 'A');
+
+
+    //mu_assert("", ht->)
+    return 0;
+}
+
 static char * all_tests(){
 	mu_run_test(test_debug);
 	mu_run_test(test_create_huffman_tree);
     mu_run_test(test_utility_get_node_position);
+    mu_run_test(test_utility_siblings);
 	//mu_run_test(test_add_weight_to_element);
     mu_run_test(test_create_ht_array);
     mu_run_test(test_last_of_weight);

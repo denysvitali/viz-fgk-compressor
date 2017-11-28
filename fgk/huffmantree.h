@@ -33,3 +33,4 @@ void check_move_weight(Node* root, Node* node);
 Node* last_of_weight(Node* root, int wtc, int* last);
 void swap_nodes(Node* node, Node* node2);
 void update_weights(Node* root, Node* start);
+void* siblings(HuffmanTree* ht, int level, int* size);

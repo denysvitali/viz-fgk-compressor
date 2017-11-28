@@ -20,7 +20,7 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
 
 void printHuffmanTree(HuffmanTree *ht){
     printTree(ht->root, 0);
-    printf("\n");
+    printf("----\n");
     printHuffmanArray(ht);
 }
 
@@ -32,7 +32,8 @@ void printHuffmanArray(HuffmanTree* ht){
         if(ht->tree[i] == NULL){
             printf(" ");
         } else {
-            printf("%d (%d) @%d", ht->tree[i]->element, ht->tree[i]->weight, ht->tree[i]->node_number);
+            printElement(ht->tree[i]);
+            //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
         }
         if(i<HUFFMAN_ARRAY_SIZE-1){
             printf(",");
