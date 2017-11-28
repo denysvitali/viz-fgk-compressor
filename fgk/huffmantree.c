@@ -38,7 +38,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         int new_char_position = new_nyt_position + 1;
 
 
-        printf("NNPOS: %d\n", new_nyt_position);
+        //printf("NNPOS: %d\n", new_nyt_position);
 
         // OLD NYT becomes our new parent for the new NYT and the new element
         old_nyt->left = new_nyt;
@@ -58,33 +58,64 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         if(ht->nyt == ht->root) {
             ht->root = old_nyt;
         }
-        printHuffmanTree(ht);
-        printf("\n");
 
-        // Fix Weights
-        int i = 0;
-        printf("LOW params: %p, %d, %d\n", ht->root, old_nyt->weight, i);
-        Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
-        if(n != NULL) {
-            printf("Node: %p, NN: %d\n", n, n->node_number);
+        if(ht->root->left != ht->nyt){
+            ht->root->weight++;
+        }
+
+        int size;
+        Node** level_siblings = siblings(ht, getNodeLevel(old_nyt), &size);
+        if(size != 0){
+            // Last = level_siblings[size-1]
+
+            Node* last = level_siblings[size-1];
+
+            if(last != NULL) {
+                printf("Level Siblings Size: %d\n", size);
+                printf("Last sibling: %p\n", last);
+                printf("Last sibling Element: %x\n", last->element);
+                printf("Last Sibling: %d\n", last->node_number);
+
+                if (last != old_nyt) {
+                    printf("We need to swap %d w/ %d\n", old_nyt->node_number, last->node_number);
+                    swap_nodes(ht, old_nyt, last);
+                }
+            } else {
+                printf("Last is null.\n");
+            }
+
         }
 
 
+        //printHuffmanTree(ht);
+        //printf("\n");
 
-        //printf("LOW NN: %d\n", i);
-        printf("Root: %p\n", ht->root);
-        printf("Parent: %p\n", ht->nyt->parent);
 
-        //update_weights(ht->nyt->parent);
-        if(new_char->parent->parent != NULL){
-            debug("Calling Update weights");
-            // Printing tree before update weights
-            debug("Print before u_w");
-            printHuffmanTree(ht);
-            update_weights(ht->root, new_char->parent);
-            debug("Printing after u_w");
-            printHuffmanTree(ht);
-        }
+        //ht->root->weight++;
+//        // Fix Weights
+//        int i = 0;
+//        printf("LOW params: %p, %d, %d\n", ht->root, old_nyt->weight, i);
+//        Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
+//        if(n != NULL) {
+//            printf("Node: %p, NN: %d\n", n, n->node_number);
+//        }
+//
+//
+//
+//        //printf("LOW NN: %d\n", i);
+//        printf("Root: %p\n", ht->root);
+//        printf("Parent: %p\n", ht->nyt->parent);
+//
+//        //update_weights(ht->nyt->parent);
+//        if(new_char->parent->parent != NULL){
+//            debug("Calling Update weights");
+//            // Printing tree before update weights
+//            debug("Print before u_w");
+//            printHuffmanTree(ht);
+//            update_weights(ht->root, new_char->parent);
+//            debug("Printing after u_w");
+//            printHuffmanTree(ht);
+//        }
 
         return ht;
     }
@@ -218,54 +249,38 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     return res2;
 }
 
-void swap_nodes(Node* node, Node* node2){
-    Node* aux = node;
+void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
+    //Node* aux = node;
     if(node->parent == NULL || node2->parent == NULL){
         // Not going to swap a root.
         return;
     }
 
-    if(aux->parent == node2->parent){
-        printf("Parent L: %p R: %p\n", aux->parent->left, aux->parent->right);
 
-        Node* left = node->parent->left;
-        Node* right = node->parent->right;
+    int pos1 = getNodePosition(ht, node);
+    int pos2 = getNodePosition(ht, node2);
 
-        node->parent->left = right;
-        node->parent->right = left;
-        printf("Parent L: %p R: %p\n", aux->parent->left, aux->parent->right);
-    }
+    // TODO: Implement ht->tree switching here.
 
+    printf("Pos1: %d, Pos2: %d\n", pos1, pos2);
 
-    /*debug("Swapping nodes");
-    if(aux->parent->left == node){
-        debug("Node is on the left");
-        // Node is on the left
-        if(node2->parent->left == node2){
-            // Node 2 is on the left
-            debug("L");
-            *aux->parent->left = *node2->parent->left;
-        } else {
-            // Node 2 is on the right
-            debug("R");
-            *aux->parent->left = *node2->parent->right;
-        }
+    Node aux = *node;
+
+    if(node2->parent->left == node2){
+        node2->parent->left = node;
     } else {
-        // Node is on the right
-        debug("Node is on the right");
-        if(node2->parent->left == node2){
-            // Node 2 is on the left
-            debug("L");
-            *aux->parent->right = *node2->parent->left;
-        } else {
-            // Node 2 is on the right
-            debug("R");
-            *aux->parent->right = *node2->parent->right;
-        }
+        node2->parent->right = node;
     }
 
-    *node = *node2;
-    *node2 = *aux;*/
+    if(aux.parent->left == node){
+        (aux.parent)->left = node2;
+    } else {
+        (aux.parent)->right = node2;
+    }
+
+    node->node_number = node2->node_number;
+    node2->node_number = aux.node_number;
+
 }
 /*
 int calculate_weight(Node* node){
@@ -342,7 +357,7 @@ Node* check_move(Node* root, Node* node){
     printf("Node: %p %d\n", node, node->node_number);
     if(node != last && node != root && last != root) {
         printf("Swapping %d w/ %d\n", node->node_number, last->node_number);
-        swap_nodes(node, last);
+        // swap_nodes(node, last);
         int nn = node->node_number;
         node->node_number = last->node_number;
         last->node_number = nn;
