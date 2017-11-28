@@ -35,7 +35,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         if(ht->nyt == ht->root){
             ht->root = old_nyt;
-            ht->root->weight++;
         }
         printElement(ht->root);
         printf("\n");
@@ -258,6 +257,27 @@ int calculate_weight(Node* node){
     return res+res2;
 }
 */
+
+void update_weights_2(Node* root, Node* original, Node* start){
+    if(start == NULL){
+        warn("Update Weights called w/ start = NULL");
+        return;
+    } else {
+        debug("Non è null");
+    }
+
+    if(start->parent != NULL && root == start->parent->parent)
+    {
+        //root->weight++;
+        return;
+    }
+    check_move(root, start);
+    if(start != original){
+        start->weight++;
+    }
+    update_weights_2(root, original, start->parent);
+}
+
 void update_weights(Node* root, Node* start){
     if(start == NULL){
         warn("Update Weights called w/ start = NULL");
@@ -276,8 +296,7 @@ void update_weights(Node* root, Node* start){
         return;
     }
     check_move(root, start);
-    start->weight++;
-    update_weights(root, start->parent);
+    update_weights_2(root, start, start->parent);
 }
 
 Node* check_move(Node* root, Node* node){
@@ -299,6 +318,9 @@ Node* check_move(Node* root, Node* node){
     if(node != last && node != root && last != root) {
         printf("Swapping %d w/ %d\n", node->node_number, last->node_number);
         swap_nodes(node, last);
+        int nn = node->node_number;
+        node->node_number = last->node_number;
+        last->node_number = nn;
     }
     return last;
 }
