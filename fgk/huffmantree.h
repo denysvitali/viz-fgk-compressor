@@ -3,6 +3,8 @@
 
 #endif //ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
 
+#define HUFFMAN_ARRAY_SIZE 511
+
 typedef struct Node {
     int node_number;
     int weight;
@@ -15,7 +17,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[511];
+    Node* tree[HUFFMAN_ARRAY_SIZE];
     Node* nyt;
 } HuffmanTree;
 
