@@ -84,6 +84,18 @@ static char * test_last_of_weight(){
 static char * test_create_ht_array(){
     HuffmanTree* ht = createHuffmanTree();
     mu_assert("HT.TREE[0] is not NYT / Root", ht->tree[0] == ht->nyt && ht->tree[0] == ht->root);
+    add_new_element(ht, 'A');
+    mu_assert("HT.TREE[0] doesn't exist", ht->tree[0] != NULL);
+    mu_assert("HT.TREE[0] doesn't have weight 1", ht->tree[0]->weight == 1);
+    mu_assert("HT.TREE[0] doesn't have NN 511", ht->tree[0]->node_number == 511);
+    mu_assert("HT.TREE[0] has a parent", ht->tree[0]->parent == NULL);
+    mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
+    mu_assert("HT.TREE[1] is not the NYT", isNYT(ht->tree[1]));
+    mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
+    mu_assert("HT.TREE[2] doesn't exist", ht->tree[2] != NULL);
+    mu_assert("HT.TREE[2] doesn't have weight 1", ht->tree[2]->weight == 1);
+    mu_assert("HT.TREE[2] doesn't have NN 510", ht->tree[2]->node_number == 510);
+
     return 0;
 }
 
