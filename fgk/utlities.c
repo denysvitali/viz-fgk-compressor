@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "utilities.h"
 
 #ifndef ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
@@ -19,6 +20,25 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
 
 void printHuffmanTree(HuffmanTree *ht){
     printTree(ht->root, 0);
+    printf("\n");
+    printHuffmanArray(ht);
+}
+
+void printHuffmanArray(HuffmanTree* ht){
+    printf("HTA:\n");
+    printf("------\n");
+    int i;
+    for(i=0; i< HUFFMAN_ARRAY_SIZE; i++){
+        if(ht->tree[i] == NULL){
+            printf(" ");
+        } else {
+            printf("%d (%d) @%d", ht->tree[i]->element, ht->tree[i]->weight, ht->tree[i]->node_number);
+        }
+        if(i<HUFFMAN_ARRAY_SIZE-1){
+            printf(",");
+        }
+    }
+    printf("------\n");
 }
 
 void printTree(Node* root, int level){
@@ -78,6 +98,50 @@ void printElement(Node* root){
     else if(root->element == -1){
         printf("\"(%d,%d)\"", root->weight, root->node_number);
     } else {
-        printf("\"%X (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
+        printf("\"%x (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
     }
+}
+
+/*
+ * Return the node level
+ *          A
+ *      B       C
+ *   D    E   F   G
+ *
+ *   A is at NL 0
+ *   B&C are at NL 1
+ *   D,E,F,G are at NL 2
+ */
+
+int getNodeLevel(Node* node){
+    if(node->parent == NULL){
+        return 0;
+    }
+
+    Node* el = node->parent;
+    int level = 0;
+    while(el != NULL){
+        level++;
+        el = el->parent;
+    }
+    return level;
+}
+
+// Get node position in ht->elements array
+int getNodePosition(HuffmanTree* ht, Node* node){
+    int nl = getNodeLevel(node);
+    //printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
+
+    int nn = (int) pow(2,nl);
+    while(node->parent != NULL){
+        nl--;
+        if(node->parent->left == node){
+            // 0
+        } else {
+            //printf("Adding 2^%d\n", nl-1);
+            nn += pow(2, nl);
+        }
+        node = node->parent;
+    }
+    return nn-1;
 }
