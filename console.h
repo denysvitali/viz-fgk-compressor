@@ -9,4 +9,6 @@
 
 void debug(char* string);
 void error(char* string);
+void error_test_fail(char* string);
 void warn(char* string);
+void test_successful(char* string);
