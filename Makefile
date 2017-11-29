@@ -25,7 +25,7 @@ test:
 	$(CC) $(CFLAGS) $(TESTFLAGS) $(PRJ_FILES) -o viz-test && ./viz-test
 
  ifneq ($(detected_OS),Windows)
-	$(PROFILER) $(PROFILER_FLAGS) ./viz-test
+	#$(PROFILER) $(PROFILER_FLAGS) ./viz-test
  endif
 
 .PHONY: test
