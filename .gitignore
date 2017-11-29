@@ -39,6 +39,12 @@
 # Archive files
 /*.viz
 
+# Massif output
+/massif.out*
+
+# Memcheck Output
+*.memcheck
+
 # Intellij / CLion
 /.idea
 /cmake-build-debug
