@@ -41,6 +41,7 @@
 
 # Massif output
 /massif.out*
+*.massif
 
 # Memcheck Output
 *.memcheck
