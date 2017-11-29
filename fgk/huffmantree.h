@@ -23,6 +23,7 @@ typedef struct{
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
 HuffmanTree* createHuffmanTree();
+void freeHuffman(HuffmanTree* ht);
 Node* find_node(Node *root, int c);
 Node* createNYT(int i);
 Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);

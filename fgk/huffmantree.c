@@ -217,6 +217,10 @@ HuffmanTree* createHuffmanTree(){
     return ht;
 }
 
+void freeHuffman(HuffmanTree* ht){
+    free(ht);
+}
+
 
 
 Node* last_of_weight(Node* root, int wtc, int* last){

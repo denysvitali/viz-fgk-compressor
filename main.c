@@ -234,7 +234,7 @@ static char* test_swap_nodes(){
     mu_assert("ht[2] (Root -> Right) doesn't exist", ht->tree[2] != NULL);
     mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == first_p);*/
 
-
+    freeHuffman(ht);
 
     return 0;
 }
@@ -254,6 +254,7 @@ static char* test_utility_get_node_position(){
     // getNodePosition tests
     mu_assert("NYT isn't at position 1 (Root->Left, 0-based index)", getNodePosition(ht, ht->nyt) == 1);
     mu_assert("Root -> Right isn't at position 2 (0-based index)", getNodePosition(ht, ht->root->right) == 2);
+    freeHuffman(ht);
     return 0;
 }
 
@@ -280,6 +281,7 @@ static char* test_utility_siblings(){
     mu_assert("Sibling 2 is not NN 510", node_siblings[1]->node_number == 510);
     mu_assert("Sibling 2 is not 'A'", node_siblings[1]->element == 'A');
 
+    freeHuffman(ht);
 
     //mu_assert("", ht->)
     return 0;
@@ -461,8 +463,8 @@ int main(int argc, char *argv[]){
             printHuffmanTreeInfo(ht);
             i++;
         }
-
 		printf("\n");
+        freeHuffman(ht);
 		fclose(fh);
 		
 		return 0;
