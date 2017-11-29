@@ -267,10 +267,22 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     int pos1 = getNodePosition(ht, node);
     int pos2 = getNodePosition(ht, node2);
+    int lvl1 = getNodeLevel(node);
+    int lvl2 = getNodeLevel(node2);
 
     // TODO: Implement ht->tree switching here.
 
     printf("Pos1: %d, Pos2: %d\n", pos1, pos2);
+    int distance = pos1-pos2;
+
+    if(lvl1 == lvl2) {
+        int new_pos1 = pos1+distance;
+        int new_pos2 = pos2-distance;
+        //swap_tree();
+    }
+    if(lvl1 > lvl2);
+    if(lvl1 < lvl2);
+
 
     Node aux = *node;
 
