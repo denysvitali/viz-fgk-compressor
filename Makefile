@@ -28,4 +28,8 @@ test:
 	#$(PROFILER) $(PROFILER_FLAGS) ./viz-test
  endif
 
+massif: test
+	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
+	massif-visualizer viz-test.massif
+
 .PHONY: test
