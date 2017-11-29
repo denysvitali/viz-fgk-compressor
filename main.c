@@ -13,7 +13,6 @@
 #include "fgk/huffmantree.h"
 #include "fgk/utilities.h"
 
-test break (jenkins)
 int tests_run = 0;
 
 void usage(){
