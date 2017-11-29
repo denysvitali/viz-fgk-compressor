@@ -133,6 +133,10 @@ int getNodePosition(HuffmanTree* ht, Node* node){
     int nl = getNodeLevel(node);
     //printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
 
+    if(node == NULL){
+        return-1;
+    }
+
     int nn = (int) pow(2,nl);
     while(node->parent != NULL){
         nl--;

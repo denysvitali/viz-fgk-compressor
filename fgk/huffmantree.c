@@ -202,9 +202,16 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
 
 HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(511);
+    Node* tmp_nyt = createNYT(HUFFMAN_ARRAY_SIZE);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
+
+    int i;
+    for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
+        ht->tree[i] = NULL;
+        printf("%p", ht->tree[i]);
+    }
+
     ht->tree[0] = ht->root;
     return ht;
 }
