@@ -186,6 +186,7 @@ Node* createNYT(int i) {
     root->node_number = i;
     root->left = NULL;
     root->right = NULL;
+    root->parent = NULL;
     return root;
 }
 
