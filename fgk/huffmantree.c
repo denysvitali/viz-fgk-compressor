@@ -217,7 +217,23 @@ HuffmanTree* createHuffmanTree(){
     return ht;
 }
 
+void freeNode(Node* node){
+    if(node->left == NULL && node->right == NULL){
+        free(node);
+        return;
+    }
+
+    if(node->left != NULL){
+        freeNode(node->left);
+    }
+
+    if(node->right != NULL){
+        freeNode(node->right);
+    }
+}
+
 void freeHuffman(HuffmanTree* ht){
+    freeNode(ht->root);
     free(ht);
 }
 
