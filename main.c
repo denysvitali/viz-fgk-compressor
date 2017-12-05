@@ -99,6 +99,19 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[2] doesn't have weight 1", ht->tree[2]->weight == 1);
     mu_assert("HT.TREE[2] doesn't have NN 510", ht->tree[2]->node_number == 510);
 
+    add_new_element(ht, 'B');
+    printHuffmanTree(ht);
+
+    mu_assert("HT.TREE[0] does not exist", ht->tree[0] != NULL);
+    mu_assert("HT.TREE[0] element is not 256", ht->tree[0]->element == -1);
+    mu_assert("HT.TREE[0] weight is not 2", ht->tree[0]->weight == 2);
+    mu_assert("HT.TREE[0] NN is not 511", ht->tree[0]->node_number == 511);
+
+    //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
+
+    mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
+    mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
+
     return 0;
 }
 
@@ -288,15 +301,15 @@ static char* test_utility_siblings(){
 
 static char * all_tests(){
 	mu_run_test(test_debug);
-    mu_run_test(test_swap_nodes);
+    mu_run_test(test_create_ht_array);
+    /*mu_run_test(test_swap_nodes);
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_get_node_position);
     mu_run_test(test_utility_siblings);
 	//mu_run_test(test_add_weight_to_element);
-    mu_run_test(test_create_ht_array);
     mu_run_test(test_last_of_weight);
-    mu_run_test(test_huffman_coding);
+    mu_run_test(test_huffman_coding);*/
 
 	return 0;
 }

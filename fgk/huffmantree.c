@@ -279,6 +279,10 @@ Node* last_of_weight(Node* root, int wtc, int* last){
 
 void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //Node* aux = node;
+    if(node == NULL || node2 == NULL){
+        // Null Pointer Exception
+        return;
+    }
     if(node->parent == NULL || node2->parent == NULL){
         // Not going to swap a root.
         return;
@@ -292,16 +296,103 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     // TODO: Implement ht->tree switching here.
 
+    printHuffmanArray(ht);
+
     char buffer[500];
-    sprintf(buffer, "[Swapping] Pos1: %d, Pos2: %d", pos1, pos2);
+    sprintf(buffer, "[Swapping] Pos1: %d (NN %d), Pos2: %d (NN %d)", pos1, node->node_number, pos2, node2->node_number);
     debug(buffer);
 
     int distance = pos1-pos2;
 
     if(lvl1 == lvl2) {
-        int new_pos1 = pos1+distance;
-        int new_pos2 = pos2-distance;
+        int new_pos1 = pos2;
+        int new_pos2 = pos1;
         //swap_tree();
+
+        /*
+         *                         00                                   L: 0
+         *         01                                02                 L: 1
+         *    03         04                    05          06           L: 2
+         * 07    08   09    10              11    12    13    14        L: 3
+         *
+         * =================== SWAP 01 w/ 02 ===================
+         *
+         *                         00                                   L: 0
+         *         02                                01                 L: 1
+         *    05         06                    03          04           L: 2
+         * 11    12    13    14             07    08   09    10         L: 3
+         *
+         * 00,01,02,03,04,05,06,07,08,09,10,11,12,13,14
+         * 00,02,01,05,06,03,04,11,12,13,14,07,08,09,10
+         *   |1 |1 |--2--|--2--|-----4-----|-----4-----
+         *   |
+         *   |____[SWAP HERE]
+         *
+         * 01 => 02 (+1)
+         * 03 => 05 (+2)
+         * 04 => 06 (+2)
+         * 06 => 10 (+4)
+         * 07 => 11 (+4)
+         * 08 => 12 (+4)
+         * 09 => 13 (+4)
+         *
+         * 02 => 01 (-1)
+         * 05 => 03 (-2)
+         * 06 => 04 (-2)
+         * 10 => 06 (-4)
+         * 11 => 07 (-4)
+         * 12 => 08 (-4)
+         * 13 => 09 (-4)
+         *
+         */
+
+        Node* ht_clone[HUFFMAN_ARRAY_SIZE];
+        int i;
+        for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+            ht_clone[i] = ht->tree[i];
+        }
+
+        // Swap primary nodes
+
+        ht_clone[pos1] = ht->tree[pos2];
+        ht_clone[pos2] = ht->tree[pos1];
+
+        ht_clone[pos1]->parent->left = ht->tree[pos1];
+        ht_clone[pos1]->parent->right = ht->tree[pos2];
+
+        printf("NN: %d\n", ht_clone[pos1]->parent->node_number);
+        printf("L) NN: %d\n", ht_clone[pos1]->parent->left->node_number);
+        printf("R) NN: %d\n", ht_clone[pos1]->parent->right->node_number);
+
+        for(i=pos1+2; i<=pos2+2; i++){
+            ht_clone[i] = ht->tree[i+2];
+        }
+
+        for(i=pos1+4; i<=pos2+4; i++){
+            ht_clone[i] = ht->tree[i-2];
+        }
+
+        for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+            ht->tree[i] = ht_clone[i];
+        }
+        printHuffmanArray(ht);
+
+/*
+        if(pos1 > pos2){
+            debug("POS1 > POS2");
+        } else if(pos2 > pos1){
+            debug("POS2 > POS1");
+
+            debug("END");
+        } else {
+            warn("SWAP between nodes of equal position doesn't make any sense");
+            return;
+        }
+
+        sprintf(buffer, "[SWAP-NODES] %d, %d", new_pos1, new_pos2);
+        debug(buffer);
+        */
+
     }
     if(lvl1 > lvl2);
     if(lvl1 < lvl2);
