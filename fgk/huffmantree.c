@@ -210,7 +210,7 @@ HuffmanTree* createHuffmanTree(){
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
         ht->tree[i] = NULL;
-        printf("%p", ht->tree[i]);
+        //printf("%p", ht->tree[i]);
     }
 
     ht->tree[0] = ht->root;
@@ -292,7 +292,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     // TODO: Implement ht->tree switching here.
 
-    printf("Pos1: %d, Pos2: %d\n", pos1, pos2);
+    char buffer[500];
+    sprintf(buffer, "[Swapping] Pos1: %d, Pos2: %d", pos1, pos2);
+    debug(buffer);
+
     int distance = pos1-pos2;
 
     if(lvl1 == lvl2) {
