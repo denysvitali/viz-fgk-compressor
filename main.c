@@ -290,6 +290,7 @@ static char * all_tests(){
 	mu_run_test(test_debug);
     mu_run_test(test_swap_nodes);
 	mu_run_test(test_create_huffman_tree);
+	mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_get_node_position);
     mu_run_test(test_utility_siblings);
 	//mu_run_test(test_add_weight_to_element);
