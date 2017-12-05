@@ -39,7 +39,7 @@ void printHuffmanArray(HuffmanTree* ht){
             printf(",");
         }
     }
-    printf("------\n");
+    printf("\n------\n");
 }
 
 void printTree(Node* root, int level){
