@@ -112,6 +112,28 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
     mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
 
+    mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
+    mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
+    mu_assert("HT.TREE[1] doesn't have weight 1", ht->tree[1]->weight == 1);
+    mu_assert("HT.TREE[1] left is not null", ht->tree[1]->left == NULL);
+    mu_assert("HT.TREE[1] right is not null", ht->tree[1]->right == NULL);
+
+    mu_assert("HT.TREE[2] doesn't exist", ht->tree[2] != NULL);
+    mu_assert("HT.TREE[2] doesn't have NN 509", ht->tree[2]->node_number == 510);
+    mu_assert("HT.TREE[2] doesn't have weight 1", ht->tree[2]->weight == 1);
+    mu_assert("HT.TREE[2] left is not ht->tree[5]", ht->tree[2]->left == ht->tree[5]);
+    mu_assert("HT.TREE[2] right is not ht->tree[6]", ht->tree[2]->right == ht->tree[6]);
+
+
+    mu_assert("HT.TREE[2] left is NULL", ht->tree[2]->left != NULL);
+    mu_assert("HT.TREE[2] right is NULL", ht->tree[2]->right != NULL);
+    mu_assert("HT.TREE[2] left is not the NYT", isNYT(ht->tree[2]->left));
+    mu_assert("HT.TREE[2] left doesn't have NN 507", ht->tree[2]->left->node_number == 507);
+    mu_assert("HT.TREE[2] right doesn't have NN 508", ht->tree[2]->right->node_number == 508);
+    mu_assert("HT.TREE[2] right doesn't have weight 1", ht->tree[2]->right->weight == 1);
+
+
+
     freeHuffman(ht);
 
     return 0;
