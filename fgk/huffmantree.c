@@ -235,8 +235,8 @@ void freeNode(Node* node){
 }
 
 void freeHuffman(HuffmanTree* ht){
-    freeNode(ht->root);
     freeNode(ht->nyt);
+    freeNode(ht->root);
     free(ht);
 }
 
