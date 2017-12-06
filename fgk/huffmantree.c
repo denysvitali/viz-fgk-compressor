@@ -307,8 +307,11 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     int distance = pos1-pos2;
 
     if(lvl1 == lvl2) {
-        int new_pos1 = pos2;
-        int new_pos2 = pos1;
+        int new_pos1 = pos1-distance;
+        int new_pos2 = pos2+distance;
+         move_subtree(ht, pos1, new_pos1, lvl1);
+        //int new_pos1 = pos2;
+        //int new_pos2 = pos1;
         //swap_tree();
 
         /*
@@ -433,6 +436,23 @@ int calculate_weight(Node* node){
     return res+res2;
 }
 */
+
+void move_subtree(HuffmanTree* ht, int pos, int new_pos, int subroot_lvl){
+    if(ht->tree[pos]->left == NULL && ht->tree[pos]->right == NULL){
+        int lvl = getNodeLevel(ht->tree[pos]), diff = lvl - subroot_lvl;
+        new_pos += pow(2, diff);
+    }
+
+    if(ht->tree[pos]->left != NULL){
+        int lvl = getNodeLevel(ht->tree[pos]), relative_lvl = lvl-subroot_lvl;
+        /*
+        new_pos += pow(2, relative_lvl);
+        new_pos2 += pow(2, relative_lvl);*/
+        move_subtree(ht, getNodePosition(ht, ht->tree[pos]->left), new_pos, relative_lvl);
+    }
+
+
+}
 
 void update_weights_2(Node* root, Node* original, Node* start){
     if(start == NULL){
