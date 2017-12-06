@@ -35,4 +35,5 @@ Node* last_of_weight(Node* root, int wtc, int* last);
 void swap_nodes(HuffmanTree* ht, Node* node, Node* node2);
 void update_weights(Node* root, Node* start);
 void* siblings(HuffmanTree* ht, int level, int* size);
-void move_subtree(HuffmanTree* ht, int pos, int new_pos, int subroot_lvl);
+void swap_nodes_array(HuffmanTree* ht, int pos, int pos2);
+void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2);
