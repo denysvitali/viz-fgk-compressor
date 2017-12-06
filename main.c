@@ -112,6 +112,8 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
     mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
 
+    free(ht);
+
     return 0;
 }
 
