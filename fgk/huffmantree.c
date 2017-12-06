@@ -86,6 +86,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         }
 
+        free(level_siblings);
+
 
         //printHuffmanTree(ht);
         //printf("\n");
