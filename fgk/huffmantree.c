@@ -232,10 +232,11 @@ void freeNode(Node* node){
     if(node->right != NULL){
         freeNode(node->right);
     }
+
+    free(node);
 }
 
 void freeHuffman(HuffmanTree* ht){
-    freeNode(ht->nyt);
     freeNode(ht->root);
     free(ht);
 }
