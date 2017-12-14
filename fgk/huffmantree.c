@@ -442,23 +442,32 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     Node* tmp;
     int nn;
     tmp = ht->tree[pos];
+    char db[50];
+    sprintf(db, "swapping pos %d and %d", pos, pos2);
+    debug(db);
     if(tmp == NULL || tmp->parent == NULL || tmp->parent->left == NULL) {
+        debug("check4null true");
         return;
     }
     if(tmp == tmp->parent->left){
+        debug("parent left");
         tmp->parent->left = ht->tree[pos2];
     }else{
         if(tmp->parent->right != NULL) {
+            debug("parent right");
             tmp->parent->right = ht->tree[pos2];
         }
     }
     if(ht->tree[pos2] == NULL || ht->tree[pos2]->parent == NULL || ht->tree[pos2]->parent->left == NULL ) {
+        debug("check4null true");
         return;
     }
     if(ht->tree[pos2] == ht->tree[pos2]->parent->left){
+        debug("parent 2 left");
         ht->tree[pos2]->parent->left = tmp;
     }else{
         if(ht->tree[pos2]->parent->right != NULL) {
+            debug("parent 2 right");
             ht->tree[pos2]->parent->right = tmp;
         }
     }
@@ -477,7 +486,7 @@ void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2){
     //int lvl = getNodeLevel(ht->tree[pos]), relative_lvl = lvl-subroot_lvl;
 
     int child_left = 2*pos+1;
-    int child_left2 = 2*pos+1;
+    int child_left2 = 2*pos2+1;
     if(child_left >= HUFFMAN_ARRAY_SIZE || child_left>= HUFFMAN_ARRAY_SIZE){
         return;
     }
