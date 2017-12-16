@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <math.h>
-#include "utilities.h"
+#include <malloc.h>
+#include <string.h>
+
+#ifndef  ALGORITMI_FGK_COMPRESSION_UTILITIES_H
+    #include "utilities.h"
+#include "../console.h"
+
+#endif
 
 #ifndef ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
     #include "huffmantree.h"
@@ -24,6 +31,22 @@ void printHuffmanTree(HuffmanTree *ht){
     printHuffmanArray(ht);
 }
 
+void saveHuffmanTree(HuffmanTree *ht, char* filename){
+    char* ht_string = getTree(ht->root, 0);
+    FILE* fh;
+    if((fh = fopen(filename, "w+")) != NULL){
+        debug("[Save Huffman Tree] Saving file...");
+        if(!ferror(fh)){
+            fprintf(fh, ht_string);
+        } else{
+            error((char *) ferror(fh));
+        }
+        fclose(fh);
+    } else {
+        error("[Save Huffman Tree] Unable to open FH");
+    }
+}
+
 void printHuffmanArray(HuffmanTree* ht){
     printf("HTA:\n");
     printf("------\n");
@@ -42,7 +65,8 @@ void printHuffmanArray(HuffmanTree* ht){
     printf("\n------\n");
 }
 
-void printTree(Node* root, int level){
+char* getTree(Node* root, int level) {
+    char* string = malloc(sizeof(char)*500);
 
     /* Expected output
      *
@@ -61,46 +85,59 @@ void printTree(Node* root, int level){
     // We use webgraphviz.com
 
     if(root == NULL){
-        return;
+        return "";
     }
 
     if(level == 0){
-        printf("graph G {\n");
+        sprintf(string + strlen(string), "graph G {\n");
     }
 
-    printElement(root);
+    sprintf(string + strlen(string), "%s", getElement(root));
 
     if(root->left == NULL && root->right == NULL){
-        printf(";\n");
+        sprintf(string + strlen(string), ";\n");
     }
     else{
-        printf(" -- ");
-        printTree(root->left, level+1);
-        printElement(root);
+        sprintf(string + strlen(string), " -- ");
+        sprintf(string + strlen(string), "%s", getTree(root->left, level+1));
+        sprintf(string + strlen(string), "%s", getElement(root));
         if(root->right != NULL) {
-            printf(" -- ");
-            printTree(root->right, level + 1);
+            sprintf(string + strlen(string)," -- ");
+            sprintf(string + strlen(string), "%s", getTree(root->right, level + 1));
         }
 
     }
 
     if(level == 0){
-        printf("}\n");
+        sprintf(string + strlen(string), "}\n");
     }
+
+    return string;
 }
 
-void printElement(Node* root){
+void printTree(Node* root, int level){
+    printf("%s", getTree(root, level));
+}
+
+char* getElement(Node* root){
+    char* string = malloc(sizeof(char) * 100);
+
     // Node:
     // character (weight, node number)
 
     if(isNYT(root)){
-        printf("\"NYT (%d,%d)\"", root->weight, root->node_number);
+        sprintf(string, "\"NYT (%d,%d)\"", root->weight, root->node_number);
     }
     else if(root->element == -1){
-        printf("\"(%d,%d)\"", root->weight, root->node_number);
+        sprintf(string, "\"(%d,%d)\"", root->weight, root->node_number);
     } else {
-        printf("\"%x (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
+        sprintf(string, "\"%x (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
     }
+    return string;
+}
+
+void printElement(Node* root){
+    printf("%s", getElement(root));
 }
 
 /*
@@ -149,4 +186,46 @@ int getNodePosition(HuffmanTree* ht, Node* node){
         node = node->parent;
     }
     return nn-1;
+}
+
+// Checks the Huffman Tree for broken relationships
+// Returns the first NN that breaks the relationship
+
+int checkHuffmanRelationships(HuffmanTree* ht){
+    if(ht->root == NULL){
+        return -1;
+    }
+
+    return checkNodeRelationships(ht->root);
+}
+
+int checkNodeRelationships(Node* node){
+    if(node == NULL){
+        return -1;
+    }
+
+    int result;
+
+    if(node->left != NULL){
+        if(node->left->parent != node){
+            return node->left->node_number;
+        }
+        result = checkNodeRelationships(node->left);
+
+        if(result != 0){
+            return result;
+        }
+    }
+
+    if(node->right != NULL){
+        if(node->right->parent != node){
+            return node->right->node_number;
+        }
+        result = checkNodeRelationships(node->right);
+        if(result != 0){
+            return result;
+        }
+    }
+
+    return 0;
 }

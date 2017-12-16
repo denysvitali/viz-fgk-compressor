@@ -49,3 +49,7 @@
 # Intellij / CLion
 /.idea
 /cmake-build-debug
+
+
+# Graphviz dot files
+.dot

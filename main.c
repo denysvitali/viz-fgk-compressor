@@ -133,7 +133,6 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[2] right doesn't have weight 1", ht->tree[2]->right->weight == 1);
 
 
-
     freeHuffman(ht);
 
     return 0;

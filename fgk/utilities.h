@@ -11,9 +11,16 @@
     #include "huffmantree.h"
 #endif
 
+char* getTree(Node* root, int level);
 void printTree(Node* root, int level);
+
+
+char* getElement(Node* root);
 void printElement(Node* root);
+
 void printHuffmanTree(HuffmanTree *ht);
+void saveHuffmanTree(HuffmanTree *ht, char* filename);
+
 void printHuffmanTreeInfo(HuffmanTree *ht);
 void printHuffmanArray(HuffmanTree* ht);
 int getNodeLevel(Node* node);

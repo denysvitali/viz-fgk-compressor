@@ -308,10 +308,11 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     //int distance = pos1-pos2;
 
+
     if(lvl1 == lvl2) {
         //int new_pos1 = pos1-distance;
         //int new_pos2 = pos2+distance;
-        swapping_array_recursive(ht, pos1, pos2);
+        //swapping_array_recursive(ht, pos1, pos2);
         //int new_pos1 = pos2;
         //int new_pos2 = pos1;
         //swap_tree();
@@ -352,75 +353,95 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
          * 13 => 09 (-4)
          *
          */
-        return;
-        Node* ht_clone[HUFFMAN_ARRAY_SIZE];
-        int i;
+
+        debug("Saving Huffman Tree File...");
+        saveHuffmanTree(ht, "./ht_swap.dot");
+
+        int i,j;
+        int maxlevel = (int) (log(HUFFMAN_ARRAY_SIZE + 1) / log(2));
+        maxlevel -= lvl1;
+
+        int cpos1 = pos1;
+        int cpos2 = pos2;
+
+        Node** ht_copy = ht->tree;
+
+        for(i=0; i<maxlevel; i++){
+
+            for(j=0; j < 2; j++) {
+                printf("Currently at level %d / %d \n", i, maxlevel);
+                if (ht_copy[cpos1 + j] != NULL) {
+                    printElement(ht_copy[cpos1 + j]);
+                    printf("\n");
+                } else {
+                    printf("CPOS1 (%d) is NULL\n", cpos1 + j);
+                }
+
+
+                printf("Cpos: %d, J: %d, 2^%d = %d\n", cpos1, j, i, (int) pow(2, i));
+
+                Node *prev = ht_copy[cpos1 + j];
+                printf("Prev: ");
+                printElement(prev);
+                printf("\n");
+                printf("%d = %d\n", cpos1+j, cpos1 + j + (int) pow(2, i));
+                ht_copy[cpos1 + j] = ht_copy[cpos1 + j + (int) pow(2, i)];
+                ht_copy[cpos1 + j + (int) pow(2, i)] = prev;
+
+
+                if (j == 1) {
+                    cpos1 += (int) pow(2, i);
+                    if(ht->tree[cpos1] == NULL && ht->tree[cpos1 + j] == NULL){
+                        // If the HT is correct, there shouldn't be any node that has a NULL parent.
+                        // For this reason, we're going to stop the for loop here to save some resources / time.
+                        break;
+                    }
+                }
+            }
+        }
+
         for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-            ht_clone[i] = ht->tree[i];
+            ht->tree[i] = ht_copy[i];
         }
 
-        // Swap primary nodes
+        // Swap nodes w/ pointers (easy!)
 
-        ht_clone[pos1] = ht->tree[pos2];
-        ht_clone[pos2] = ht->tree[pos1];
+        Node* parent1 = node->parent;
+        Node* parent2 = node2->parent;
 
-        ht_clone[pos1]->parent->left = ht->tree[pos1];
-        ht_clone[pos1]->parent->right = ht->tree[pos2];
+        Node* aux;
 
-        printf("NN: %d\n", ht_clone[pos1]->parent->node_number);
-        printf("L) NN: %d\n", ht_clone[pos1]->parent->left->node_number);
-        printf("R) NN: %d\n", ht_clone[pos1]->parent->right->node_number);
+        if(parent1->left == node){
+            if(parent2->left == node2){
+                // Node is on the left of Parent1
+                // Node2 is on the left of Parent2
 
-        for(i=pos1+2; i<=pos2+2; i++){
-            ht_clone[i] = ht->tree[i+2];
-        }
+                parent1->left = node2;
+                parent2->left = node;
+            } else {
+                // Node is on the left of Parent1
+                // Node2 is on the right of Parent 2
 
-        for(i=pos1+4; i<=pos2+4; i++){
-            ht_clone[i] = ht->tree[i-2];
-        }
-
-        for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-            ht->tree[i] = ht_clone[i];
-        }
-        printHuffmanArray(ht);
-
-/*
-        if(pos1 > pos2){
-            debug("POS1 > POS2");
-        } else if(pos2 > pos1){
-            debug("POS2 > POS1");
-
-            debug("END");
+                parent1->left = node2;
+                parent2->right = node;
+            }
         } else {
-            warn("SWAP between nodes of equal position doesn't make any sense");
-            return;
+            if(parent2->left == node2){
+                // Node is on the right of Parent1
+                // Node2 is on the left of Parent2
+
+                parent1->right = node2;
+                parent2->left = node;
+            } else {
+                // Node is on the right of Parent1
+                // Node2 is on the right of Parent2
+
+                parent1->right = node2;
+                parent2->right = node;
+            }
         }
 
-        sprintf(buffer, "[SWAP-NODES] %d, %d", new_pos1, new_pos2);
-        debug(buffer);
-        */
-
     }
-    if(lvl1 > lvl2);
-    if(lvl1 < lvl2);
-
-
-    Node aux = *node;
-
-    if(node2->parent->left == node2){
-        node2->parent->left = node;
-    } else {
-        node2->parent->right = node;
-    }
-
-    if(aux.parent->left == node){
-        (aux.parent)->left = node2;
-    } else {
-        (aux.parent)->right = node2;
-    }
-
-    node->node_number = node2->node_number;
-    node2->node_number = aux.node_number;
 
 }
 /*
