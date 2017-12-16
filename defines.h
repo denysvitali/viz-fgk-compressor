@@ -20,4 +20,3 @@
 /* Compressor Magic Number */
 #define MAGIC_NUMBER 0x517D3C0
 #define NYT_ELEMENT 256
-#define TEST 1
