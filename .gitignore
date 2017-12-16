@@ -52,4 +52,4 @@
 
 
 # Graphviz dot files
-.dot
+*.dot
