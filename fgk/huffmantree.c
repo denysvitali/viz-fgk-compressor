@@ -305,6 +305,9 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         return;
     }
 
+    debug("Begin Swap");
+    printHuffmanTree(ht);
+
 
     int pos1 = getNodePosition(ht, node);
     int pos2 = getNodePosition(ht, node2);
@@ -312,6 +315,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     int lvl2 = getNodeLevel(node2);
 
     // TODO: Implement ht->tree switching here.
+    // WIP
 
     printHuffmanArray(ht);
 
@@ -377,50 +381,62 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         int cpos1 = pos1;
         int cpos2 = pos2;
 
-        Node** ht_copy = ht->tree;
+        Node** ht_copy = malloc(sizeof(ht->tree));
+        for(i = 0; i<sizeof(ht->tree)/sizeof(Node*); i++){
+            ht_copy[i] = ht->tree[i];
+        }
+
+        int stop = 0;
 
         for(i=0; i<maxlevel; i++){
 
-            for(j=0; j < 2; j++) {
-                int elementIndex = cpos1 + j;
+            int elementIndex = cpos1;
+            //printTree(generateHTFromArray(ht->tree)->root, 0);
+            //printHuffmanArray(ht);
+            printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
 
-
-                printTree(generateHTFromArray(ht->tree)->root, 0);
-                //printHuffmanArray(ht);
-                printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
-
-                if (ht->tree[elementIndex] != NULL) {
-                    printElement(ht->tree[elementIndex]);
-                    printf("\n");
-                } else {
-                    printf("CPOS1 (%d) is NULL\n", cpos1 + j);
-                }
-
-
-                printf("Cpos: %d, J: %d, 2^%d = %d\n", cpos1, j, i, (int) pow(2, i));
-
-                Node *prev = ht_copy[cpos1 + j];
-                if(prev != NULL) {
-                    printf("Prev: ");
-                    printElement(prev);
-                    printf("\n");
-                } else {
-                    printf("PREV is null!\n");
-                }
-                printf("%d = %d\n", cpos1+j, cpos1 + j + (int) pow(2, i));
-                ht_copy[cpos1 + j] = ht_copy[cpos1 + j + (int) pow(2, i)];
-                ht_copy[cpos1 + j + (int) pow(2, i)] = prev;
-
-
-                if (j == 1) {
-                    cpos1 += (int) pow(2, i);
-                    if(ht->tree[cpos1] == NULL && ht->tree[cpos1 + j] == NULL){
-                        // If the HT is correct, there shouldn't be any node that has a NULL parent.
-                        // For this reason, we're going to stop the for loop here to save some resources / time.
-                        break;
-                    }
-                }
+            /*if (ht->tree[elementIndex] != NULL) {
+                printElement(ht->tree[elementIndex]);
+                printf("\n");
+            } else {
+                printf("CPOS1 (%d) is NULL\n", cpos1);
             }
+             */
+
+            //printNodeArray(ht_copy);
+            printf("\n");
+            //                                                      ROOT
+            // 01 = 2^1 + 0 + 0    (LVL 0)             (1,509)                       41 (1,510)        [SWAP HAPPENS HERE]
+            // 03 = 2^2 + 1 + 0    (LVL 1)    NYT (0,507)    42 (1,508)         NULL           NULL
+            // 04 = 2^2 + 1 + 1    (LVL 1)
+            // 07 = 2^3 + 3 + 0    (LVL 2)   NULL    NULL      NULL    NULL    NULL  NULL    NULL    NULL
+            // 08 = 2^3 + 3 + 1    (LVL 2)
+            // 09 = 2^3 + 3 + 2    (LVL 2)
+            // 10 = 2^3 + 3 + 3    (LVL 2)  2^3 + 3 + (2^4 - 1)
+            // a  = b
+            // 1, 3 | 4, 7 | 8 | 9 | 10
+
+            // 2^0, 2^2 - 1 | 2^2, 2^3 - 1 | 2^3 | 2^3 + 1 | 2^3 + 2
+
+
+            for(j=(int) pow(2,i); j < ((int) pow(2,i+1)); j++) {
+                int a =  j + (int) pow(2,i)-1;
+                int b = (int) pow(2,i) + (int) pow(2,i)-1 + j;
+
+                printf("a: %d, b = %d\n", a,b);
+
+                Node* prev = ht->tree[a];
+                ht_copy[a] = ht_copy[b];
+                ht_copy[b] = prev;
+            }
+
+            cpos1 += pow(2,i);
+
+            /*if(ht->tree[cpos1] == NULL && ht->tree[cpos1 + 2] == NULL){
+                // If the HT is correct, there shouldn't be any node that has a NULL parent.
+                // For this reason, we're going to stop the for loop here to save some resources / time.
+                break;
+            }*/
         }
 
         for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
@@ -437,16 +453,23 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 
         if(parent1_left == node){
+            // node is on the left of its parent
             parent1->left = node2;
         } else {
+            // node is on the right of its parent
             parent1->right = node2;
         }
 
         if(parent2_left == node2){
+            // node2 is on the left of its parent
             parent2->left = node;
         } else {
+            // node2 is on the right of its parent
             parent2->right = node;
         }
+
+        debug("End swap");
+        printHuffmanTree(ht);
 
     }
 

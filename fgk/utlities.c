@@ -43,35 +43,41 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
         debug("[Save Huffman Tree] Saving file...");
         if(!ferror(fh)){
             fprintf(fh, ht_string);
+            fclose(fh);
         } else{
-            error((char *) ferror(fh));
+            char buffer[50];
+            snprintf(buffer, 50, "Error: %d",  ferror(fh));
+            error(buffer);
         }
-        fclose(fh);
     } else {
         error("[Save Huffman Tree] Unable to open FH");
     }
 }
 
-void printHuffmanArray(HuffmanTree* ht){
-    printf("HTA:\n");
-    printf("------\n");
+void printNodeArray(Node** array){
     int i;
-    for(i=0; i< HUFFMAN_ARRAY_SIZE; i++){
-        if(ht->tree[i] == NULL){
+    for(i=0; i< sizeof(array); i++){
+        if(array == NULL){
             printf(" ");
         } else {
-            printElement(ht->tree[i]);
+            printElement(array[i]);
             //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
         }
         if(i<HUFFMAN_ARRAY_SIZE-1){
             printf(",");
         }
     }
+}
+
+void printHuffmanArray(HuffmanTree* ht){
+    printf("HTA:\n");
+    printf("------\n");
+    printNodeArray(ht->tree);
     printf("\n------\n");
 }
 
 char* getTree(Node* root, int level) {
-    char* string = malloc(sizeof(char)*500);
+    char* string = calloc(sizeof(char), 500);
 
     /* Expected output
      *
@@ -125,7 +131,12 @@ void printTree(Node* root, int level){
 }
 
 char* getElement(Node* root){
-    char* string = malloc(sizeof(char) * 100);
+
+    if(root == NULL){
+        return "(nil)";
+    }
+
+    char* string = calloc(sizeof(char), 100);
 
     // Node:
     // character (weight, node number)
@@ -193,17 +204,6 @@ int getNodePosition(HuffmanTree* ht, Node* node){
     return nn-1;
 }
 
-// Checks the Huffman Tree for broken relationships
-// Returns the first NN that breaks the relationship
-
-int checkHuffmanRelationships(HuffmanTree* ht){
-    if(ht->root == NULL){
-        return -1;
-    }
-
-    return checkNodeRelationships(ht->root);
-}
-
 int checkNodeRelationships(Node* node){
     if(node == NULL){
         return -1;
@@ -233,4 +233,15 @@ int checkNodeRelationships(Node* node){
     }
 
     return 0;
+}
+
+// Checks the Huffman Tree for broken relationships
+// Returns the first NN that breaks the relationship
+
+int checkHuffmanRelationships(HuffmanTree* ht){
+    if(ht->root == NULL){
+        return -1;
+    }
+
+    return checkNodeRelationships(ht->root);
 }

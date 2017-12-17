@@ -58,7 +58,7 @@ static char* test_simple_swap(){
 
     printTree(ht->root,0);
     swap_nodes(ht, ht->root->left, ht->root->right);
-    printTree(ht,0);
+    printTree(ht->root,0);
 
     mu_assert("Root isn't NN 511", ht->root->node_number == 511);
     mu_assert("Root left is null", ht->root->left != NULL);

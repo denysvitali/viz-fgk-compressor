@@ -23,5 +23,8 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename);
 
 void printHuffmanTreeInfo(HuffmanTree *ht);
 void printHuffmanArray(HuffmanTree* ht);
+
+void printNodeArray(Node** array);
+
 int getNodeLevel(Node* node);
 int getNodePosition(HuffmanTree* ht, Node* node);
