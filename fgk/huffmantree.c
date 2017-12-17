@@ -515,7 +515,7 @@ void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2){
 
     int child_left = 2*pos+1;
     int child_left2 = 2*pos2+1;
-    if(child_left >= HUFFMAN_ARRAY_SIZE || child_left>= HUFFMAN_ARRAY_SIZE){
+    if(child_left >= HUFFMAN_ARRAY_SIZE || child_left2 >= HUFFMAN_ARRAY_SIZE){
         return;
     }
     swapping_array_recursive(ht, child_left, child_left2);
