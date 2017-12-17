@@ -6,7 +6,6 @@
 #ifndef  ALGORITMI_FGK_COMPRESSION_UTILITIES_H
     #include "utilities.h"
 #include "../console.h"
-
 #endif
 
 #ifndef ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
@@ -26,6 +25,12 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
 }
 
 void printHuffmanTree(HuffmanTree *ht){
+    if(ht == NULL){
+        return;
+    }
+    if(ht->root == NULL){
+        return;
+    }
     printTree(ht->root, 0);
     printf("----\n");
     printHuffmanArray(ht);

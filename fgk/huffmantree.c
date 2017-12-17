@@ -241,6 +241,19 @@ void freeHuffman(HuffmanTree* ht){
     free(ht);
 }
 
+HuffmanTree* generateHTFromArray(Node** array){
+    HuffmanTree* ht = malloc(sizeof(HuffmanTree));
+    ht->root = array[0];
+    int i;
+    for(i=0; i<HUFFMAN_ARRAY_SIZE;i++) {
+        ht->tree[i] = array[i];
+        if(isNYT(ht->tree[i])){
+            ht->nyt = ht->tree[i];
+        }
+    }
+    return ht;
+}
+
 
 
 Node* last_of_weight(Node* root, int wtc, int* last){
@@ -369,9 +382,15 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         for(i=0; i<maxlevel; i++){
 
             for(j=0; j < 2; j++) {
-                printf("Currently at level %d / %d \n", i, maxlevel);
-                if (ht_copy[cpos1 + j] != NULL) {
-                    printElement(ht_copy[cpos1 + j]);
+                int elementIndex = cpos1 + j;
+
+
+                printTree(generateHTFromArray(ht->tree)->root, 0);
+                //printHuffmanArray(ht);
+                printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
+
+                if (ht->tree[elementIndex] != NULL) {
+                    printElement(ht->tree[elementIndex]);
                     printf("\n");
                 } else {
                     printf("CPOS1 (%d) is NULL\n", cpos1 + j);
@@ -381,9 +400,13 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
                 printf("Cpos: %d, J: %d, 2^%d = %d\n", cpos1, j, i, (int) pow(2, i));
 
                 Node *prev = ht_copy[cpos1 + j];
-                printf("Prev: ");
-                printElement(prev);
-                printf("\n");
+                if(prev != NULL) {
+                    printf("Prev: ");
+                    printElement(prev);
+                    printf("\n");
+                } else {
+                    printf("PREV is null!\n");
+                }
                 printf("%d = %d\n", cpos1+j, cpos1 + j + (int) pow(2, i));
                 ht_copy[cpos1 + j] = ht_copy[cpos1 + j + (int) pow(2, i)];
                 ht_copy[cpos1 + j + (int) pow(2, i)] = prev;
@@ -409,36 +432,20 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         Node* parent1 = node->parent;
         Node* parent2 = node2->parent;
 
-        Node* aux;
+        Node* parent1_left = parent1->left;
+        Node* parent2_left = parent2->left;
 
-        if(parent1->left == node){
-            if(parent2->left == node2){
-                // Node is on the left of Parent1
-                // Node2 is on the left of Parent2
 
-                parent1->left = node2;
-                parent2->left = node;
-            } else {
-                // Node is on the left of Parent1
-                // Node2 is on the right of Parent 2
-
-                parent1->left = node2;
-                parent2->right = node;
-            }
+        if(parent1_left == node){
+            parent1->left = node2;
         } else {
-            if(parent2->left == node2){
-                // Node is on the right of Parent1
-                // Node2 is on the left of Parent2
+            parent1->right = node2;
+        }
 
-                parent1->right = node2;
-                parent2->left = node;
-            } else {
-                // Node is on the right of Parent1
-                // Node2 is on the right of Parent2
-
-                parent1->right = node2;
-                parent2->right = node;
-            }
+        if(parent2_left == node2){
+            parent2->left = node;
+        } else {
+            parent2->right = node;
         }
 
     }

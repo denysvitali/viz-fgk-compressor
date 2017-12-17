@@ -41,6 +41,35 @@ static char * test_create_huffman_tree(){
 	return 0;
 }
 
+static char* test_simple_swap(){
+    // Test getNodeLevel && getNodePosition on an empty HT
+    mu_tag("Simple Swap");
+
+    HuffmanTree* ht = createHuffmanTree();
+    ht->root = createNode(511, 1, -1, NULL, NULL, NULL);
+    ht->root->left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
+    ht->root->right = createNode(510, 1, 'a', NULL, NULL, ht->root);
+
+    mu_assert("Root isn't NN 511", ht->root->node_number == 511);
+    mu_assert("Root left is null", ht->root->left != NULL);
+    mu_assert("Root left isn't NN 509", ht->root->left->node_number == 509);
+    mu_assert("Root right is null", ht->root->right != NULL);
+    mu_assert("Root right isn't NN 510", ht->root->right->node_number == 510);
+
+    printTree(ht->root,0);
+    swap_nodes(ht, ht->root->left, ht->root->right);
+    printTree(ht,0);
+
+    mu_assert("Root isn't NN 511", ht->root->node_number == 511);
+    mu_assert("Root left is null", ht->root->left != NULL);
+    mu_assert("Root left isn't NN 510", ht->root->left->node_number == 510);
+    mu_assert("Root right is null", ht->root->right != NULL);
+    mu_assert("Root right isn't NN 509", ht->root->right->node_number == 509);
+
+    freeHuffman(ht);
+    return 0;
+}
+
 static char * test_last_of_weight(){
     mu_tag("Last Of Weight");
     HuffmanTree* ht = createHuffmanTree();
@@ -108,6 +137,19 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[0] NN is not 511", ht->tree[0]->node_number == 511);
 
     //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
+
+
+    if(ht->tree[0]->left != ht->tree[1]){
+        printf("HT.TREE[0] (%s) doesn't have HT.TREE[1] (%s) on its left\n", getElement(ht->tree[0]), getElement(ht->tree[1]));
+    }
+
+    if(ht->tree[0]->right != ht->tree[2]){
+        printf("HT.TREE[0] (%s) doesn't have HT.TREE[2] (%s) on its right\n", getElement(ht->tree[0]), getElement(ht->tree[2]));
+    }
+
+
+
+
 
     mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
     mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
@@ -324,8 +366,10 @@ static char* test_utility_siblings(){
 
 static char * all_tests(){
 	mu_run_test(test_debug);
+	mu_run_test(test_simple_swap);
     mu_run_test(test_create_ht_array);
-    /*mu_run_test(test_swap_nodes);
+    /*
+    mu_run_test(test_swap_nodes);
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_get_node_position);
