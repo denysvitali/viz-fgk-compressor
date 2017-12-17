@@ -433,6 +433,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
             ht->tree[i] = ht_copy[i];
         }
 
+        free(ht_copy);
+
         // Swap nodes w/ pointers (easy!)
 
         Node* parent1 = node->parent;

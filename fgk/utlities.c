@@ -103,19 +103,34 @@ char* getTree(Node* root, int level) {
         sprintf(string + strlen(string), "graph G {\n");
     }
 
-    sprintf(string + strlen(string), "%s", getElement(root));
+    char* element_string;
+    char* tree_string;
+    element_string = getElement(root);
+    sprintf(string + strlen(string), "%s", element_string);
+    free(element_string);
 
     if(root->left == NULL && root->right == NULL){
         sprintf(string + strlen(string), ";\n");
     }
     else{
         sprintf(string + strlen(string), " -- ");
-        sprintf(string + strlen(string), "%s", getTree(root->left, level+1));
-        sprintf(string + strlen(string), "%s", getElement(root));
+        element_string = getElement(root);
+        tree_string = getTree(root->left, level+1);
+
+        sprintf(string + strlen(string), "%s", tree_string);
+        sprintf(string + strlen(string), "%s", element_string);
+
+        free(element_string);
+        free(tree_string);
+
+        tree_string = getTree(root->right, level + 1);
+
         if(root->right != NULL) {
             sprintf(string + strlen(string)," -- ");
-            sprintf(string + strlen(string), "%s", getTree(root->right, level + 1));
+            sprintf(string + strlen(string), "%s", tree_string);
         }
+
+        free(tree_string);
 
     }
 
@@ -127,7 +142,9 @@ char* getTree(Node* root, int level) {
 }
 
 void printTree(Node* root, int level){
-    printf("%s", getTree(root, level));
+    char* tree_string = getTree(root, level);
+    printf("%s", tree_string);
+    free(tree_string);
 }
 
 char* getElement(Node* root){
