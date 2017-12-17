@@ -47,13 +47,19 @@ static char* test_simple_swap(){
 
     HuffmanTree* ht = createHuffmanTree();
     ht->root = createNode(511, 1, -1, NULL, NULL, NULL);
-    ht->root->left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
-    ht->root->right = createNode(510, 1, 'a', NULL, NULL, ht->root);
+
+    Node* original_left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
+    Node* original_right = createNode(510, 1, 'a', NULL, NULL, ht->root);
+
+    ht->root->left = original_left;
+    ht->root->right = original_right;
 
     mu_assert("Root isn't NN 511", ht->root->node_number == 511);
     mu_assert("Root left is null", ht->root->left != NULL);
     mu_assert("Root left isn't NN 509", ht->root->left->node_number == 509);
+    mu_assert("Root left isn't original_left", ht->root->left == original_left);
     mu_assert("Root right is null", ht->root->right != NULL);
+    mu_assert("Root right isn't original_right", ht->root->right == original_right);
     mu_assert("Root right isn't NN 510", ht->root->right->node_number == 510);
 
     printTree(ht->root,0);
@@ -62,9 +68,12 @@ static char* test_simple_swap(){
 
     mu_assert("Root isn't NN 511", ht->root->node_number == 511);
     mu_assert("Root left is null", ht->root->left != NULL);
-    mu_assert("Root left isn't NN 510", ht->root->left->node_number == 510);
+    mu_assert("Root left isn't NN 509", ht->root->left->node_number == 509);
+    mu_assert("Root left isn't original_right", ht->root->left == original_right);
+    mu_assert("Root left isn't NN 509", ht->root->left->node_number == 509);
     mu_assert("Root right is null", ht->root->right != NULL);
-    mu_assert("Root right isn't NN 509", ht->root->right->node_number == 509);
+    mu_assert("Root right isn't NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root right isn't original_left", ht->root->left == original_right);
 
     freeHuffman(ht);
     return 0;
