@@ -269,8 +269,8 @@ Node* last_of_weight(Node* root, int wtc, int* last){
         return NULL;
     }
 
-    Node* res;
-    Node* res2;
+    Node* res = NULL;
+    Node* res2 = NULL;
     if(root->left != NULL){
         //debug("LOW: 2");
         res = last_of_weight(root->left, wtc, last);
@@ -506,7 +506,6 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     ht->tree[pos2]->parent = ht->tree[pos]->parent;
     ht->tree[pos]->parent = tmp->parent;
     tmp->node_number = nn;
-    return;
 }
 
 void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2){
@@ -520,7 +519,6 @@ void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2){
     }
     swapping_array_recursive(ht, child_left, child_left2);
     swapping_array_recursive(ht, child_left+1, child_left2+1);
-    return;
 }
 
 void update_weights_2(Node* root, Node* original, Node* start){
