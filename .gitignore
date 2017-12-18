@@ -53,3 +53,6 @@
 
 # Graphviz dot files
 *.dot
+
+# Test Results
+/test/results
