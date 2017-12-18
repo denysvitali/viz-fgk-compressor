@@ -479,36 +479,36 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
         // Swap nodes w/ pointers (easy!)
 
-        Node* parent1 = node->parent;
-        Node* parent2 = node2->parent;
+    Node* parent1 = node->parent;
+    Node* parent2 = node2->parent;
 
-        Node* parent1_left = parent1->left;
-        Node* parent2_left = parent2->left;
+    Node* parent1_left = parent1->left;
+    Node* parent2_left = parent2->left;
 
 
-        if(parent1_left == node){
-            // node is on the left of its parent
-            parent1->left = node2;
-        } else {
-            // node is on the right of its parent
-            parent1->right = node2;
-        }
+    if(parent1_left == node){
+        // node is on the left of its parent
+        parent1->left = node2;
+    } else {
+        // node is on the right of its parent
+        parent1->right = node2;
+    }
 
-        if(parent2_left == node2){
-            // node2 is on the left of its parent
-            parent2->left = node;
-        } else {
-            // node2 is on the right of its parent
-            parent2->right = node;
-        }
+    if(parent2_left == node2){
+        // node2 is on the left of its parent
+        parent2->left = node;
+    } else {
+        // node2 is on the right of its parent
+        parent2->right = node;
+    }
 
-        // Fix Node Numbers
-        int nn = node->node_number;
-        node->node_number = node2->node_number;
-        node2->node_number = nn;
+    // Fix Node Numbers
+    int nn = node->node_number;
+    node->node_number = node2->node_number;
+    node2->node_number = nn;
 
-        debug("End swap");
-        printHuffmanTree(ht);
+    debug("End swap");
+    printHuffmanTree(ht);
 
 }
 /*
