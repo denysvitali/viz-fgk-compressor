@@ -250,7 +250,6 @@ static char * test_huffman_coding(){
 
 static char* test_swap_nodes(){
     mu_tag("Swap Nodes");
-    printf("Testing Node Swap\n");
 
     HuffmanTree* ht = createHuffmanTree();
     Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
@@ -275,6 +274,11 @@ static char* test_swap_nodes(){
     ht->nyt = four_one;
     ht->root = root;
 
+
+    Node** nodes = generateHTArrayFromTree(ht);
+
+    printf("\n");
+    /*
     ht->tree[0] = root;
     ht->tree[1] = two_one;
     ht->tree[2] = two_two;
@@ -283,7 +287,8 @@ static char* test_swap_nodes(){
     // 5 = NULL
     // 6 = NULL
     ht->tree[7] = four_one;
-    ht->tree[8] = four_two;
+    ht->tree[8] = four_two;*/
+
 
     printHuffmanArray(ht);
     printHuffmanTree(ht);
@@ -296,6 +301,7 @@ static char* test_swap_nodes(){
     Node* second_p = ht->root->right;
     Node second = *second_p;
 
+    saveHuffmanTree(ht, "./test/results/t_sn_1.dot");
     swap_nodes(ht, ht->root->left, ht->root->right);
 
     printHuffmanTree(ht);
@@ -314,11 +320,35 @@ static char* test_swap_nodes(){
     mu_assert("Root -> Right -> Left is incorrect", ht->root->right->left == first.left);
     mu_assert("Root -> Right -> Right is incorrect", ht->root->right->right == first.right);
 
-    // TODO: Uncomment tests after ht->tree swap is completed
-    /*mu_assert("ht[1] (Root -> Left) does not exist", ht->tree[1] != NULL);
+    mu_assert("ht[1] (Root -> Left) does not exist", ht->tree[1] != NULL);
     mu_assert("ht[1] (Root -> Left) is incorrect", ht->tree[1] == second_p);
     mu_assert("ht[2] (Root -> Right) doesn't exist", ht->tree[2] != NULL);
-    mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == first_p);*/
+    mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == first_p);
+    saveHuffmanTree(ht, "./test/results/t_sn_2.dot");
+
+    // Test swap back
+
+    swap_nodes(ht, ht->root->left, ht->root->right);
+    mu_assert("ht[1] (Root -> Left) does not exist", ht->tree[1] != NULL);
+    mu_assert("ht[1] (Root -> Left) is incorrect", ht->tree[1] == first_p);
+    mu_assert("ht[2] (Root -> Right) doesn't exist", ht->tree[2] != NULL);
+    mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == second_p);
+    saveHuffmanTree(ht, "./test/results/t_sn_3.dot");
+
+    // Swap 507 w/ 510
+    swap_nodes(ht, ht->root->left->left, ht->root->right);
+    saveHuffmanTree(ht, "./test/results/t_sn_4.dot");
+
+    Node** ht_array = generateHTArrayFromTree(ht);
+    int i;
+
+    printHuffmanArray(ht);
+    printNodeArray(ht_array);
+    for(i = 0; i < sizeof(ht_array);i++){
+        printf("%d,",i);
+        mu_assert("Invalid ht_array entry.", ht->tree[i] == ht_array[i]);
+    }
+    printf("\n");
 
     freeHuffman(ht);
 
@@ -377,8 +407,8 @@ static char * all_tests(){
 	mu_run_test(test_debug);
 	mu_run_test(test_simple_swap);
     mu_run_test(test_create_ht_array);
-    /*
     mu_run_test(test_swap_nodes);
+    /*
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_get_node_position);

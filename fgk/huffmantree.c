@@ -254,6 +254,47 @@ HuffmanTree* generateHTFromArray(Node** array){
     return ht;
 }
 
+void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, int level, int i){
+    if(levelRoot == NULL){
+        return;
+    }
+
+    if(level == 0){
+        if(originalLevel == 0){
+            i=1;
+        }
+        int index = originalLevel + i - 1;
+        ht->tree[index] = levelRoot;
+    } else {
+        i++;
+        fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, i);
+        fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, i+1);
+    }
+}
+
+Node** generateHTArrayFromTree(HuffmanTree* ht){
+    Node** tree = calloc(sizeof(Node), HUFFMAN_ARRAY_SIZE);
+    tree[0] = ht->root;
+    tree[1] = ht->root->left;
+    tree[2] = ht->root->right;
+
+    int i;
+    for(i = 0; i < (int) (log(HUFFMAN_ARRAY_SIZE)/log(2)); i++){
+        fillHTArrayFromTree(ht, ht->root, i, i, 0);
+    }
+
+
+    tree[3] = ht->root->left->left;
+    tree[4] = ht->root->left->right;
+
+    tree[5] = ht->root->right->left;
+    tree[6] = ht->root->right->right;
+
+    return tree;
+}
+
+
+
 
 
 Node* last_of_weight(Node* root, int wtc, int* last){
@@ -306,7 +347,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
 
     debug("Begin Swap");
-    printHuffmanTree(ht);
+    //printHuffmanTree(ht);
 
 
     int pos1 = getNodePosition(ht, node);
@@ -314,10 +355,11 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     int lvl1 = getNodeLevel(node);
     int lvl2 = getNodeLevel(node2);
 
-    // TODO: Implement ht->tree switching here.
-    // WIP
+    if(pos1 > pos2){
+        swap_nodes(ht, node2, node);
+        return;
+    }
 
-    printHuffmanArray(ht);
 
     char buffer[500];
     sprintf(buffer, "[Swapping] Pos1: %d (NN %d), Pos2: %d (NN %d)", pos1, node->node_number, pos2, node2->node_number);
@@ -387,10 +429,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
         for(i=0; i<maxlevel; i++){
 
-            int elementIndex = cpos1;
             //printTree(generateHTFromArray(ht->tree)->root, 0);
             //printHuffmanArray(ht);
-            printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
+            // int elementIndex = cpos1;
+            //printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
 
             //                                                      ROOT
             // 01 = 2^1 + 0 + 0    (LVL 0)             (1,509)                       41 (1,510)        [SWAP HAPPENS HERE]
@@ -411,7 +453,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
                 int a =  j + (int) pow(2,i)-1;
                 int b = (int) pow(2,i) + (int) pow(2,i)-1 + j;
 
-                printf("a: %d, b = %d\n", a,b);
+                //printf("a: %d, b = %d\n", a,b);
 
                 Node* prev = ht->tree[a];
                 ht_copy[a] = ht_copy[b];
@@ -434,7 +476,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         }
 
         free(ht_copy);
-
+    }
         // Swap nodes w/ pointers (easy!)
 
         Node* parent1 = node->parent;
@@ -467,8 +509,6 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
         debug("End swap");
         printHuffmanTree(ht);
-
-    }
 
 }
 /*

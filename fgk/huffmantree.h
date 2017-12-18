@@ -37,3 +37,5 @@ void update_weights(Node* root, Node* start);
 void* siblings(HuffmanTree* ht, int level, int* size);
 void swap_nodes_array(HuffmanTree* ht, int pos, int pos2);
 void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2);
+
+Node** generateHTArrayFromTree(HuffmanTree* ht);
