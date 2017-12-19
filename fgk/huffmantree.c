@@ -416,18 +416,18 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         debug("Saving Huffman Tree File...");
         saveHuffmanTree(ht, "./ht_swap.dot");
 
-        int i,j;
+        int i, j;
         int maxlevel = (int) (log(HUFFMAN_ARRAY_SIZE + 1) / log(2));
         maxlevel -= lvl1;
 
         int cpos1 = pos1;
 
-        Node** ht_copy = malloc(sizeof(ht->tree));
-        for(i = 0; i<sizeof(ht->tree)/sizeof(Node*); i++){
+        Node **ht_copy = malloc(sizeof(ht->tree));
+        for (i = 0; i < sizeof(ht->tree) / sizeof(Node *); i++) {
             ht_copy[i] = ht->tree[i];
         }
 
-        for(i=0; i<maxlevel; i++){
+        for (i = 0; i < maxlevel; i++) {
 
             //printTree(generateHTFromArray(ht->tree)->root, 0);
             //printHuffmanArray(ht);
@@ -449,33 +449,35 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
             int allNull = 1;
 
-            for(j=(int) pow(2,i); j < ((int) pow(2,i+1)); j++) {
-                int a =  j + (int) pow(2,i)-1;
-                int b = (int) pow(2,i) + (int) pow(2,i)-1 + j;
+            for (j = (int) pow(2, i); j < ((int) pow(2, i + 1)); j++) {
+                int a = j + (int) pow(2, i) - 1;
+                int b = (int) pow(2, i) + (int) pow(2, i) - 1 + j;
 
                 //printf("a: %d, b = %d\n", a,b);
 
-                Node* prev = ht->tree[a];
+                Node *prev = ht->tree[a];
                 ht_copy[a] = ht_copy[b];
                 ht_copy[b] = prev;
 
-                if(ht->tree[a] != NULL || ht->tree[b] != NULL){
+                if (ht->tree[a] != NULL || ht->tree[b] != NULL) {
                     allNull = 0;
                 }
             }
 
-            if(allNull){
+            if (allNull) {
                 // If the HT is correct, there shouldn't be any node that has a NULL parent.
                 // For this reason, we're going to stop the for loop here to save some resources / time.
                 break;
             }
         }
 
-        for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+        for (i = 0; i < HUFFMAN_ARRAY_SIZE; i++) {
             ht->tree[i] = ht_copy[i];
         }
 
         free(ht_copy);
+    } else{
+        //swap_on_diff_lvls()
     }
         // Swap nodes w/ pointers (easy!)
 
@@ -511,8 +513,37 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     printHuffmanTree(ht);
 
 }
+
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int pos){
+    if(node != NULL) {
+        result[pos] = node;
+        create_subtree_from_node(ht, ht->tree[(2*pos)+1], result, (2*pos)+1);
+        create_subtree_from_node(ht, ht->tree[(2*pos)+2], result, (2*pos)+2);
+        return;
+    }
+    return;
+}
+
+void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
+    Node **arr = calloc(256, sizeof(Node*));
+    Node **arr2 = calloc(256, sizeof(Node*));
+    int pos, pos2;
+    pos = getNodePosition(ht, node);
+    pos2 = getNodePosition(ht, node2);
+    create_subtree_from_node(ht, node, arr, 0);
+    create_subtree_from_node(ht, node2, arr2, 0);
+    //TODO Rebuilding of the array
+    //rebuilding_from_array(ht, pos, arr, 0);
+}
+
+void rebuilding_from_array(HuffmanTree *ht,int pos,Node** arr, int* i){
+    //ht->tree[pos] = arr[((*i)*2)+1];
+
+}
+
 /*
-int calculate_weight(Node* node){
+int calculate_weight(Node* node){{
+
     if(node->left == NULL && node->right == NULL)
         return node->weight;
 
