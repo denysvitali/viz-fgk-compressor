@@ -56,8 +56,8 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
 
 void printNodeArray(Node** array){
     int i;
-    for(i=0; i< sizeof(array); i++){
-        if(array == NULL){
+    for(i=0; i< HUFFMAN_ARRAY_SIZE; i++){
+        if(array[i] == NULL){
             printf(" ");
         } else {
             printElement(array[i]);

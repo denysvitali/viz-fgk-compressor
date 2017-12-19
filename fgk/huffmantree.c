@@ -260,37 +260,30 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
     }
 
     if(level == 0){
-        if(originalLevel == 0){
-            i=1;
-        }
-        int index = originalLevel + i - 1;
+        int index = (int) pow(2,originalLevel) - 1 + i;
+
+        char buffer[100];
+        snprintf(buffer, 100, "[fillHTArrayFromTree] index: %d, i: %d, level: %d, originalLevel: %d, node: %s",
+                index,
+                 i,
+                level,
+                originalLevel,
+                getElement(levelRoot)
+        );
+        debug(buffer);
+
         ht->tree[index] = levelRoot;
     } else {
-        i++;
-        fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, i);
-        fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, i+1);
+        fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
+        fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
     }
 }
 
-Node** generateHTArrayFromTree(HuffmanTree* ht){
-    Node** tree = calloc(sizeof(Node), HUFFMAN_ARRAY_SIZE);
-    tree[0] = ht->root;
-    tree[1] = ht->root->left;
-    tree[2] = ht->root->right;
-
+void generateHTArrayFromTree(HuffmanTree* ht){
     int i;
     for(i = 0; i < (int) (log(HUFFMAN_ARRAY_SIZE)/log(2)); i++){
         fillHTArrayFromTree(ht, ht->root, i, i, 0);
     }
-
-
-    tree[3] = ht->root->left->left;
-    tree[4] = ht->root->left->right;
-
-    tree[5] = ht->root->right->left;
-    tree[6] = ht->root->right->right;
-
-    return tree;
 }
 
 
@@ -369,7 +362,7 @@ Node** getSubTree(Node** array, int pos){
 
     int i;
     for(i=0; i<arraySize; i++){
-        
+
     }
 }
 
@@ -400,215 +393,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     //int distance = pos1-pos2;
 
-    int i,j;
-    Node** ht_copy = malloc(sizeof(ht->tree));
 
-    Node** a;
-    Node** b;
-
-    a = getSubTree(ht_copy, pos1);
-
-    if(lvl1 == lvl2) {
-        //int new_pos1 = pos1-distance;
-        //int new_pos2 = pos2+distance;
-        //swapping_array_recursive(ht, pos1, pos2);
-        //int new_pos1 = pos2;
-        //int new_pos2 = pos1;
-        //swap_tree();
-
-        /*
-         *                         00                                   L: 0
-         *         01                                02                 L: 1
-         *    03         04                    05          06           L: 2
-         * 07    08   09    10              11    12    13    14        L: 3
-         *
-         * =================== SWAP 01 w/ 02 ===================
-         *
-         *                         00                                   L: 0
-         *         02                                01                 L: 1
-         *    05         06                    03          04           L: 2
-         * 11    12    13    14             07    08   09    10         L: 3
-         *
-         * 00,01,02,03,04,05,06,07,08,09,10,11,12,13,14
-         * 00,02,01,05,06,03,04,11,12,13,14,07,08,09,10
-         *   |1 |1 |--2--|--2--|-----4-----|-----4-----
-         *   |
-         *   |____[SWAP HERE]
-         *
-         * 01 => 02 (+1)
-         * 03 => 05 (+2)
-         * 04 => 06 (+2)
-         * 06 => 10 (+4)
-         * 07 => 11 (+4)
-         * 08 => 12 (+4)
-         * 09 => 13 (+4)
-         *
-         * 02 => 01 (-1)
-         * 05 => 03 (-2)
-         * 06 => 04 (-2)
-         * 10 => 06 (-4)
-         * 11 => 07 (-4)
-         * 12 => 08 (-4)
-         * 13 => 09 (-4)
-         *
-         */
-
-        debug("Saving Huffman Tree File...");
-        saveHuffmanTree(ht, "./ht_swap.dot");
-
-        int maxlevel = (int) (log(HUFFMAN_ARRAY_SIZE + 1) / log(2));
-        maxlevel -= lvl1;
-
-        int cpos1 = pos1;
-
-        for(i = 0; i<sizeof(ht->tree)/sizeof(Node*); i++){
-            ht_copy[i] = ht->tree[i];
-        }
-
-        for(i=lvl1-1; i<maxlevel; i++){
-
-            //printTree(generateHTFromArray(ht->tree)->root, 0);
-            printHuffmanArray(ht);
-            int elementIndex = cpos1;
-            printf("Currently at level %d / %d, ElementIndex: %d \n", i, maxlevel, elementIndex);
-
-            //                                                      ROOT
-            // 01 = 2^1 + 0 + 0    (LVL 0)             (1,509)                       41 (1,510)        [SWAP HAPPENS HERE]
-            // 03 = 2^2 + 1 + 0    (LVL 1)    NYT (0,507)    42 (1,508)         NULL           NULL
-            // 04 = 2^2 + 1 + 1    (LVL 1)
-            // 07 = 2^3 + 3 + 0    (LVL 2)   NULL    NULL      NULL    NULL    NULL  NULL    NULL    NULL
-            // 08 = 2^3 + 3 + 1    (LVL 2)
-            // 09 = 2^3 + 3 + 2    (LVL 2)
-            // 10 = 2^3 + 3 + 3    (LVL 2)  2^3 + 3 + (2^4 - 1)
-            // a  = b
-            // 1, 3 | 4, 7 | 8 | 9 | 10
-
-            // 2^0, 2^2 - 1 | 2^2, 2^3 - 1 | 2^3 | 2^3 + 1 | 2^3 + 2
-
-            int allNull = 1;
-
-            for(j=(int) pow(2,i); j < ((int) pow(2,i+1)); j++) {
-                int a =  j + (int) pow(2,i)-1;
-                int b = (int) pow(2,i) + (int) pow(2,i)-1 + j;
-
-                printf("a: %d, b = %d, j=%d\n", a,b, j);
-
-                Node* prev = ht->tree[a];
-                ht_copy[a] = ht_copy[b];
-                ht_copy[b] = prev;
-
-                if(ht->tree[a] != NULL || ht->tree[b] != NULL){
-                    allNull = 0;
-                }
-            }
-
-            if(allNull){
-                // If the HT is correct, there shouldn't be any node that has a NULL parent.
-                // For this reason, we're going to stop the for loop here to save some resources / time.
-                break;
-            }
-        }
-    } else {
-        // Swap 3 w/ 2
-        // 3 = 2
-        // 7 = 5
-        // 8 = 6
-
-        for(i = 0; i<sizeof(ht->tree)/sizeof(Node*); i++){
-            ht_copy[i] = ht->tree[i];
-        }
-
-        debug("Swapping nodes on different levels");
-
-        /*  Swapping (3) w/ (2)
-         *                0
-         *        1                 [2]
-         *    [3]      4         5         6
-         *  7   8  9   10   11   12   13   14
-         */
-
-        // 1. Bring nodes to the same level
-        /*
-         *               0
-         *        1               x
-         *   [3]      4       [2]       x
-         *  7   8  9   10   5     6   x   x
-         *               11 12 13 14
-         */
-
-
-        // In our case: node = 3, node2 = 2
-        if(lvl1 < lvl2){
-            debug("Inverting swap direction");
-            printf("lvl1: %d, lvl2: %d\n", lvl1, lvl2);
-            swap_nodes(ht, node2, node); // Easier :)
-            return;
-        }
-
-        // Left child: 2r + 1 (watch out, it might not be NULL!)
-        Node* prev = ht_copy[2*pos2 + 1];
-        ht_copy[2*pos2 + 1] = node2;
-        ht_copy[pos2] = prev;
-
-        // New position: 2r + 1
-
-
-
-
-
-
-        // 2. Swap them
-        /*
-         *               0
-         *        1              x
-         *    2      4       3      x
-         *  x   x  x   x   7   8   x   x
-         */
-
-        // 3. Restore orig. level
-        /*
-         *               0
-         *        1              3
-         *    2      4       7      8
-         *  x   x  x   x   x   x   x   x
-         */
-
-        int maxlevel = (int) (log(HUFFMAN_ARRAY_SIZE + 1) / log(2));
-        maxlevel -= lvl1;
-        maxlevel -= (abs(lvl1 - lvl2));
-        for(i=0; i<maxlevel; i++) {
-            int allNull = 1;
-
-            printf("Level: %d\n", i);
-
-            for (j = (int) pow(2, i); j < ((int) pow(2, i + 1)); j++) {
-                int a = j + (int) pow(2, i) - 1;
-                int b = (int) pow(2, i) + (int) pow(2, i) - 1 + j;
-
-                printf("a: %d, b = %d\n", a,b);
-
-                Node *prev = ht->tree[a];
-                ht_copy[a] = ht_copy[b];
-                ht_copy[b] = prev;
-
-                if (ht->tree[a] != NULL || ht->tree[b] != NULL) {
-                    allNull = 0;
-                }
-            }
-
-            if (allNull) {
-                // If the HT is correct, there shouldn't be any node that has a NULL parent.
-                // For this reason, we're going to stop the for loop here to save some resources / time.
-                break;
-            }
-        }
-    }
-
-    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        ht->tree[i] = ht_copy[i];
-    }
-
-    free(ht_copy);
+    swap_on_diff_lvls(ht, node, node2);
 
     // Swap nodes w/ pointers (easy!)
 
@@ -644,6 +430,64 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     printHuffmanTree(ht);
 
 }
+
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int pos){
+    if(node != NULL) {
+        result[pos] = node;
+
+        int left = (2*pos)+1;
+        Node* n_left = ht->tree[left];
+
+        int right = (2*pos) + 2;
+        Node* n_right = ht->tree[right];
+
+        printf("Pos: %d\n", pos);
+        printf("Node itself: %s\n", getElement(node));
+
+        printf("LEFT: \n");
+        printElement(n_left);
+        printf("\nRIGHT: \n");
+        printElement(n_right);
+        printf("\n");
+
+        create_subtree_from_node(ht, n_left, result, left);
+        create_subtree_from_node(ht, ht->tree[(2*pos)+2], result, (2*pos)+2);
+    }
+}
+
+void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
+    debug("Swapping on different levels");
+    Node **arr = calloc(256, sizeof(Node*));
+    Node **arr2 = calloc(256, sizeof(Node*));
+
+    int pos, pos2;
+    pos = getNodePosition(ht, node);
+    pos2 = getNodePosition(ht, node2);
+    //create_subtree_from_node(ht, node, arr, pos);
+    create_subtree_from_node(ht, node2, arr2, pos2);
+
+    int i;
+    int nulls = 0;
+    for(i=0; i<256; i++){
+        if(nulls >= 5){
+            printf("... (truncated)\n");
+            break;
+        }
+        if(arr2[i] == NULL){
+            nulls++;
+        }
+        printf("%d: %s\n", i, getElement(arr2[i]));
+    }
+
+    //TODO Rebuilding of the array
+    //rebuilding_from_array(ht, pos, arr, 0);
+}
+
+void rebuilding_from_array(HuffmanTree *ht,int pos,Node** arr, int* i){
+    //ht->tree[pos] = arr[((*i)*2)+1];
+
+}
+
 /*
 int calculate_weight(Node* node){
     if(node->left == NULL && node->right == NULL)
