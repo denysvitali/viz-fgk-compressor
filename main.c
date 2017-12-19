@@ -335,6 +335,7 @@ static char* test_swap_nodes(){
     mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == second_p);
     saveHuffmanTree(ht, "./test/results/t_sn_3.dot");
 
+
     // Swap 507 w/ 510
     swap_nodes(ht, ht->root->left->left, ht->root->right);
     saveHuffmanTree(ht, "./test/results/t_sn_4.dot");
@@ -342,8 +343,11 @@ static char* test_swap_nodes(){
     Node** ht_array = generateHTArrayFromTree(ht);
     int i;
 
+    printf("Swapped HT Array:\n");
     printHuffmanArray(ht);
+    printf("Calculated array:\n");
     printNodeArray(ht_array);
+    printf("\n");
     for(i = 0; i < sizeof(ht_array);i++){
         printf("%d,",i);
         mu_assert("Invalid ht_array entry.", ht->tree[i] == ht_array[i]);
@@ -406,8 +410,8 @@ static char* test_utility_siblings(){
 static char * all_tests(){
 	mu_run_test(test_debug);
 	mu_run_test(test_simple_swap);
-    mu_run_test(test_create_ht_array);
     mu_run_test(test_swap_nodes);
+    mu_run_test(test_create_ht_array);
     /*
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
