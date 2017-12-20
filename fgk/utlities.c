@@ -52,6 +52,7 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
     } else {
         error("[Save Huffman Tree] Unable to open FH");
     }
+    free(ht_string);
 }
 
 void printNodeArray(Node** array){
