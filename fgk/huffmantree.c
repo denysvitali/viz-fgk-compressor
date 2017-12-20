@@ -421,6 +421,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int pos){
     if(node != NULL) {
         result[pos] = node;
+        //ht->tree[node->node_number] = NULL;
 
         int left = (2*pos) + 1;
         Node* n_left = node->left;
@@ -445,12 +446,17 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
     }
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int* i){
-    //ht->tree[pos] = arr[((*i)*2)+1];
+void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
-    printf("Pos: %d, LVL: %d\n", pos, getLevel(pos));
+    printf("Pos: %d\n", pos);
+    if(pos<HUFFMAN_ARRAY_SIZE){
+        ht->tree[pos] = arr[i];
+        rebuilding_from_array(ht, (2*pos)+1, arr, i+(int)pow(2, lvl), lvl+1);
+        rebuilding_from_array(ht, (2*pos)+2, arr, i+(int)pow(2, lvl)+1, lvl+1);
+    } else {
+        error("[OUT OF BOUNDS] while rebuilding!");
+    }
 }
-
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
     Node **arr = calloc(256, sizeof(Node*));
@@ -494,12 +500,13 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
         }
     }
 
-    rebuilding_from_array(ht, pos2, arr, 0);
-    rebuilding_from_array(ht, pos, arr2, 0);
+    rebuilding_from_array(ht, pos2, arr, 0, 0);
+    rebuilding_from_array(ht, pos, arr2, 0, 0);
 
     //TODO Rebuilding of the array
     //rebuilding_from_array(ht, pos, arr, 0);
 }
+
 
 
 /*
