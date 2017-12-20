@@ -7,8 +7,26 @@
 
 #ifndef ALGORITMI_FGK_COMPRESSION_UTILITIES_H
     #include "utilities.h"
-
 #endif
+
+
+Node* highest_numbered_node(HuffmanTree* ht, int weight){
+    int i;
+    int max_nn = 0;
+    Node* result = NULL;
+    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+        Node* curr = ht->tree[i];
+        if(curr == NULL){
+            continue;
+        }
+
+        if(curr->weight == weight && curr->node_number > max_nn){
+            max_nn = curr->node_number;
+            result = curr;
+        }
+    }
+    return result;
+}
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
@@ -18,6 +36,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         char string[50];
         sprintf(string, "Target = %p", target);
         debug(string);
+        target = target->parent;
     } else {
         debug("Character not found");
         Node* old_nyt = ht->nyt;
@@ -83,45 +102,35 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             } else {
                 printf("Last is null.\n");
             }
-
         }
 
         free(level_siblings);
-
-
-        //printHuffmanTree(ht);
-        //printf("\n");
-
-
-        //ht->root->weight++;
-//        // Fix Weights
-//        int i = 0;
-//        printf("LOW params: %p, %d, %d\n", ht->root, old_nyt->weight, i);
-//        Node* n = last_of_weight(ht->root, old_nyt->weight, &i);
-//        if(n != NULL) {
-//            printf("Node: %p, NN: %d\n", n, n->node_number);
-//        }
-//
-//
-//
-//        //printf("LOW NN: %d\n", i);
-//        printf("Root: %p\n", ht->root);
-//        printf("Parent: %p\n", ht->nyt->parent);
-//
-//        //update_weights(ht->nyt->parent);
-//        if(new_char->parent->parent != NULL){
-//            debug("Calling Update weights");
-//            // Printing tree before update weights
-//            debug("Print before u_w");
-//            printHuffmanTree(ht);
-//            update_weights(ht->root, new_char->parent);
-//            debug("Printing after u_w");
-//            printHuffmanTree(ht);
-//        }
-
-        return ht;
+        target = old_nyt; // p = parent of the new symbol node
     }
-    return NULL;
+
+    if(target->parent == ht->nyt->parent){
+        Node* highest = highest_numbered_node(ht, target->weight);
+        if(highest != NULL){
+            swap_nodes(ht, target, highest);
+        }
+        free(highest);
+        target->weight++;
+        target = target->parent;
+    }
+
+    while(target != ht->root){
+        Node* swap_target = highest_numbered_node(ht, target->weight);
+
+        if(swap_target != NULL){
+            swap_nodes(ht, target, swap_target);
+        }
+
+        target->weight++;
+        target = target->parent;
+    }
+
+
+    return ht;
 }
 
 Node* findNYT(Node* root){
@@ -337,6 +346,11 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
     if(node->parent == NULL || node2->parent == NULL){
         // Not going to swap a root.
+        return;
+    }
+
+    if(node == node2){
+        // Not going to swap two identical nodes.
         return;
     }
 

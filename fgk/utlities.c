@@ -171,9 +171,11 @@ char* getElement(Node* root){
 }
 
 void printElement(Node* root){
-    char* elementText = getElement(root);
-    printf("%s", elementText);
-    free(elementText);
+    if(root != NULL){
+        char* elementText = getElement(root);
+        printf("%s", elementText);
+        free(elementText);
+    }
 }
 
 /*

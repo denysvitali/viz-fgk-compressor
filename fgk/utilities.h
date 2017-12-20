@@ -30,3 +30,4 @@ int getNodeLevel(Node* node);
 int getNodePosition(HuffmanTree* ht, Node* node);
 
 int getLevel(int pos);
+Node *getParent(HuffmanTree *ht, Node *pNode);
