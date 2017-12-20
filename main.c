@@ -284,6 +284,7 @@ static char* test_swap_nodes(){
     three_one->right = four_two;
 
     ht->nyt = four_one;
+    free(ht->root);
     ht->root = root;
 
 
