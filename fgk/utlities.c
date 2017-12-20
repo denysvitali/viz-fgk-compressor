@@ -262,3 +262,16 @@ int checkHuffmanRelationships(HuffmanTree* ht){
 
     return checkNodeRelationships(ht->root);
 }
+
+
+int getLevelInternal(int pos, int i){
+    if(pos == 0){
+        return i;
+    }
+
+    return getLevelInternal((pos-1)/2, i+1);
+}
+
+int getLevel(int pos){
+    return getLevelInternal(pos, 0);
+}

@@ -18,7 +18,7 @@ void error(char* string){
 }
 
 void error_test_fail(char* string){
-    printf("%s%s❌ TEST ERROR:  %s%s %s\n", STYLE_COLOR_RED,STYLE_BOLD, STYLE_NO_BOLD, string, STYLE_COLOR_RESET);
+    printf("%s%s❌ TEST ERROR:  %s%s %s\n", STYLE_COLOR_RED, STYLE_BOLD, STYLE_NO_BOLD, string, STYLE_COLOR_RESET);
 }
 
 void warn(char* string){

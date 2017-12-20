@@ -32,6 +32,19 @@ static char * test_debug(){
 	return 0;
 }
 
+static char * test_get_level(){
+    mu_tag("Get Level from pos");
+    mu_assert("getLevel(0) is not 0", getLevel(0)==0);
+    mu_assert("getLevel(1) is not 1", getLevel(1)==1);
+    mu_assert("getLevel(2) is not 1", getLevel(2)==1);
+    mu_assert("getLevel(3) is not 2", getLevel(3)==2);
+    mu_assert("getLevel(4) is not 2", getLevel(4)==2);
+    mu_assert("getLevel(5) is not 2", getLevel(5)==2);
+    mu_assert("getLevel(6) is not 2", getLevel(6)==2);
+    mu_assert("getLevel(7) is not 3", getLevel(7)==3);
+    return 0;
+}
+
 static char * test_create_huffman_tree(){
     mu_tag("Huffman Tree Creation");
 	HuffmanTree* ht = createHuffmanTree();
@@ -414,6 +427,7 @@ static char* test_utility_siblings(){
 
 static char * all_tests(){
 	mu_run_test(test_debug);
+	mu_run_test(test_get_level);
 	mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
     mu_run_test(test_create_ht_array);

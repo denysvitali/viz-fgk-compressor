@@ -328,19 +328,6 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     return res2;
 }
 
-int getLevelInternal(int pos, int i){
-    if(pos == 0){
-        return i;
-    }
-
-    return getLevelInternal((pos-1)/2, i-1);
-}
-
-int getLevel(int pos){
-    return getLevelInternal(pos, 0);
-}
-
-
 
 
 Node** getSubTree(Node** array, int pos){
@@ -458,6 +445,12 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
     }
 }
 
+void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int* i){
+    //ht->tree[pos] = arr[((*i)*2)+1];
+    debug("[rebuilding_from_array] Starting rebuild");
+    printf("Pos: %d, LVL: %d\n", pos, getLevel(pos));
+}
+
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
     Node **arr = calloc(256, sizeof(Node*));
@@ -508,11 +501,6 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //rebuilding_from_array(ht, pos, arr, 0);
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int* i){
-    //ht->tree[pos] = arr[((*i)*2)+1];
-    debug("[rebuilding_from_array] Starting rebuild");
-    printf("Pos: %d\n", pos);
-}
 
 /*
 int calculate_weight(Node* node){

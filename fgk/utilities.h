@@ -28,3 +28,5 @@ void printNodeArray(Node** array);
 
 int getNodeLevel(Node* node);
 int getNodePosition(HuffmanTree* ht, Node* node);
+
+int getLevel(int pos);
