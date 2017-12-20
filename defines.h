@@ -20,3 +20,6 @@
 /* Compressor Magic Number */
 #define MAGIC_NUMBER 0x517D3C0
 #define NYT_ELEMENT 256
+
+/* DEBUG flags */
+#define DEBUG_SWAP_SHOW_ARRAYS 0
