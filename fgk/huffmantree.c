@@ -448,12 +448,14 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
 }
 
 void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
-    debug("[rebuilding_from_array] Starting rebuild");
-    printf("Pos: %d\n", pos);
+    //debug("[rebuilding_from_array] Starting rebuild");
+    //printf("Pos: %d\n", pos);
     if(pos<HUFFMAN_ARRAY_SIZE){
         ht->tree[pos] = arr[i];
-        rebuilding_from_array(ht, (2*pos)+1, arr, i+(int)pow(2, lvl), lvl+1);
-        rebuilding_from_array(ht, (2*pos)+2, arr, i+(int)pow(2, lvl)+1, lvl+1);
+        if((2 * pos) + 1 < HUFFMAN_ARRAY_SIZE) {
+            rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
+            rebuilding_from_array(ht, (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
+        }
     } else {
         error("[OUT OF BOUNDS] while rebuilding!");
     }
