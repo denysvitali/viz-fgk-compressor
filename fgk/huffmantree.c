@@ -433,15 +433,15 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int level, int pos, int originalPos){
     if(node != NULL) {
-        result[pos-originalPos] = node;
+        result[pos] = node;
 
         int left = (2*pos) + 1;
-        Node* n_left = ht->tree[left];
+        Node* n_left = node->left;
+        int right = left + 1;
+        Node* n_right = node->right;
 
-        int right = (2*pos) + 2;
-        Node* n_right = ht->tree[right];
 
-        printf("Pos: %d, LVL: %d\n", pos, level);
+        printf("Pos: %d, LVL: %d OrPos: %d\n", pos, level, originalPos);
         printf("Node itself: %s\n", getElement(node));
 
         printf("LEFT: \n");
@@ -450,8 +450,8 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int le
         printElement(n_right);
         printf("\n");
 
-        create_subtree_from_node(ht, n_left, result, level, left, originalPos);
-        create_subtree_from_node(ht, ht->tree[(2*pos)+2], result, level, (2*pos)+2, originalPos);
+        create_subtree_from_node(ht, n_left, result, level, left, originalPos+1);
+        create_subtree_from_node(ht, n_right, result, level, right, originalPos+2);
     }
 }
 
@@ -463,8 +463,8 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     int pos, pos2;
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
-    create_subtree_from_node(ht, node, arr, getLevel(pos), pos, pos);
-    create_subtree_from_node(ht, node2, arr2, getLevel(pos2), pos2, pos2);
+    create_subtree_from_node(ht, node, arr, getLevel(pos), 0, pos);
+    create_subtree_from_node(ht, node2, arr2, getLevel(pos2), 0, pos2);
 
     int i;
     int nulls = 0;
