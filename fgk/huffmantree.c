@@ -497,13 +497,17 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
         printf("%d: %s\n", i, getElement(arr2[i]));
     }
 
+    rebuilding_from_array(ht, pos2, arr, 0);
+    rebuilding_from_array(ht, pos, arr2, 0);
+
     //TODO Rebuilding of the array
     //rebuilding_from_array(ht, pos, arr, 0);
 }
 
-void rebuilding_from_array(HuffmanTree *ht,int pos,Node** arr, int* i){
+void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int* i){
     //ht->tree[pos] = arr[((*i)*2)+1];
-
+    debug("[rebuilding_from_array] Starting rebuild");
+    printf("Pos: %d\n", pos);
 }
 
 /*
