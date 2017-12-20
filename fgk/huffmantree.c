@@ -329,31 +329,6 @@ Node* last_of_weight(Node* root, int wtc, int* last){
     return res2;
 }
 
-
-
-Node** getSubTree(Node** array, int pos){
-    int level = getLevel(pos);
-    printf("Level: %d\n", level);
-
-    int arraySize = (int) ((log(HUFFMAN_ARRAY_SIZE) / log(2)) - 1);
-    Node** result = calloc((size_t) arraySize, sizeof(Node));
-
-    if(array[pos] == NULL){
-        result[0] = NULL;
-        return result;
-    }
-
-    if(array[2*pos+1] == NULL && array[2*pos + 2] == NULL){
-        result[0] = array[pos];
-        return result;
-    }
-
-    int i;
-    for(i=0; i<arraySize; i++){
-
-    }
-}
-
 void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //Node* aux = node;
     if(node == NULL || node2 == NULL){
