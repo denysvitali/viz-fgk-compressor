@@ -198,7 +198,6 @@ static char * test_create_ht_array(){
 
 
     freeHuffman(ht);
-
     return 0;
 }
 
