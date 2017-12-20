@@ -170,7 +170,9 @@ char* getElement(Node* root){
 }
 
 void printElement(Node* root){
-    printf("%s", getElement(root));
+    char* elementText = getElement(root);
+    printf("%s", elementText);
+    free(elementText);
 }
 
 /*
