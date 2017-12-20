@@ -333,7 +333,7 @@ int getLevelInternal(int pos, int i){
         return i;
     }
 
-    return getLevelInternal(pos, (i-1)/2);
+    return getLevelInternal((pos-1)/2, i-1);
 }
 
 int getLevel(int pos){
@@ -431,17 +431,17 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 }
 
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int pos){
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int level, int pos, int originalPos){
     if(node != NULL) {
-        result[pos] = node;
+        result[pos-originalPos] = node;
 
-        int left = (2*pos)+1;
+        int left = (2*pos) + 1;
         Node* n_left = ht->tree[left];
 
         int right = (2*pos) + 2;
         Node* n_right = ht->tree[right];
 
-        printf("Pos: %d\n", pos);
+        printf("Pos: %d, LVL: %d\n", pos, level);
         printf("Node itself: %s\n", getElement(node));
 
         printf("LEFT: \n");
@@ -450,8 +450,8 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
         printElement(n_right);
         printf("\n");
 
-        create_subtree_from_node(ht, n_left, result, left);
-        create_subtree_from_node(ht, ht->tree[(2*pos)+2], result, (2*pos)+2);
+        create_subtree_from_node(ht, n_left, result, level, left, originalPos);
+        create_subtree_from_node(ht, ht->tree[(2*pos)+2], result, level, (2*pos)+2, originalPos);
     }
 }
 
@@ -463,11 +463,22 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     int pos, pos2;
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
-    //create_subtree_from_node(ht, node, arr, pos);
-    create_subtree_from_node(ht, node2, arr2, pos2);
+    create_subtree_from_node(ht, node, arr, getLevel(pos), pos, pos);
+    create_subtree_from_node(ht, node2, arr2, getLevel(pos2), pos2, pos2);
 
     int i;
     int nulls = 0;
+    for(i=0; i<256; i++){
+        if(nulls >= 5){
+            printf("... (truncated)\n");
+            break;
+        }
+        if(arr[i] == NULL){
+            nulls++;
+        }
+        printf("%d: %s\n", i, getElement(arr[i]));
+    }
+
     for(i=0; i<256; i++){
         if(nulls >= 5){
             printf("... (truncated)\n");
