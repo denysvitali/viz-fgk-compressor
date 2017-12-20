@@ -237,7 +237,7 @@ void freeNode(Node* node){
 }
 
 void freeHuffman(HuffmanTree* ht){
-    freeNode(ht->root);
+    //freeNode(ht->root);
     free(ht);
 }
 
@@ -261,16 +261,17 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
 
     if(level == 0){
         int index = (int) pow(2,originalLevel) - 1 + i;
-
+        char* element = getElement(levelRoot);
         char buffer[100];
         snprintf(buffer, 100, "[fillHTArrayFromTree] index: %d, i: %d, level: %d, originalLevel: %d, node: %s",
                 index,
                  i,
                 level,
                 originalLevel,
-                getElement(levelRoot)
+                element
         );
         debug(buffer);
+        free(element);
 
         ht->tree[index] = levelRoot;
     } else {
