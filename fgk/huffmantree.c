@@ -371,8 +371,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     int pos1 = getNodePosition(ht, node);
     int pos2 = getNodePosition(ht, node2);
-    int lvl1 = getNodeLevel(node);
-    int lvl2 = getNodeLevel(node2);
+    //int lvl1 = getNodeLevel(node);
+    //int lvl2 = getNodeLevel(node2);
 
 
     char buffer[500];
