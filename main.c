@@ -61,6 +61,7 @@ static char* test_simple_swap(){
     HuffmanTree* ht = createHuffmanTree();
     free(ht->root);
     ht->root = createNode(511, 1, -1, NULL, NULL, NULL);
+    ht->tree[0] = ht->root;
 
     Node* original_left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
     Node* original_right = createNode(510, 1, 'a', NULL, NULL, ht->root);
