@@ -639,7 +639,8 @@ Node* check_move(Node* root, Node* node){
     Node* last;
     int l = 0;
     last = last_of_weight(root, node->weight, &l);
-    printf("Last: %p %d\n", last, last->node_number);
+    if(last != NULL)
+        printf("Last: %p %d\n", last, last->node_number);
     printf("Node: %p %d\n", node, node->node_number);
     if(node != last && node != root && last != root) {
         printf("Swapping %d w/ %d\n", node->node_number, last->node_number);
