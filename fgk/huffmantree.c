@@ -264,6 +264,11 @@ Node* find_node(Node *root, int c){
         return NULL;
     }
 
+    if(root->left == root || root->right == root){
+        error("[find_node] Circular reference!");
+        return NULL;
+    }
+
     Node* res;
     if(root->left != NULL){
         res = find_node(root->left, c);
@@ -440,6 +445,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         return;
     }
 
+
     if(node == node2){
         // Not going to swap two identical nodes.
         return;
@@ -454,11 +460,15 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //int lvl1 = getNodeLevel(node);
     //int lvl2 = getNodeLevel(node2);
 
-
     char buffer[500];
     sprintf(buffer, "[Swapping] Pos1: %d (NN %d), Pos2: %d (NN %d)", pos1, node->node_number, pos2, node2->node_number);
     debug(buffer);
 
+
+    if(node2->parent == node || node->parent == node2){
+        error("[swap_nodes] I can't a child with its parent");
+        return;
+    }
     //int distance = pos1-pos2;
 
 

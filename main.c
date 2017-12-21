@@ -706,10 +706,6 @@ int main(int argc, char *argv[]){
 			char c = (char) fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
-            if(DEBUG) {
-                // DEBUG ONLY!
-                if (i == 20) break;
-            }
 
             char buffer[200];
             sprintf(buffer, "Parsing byte %02x", c & 0xff);

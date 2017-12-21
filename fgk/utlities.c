@@ -78,7 +78,7 @@ void printHuffmanArray(HuffmanTree* ht){
 }
 
 char* getTree(Node* root, int level) {
-    char* string = calloc(sizeof(char), 65535);
+    char* string = calloc(sizeof(char), 500);
 
     /* Expected output
      *
@@ -112,6 +112,9 @@ char* getTree(Node* root, int level) {
 
     if(root->left == NULL && root->right == NULL){
         sprintf(string + strlen(string), ";\n");
+    } else if(root->left == root || root->right == root){
+        error("[getTree] Circular reference!");
+        return string;
     }
     else{
         sprintf(string + strlen(string), " -- ");
