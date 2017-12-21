@@ -314,7 +314,7 @@ static char * test_huffman_coding(){
     mu_assert("Root -> Right -> Right -> Right isn't 'd'", ht->root->right->right->right->element == 'd');
     mu_assert("Root -> Right -> Right -> Right doesn't have weight 1", ht->root->right->right->right->weight == 1);
 
-
+    printHuffmanTree(ht);
 
 //    printHuffmanTree(ht);
 //    printf("Step 1\n");
@@ -708,17 +708,17 @@ int main(int argc, char *argv[]){
 			if(ferror(fh)) break;
             if(DEBUG) {
                 // DEBUG ONLY!
-                if (i == 5) break;
+                if (i == 20) break;
             }
 
             char buffer[200];
             sprintf(buffer, "Parsing byte %02x", c & 0xff);
             debug(buffer);
             add_new_element(ht, c);
-            printHuffmanTreeInfo(ht);
-            saveHuffmanTree(ht, "./out.dot");
             i++;
         }
+        printHuffmanTreeInfo(ht);
+        saveHuffmanTree(ht, "./out.dot");
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);

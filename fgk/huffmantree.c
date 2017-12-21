@@ -63,6 +63,10 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         printf("OLD NYT: %s\n", getElement(old_nyt));
 
+        char buffer[500];
+        sprintf(buffer,"[add_new_element] old_nyt_pos: %d, new_nyt_pos: %d", old_nyt_position, new_nyt_position);
+        debug(buffer);
+
         old_nyt->weight++;
         old_nyt->left = new_nyt;
         old_nyt->right = new_char;
@@ -301,7 +305,7 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
 
 HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(HUFFMAN_ARRAY_SIZE);
+    Node* tmp_nyt = createNYT(HUFFMAN_TOTAL_NODES);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
 
@@ -496,6 +500,9 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 }
 
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int pos){
+    if(pos >= HUFFMAN_ARRAY_SIZE){
+        return;
+    }
     if(node != NULL) {
         result[pos] = node;
         //ht->tree[node->node_number] = NULL;
@@ -526,9 +533,9 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
 void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
     //debug("[rebuilding_from_array] Starting rebuild");
     //printf("Pos: %d\n", pos);
-    if(pos<HUFFMAN_ARRAY_SIZE){
+    if(pos<HUFFMAN_TOTAL_NODES){
         ht->tree[pos] = arr[i];
-        if((2 * pos) + 1 < HUFFMAN_ARRAY_SIZE) {
+        if((2 * pos) + 1 < HUFFMAN_TOTAL_NODES) {
             rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
             rebuilding_from_array(ht, (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
         }
@@ -538,8 +545,8 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl)
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
-    Node **arr = calloc(256, sizeof(Node*));
-    Node **arr2 = calloc(256, sizeof(Node*));
+    Node **arr = calloc(HUFFMAN_ARRAY_SIZE, sizeof(Node*));
+    Node **arr2 = calloc(HUFFMAN_ARRAY_SIZE, sizeof(Node*));
 
     int pos, pos2;
     pos = getNodePosition(ht, node);

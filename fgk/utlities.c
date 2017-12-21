@@ -57,14 +57,14 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
 
 void printNodeArray(Node** array){
     int i;
-    for(i=0; i< HUFFMAN_ARRAY_SIZE; i++){
+    for(i=0; i< HUFFMAN_TOTAL_NODES; i++){ // We use HUFFMAN_NODES here to truncate the output
         if(array[i] == NULL){
             printf(" ");
         } else {
             printElement(array[i]);
             //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
         }
-        if(i<HUFFMAN_ARRAY_SIZE-1){
+        if(i<HUFFMAN_TOTAL_NODES-1){
             printf(",");
         }
     }
@@ -78,7 +78,7 @@ void printHuffmanArray(HuffmanTree* ht){
 }
 
 char* getTree(Node* root, int level) {
-    char* string = calloc(sizeof(char), 500);
+    char* string = calloc(sizeof(char), 65535);
 
     /* Expected output
      *
