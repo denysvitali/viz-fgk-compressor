@@ -112,7 +112,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         }
         target = target->parent;
     }
-
+    update_weights(node, target);
+    /*
     while(target != ht->root) {
         Node *highest = highest_numbered_node(ht, target->weight);
         if(highest != target){
