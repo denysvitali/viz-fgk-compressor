@@ -27,4 +27,5 @@ Extract:         viz -d input.viz
 [Adaptive Huffman Coding - Wikipedia](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding)  
 [Adaptive Huffman Coding - The Data Compression Guide](https://sites.google.com/site/datacompressionguide/fgk)  
 [Adaptive Huffman Coding - cs.duke.edu](https://www.cs.duke.edu/csed/curious/compression/adaptivehuff.html)  
-[Visualizing Adaptive Huffman Coding - Ben Tanen](http://ben-tanen.com/adaptive-huffman/)
+[Visualizing Adaptive Huffman Coding - Ben Tanen](http://ben-tanen.com/adaptive-huffman/)  
+[Array Implementation for Complete Binary Trees](http://www.ida.liu.se/opendsa/OpenDSA/Books/OpenDSA/html/CompleteTree.html)
