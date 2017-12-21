@@ -28,6 +28,13 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
     return result;
 }
 
+void weights_increment(Node* root, Node* node){
+    node->weight++;
+    if(node!=root){
+        weights_increment(root, node->parent);
+    }
+}
+
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
@@ -79,7 +86,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         }
 
         if(ht->root->left != ht->nyt){
-            ht->root->weight++;
+            //ht->root->weight++;
         }
 
         int size;
@@ -112,7 +119,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         }
         target = target->parent;
     }
-    update_weights(node, target);
+    weights_increment(node, target);
     /*
     while(target != ht->root) {
         Node *highest = highest_numbered_node(ht, target->weight);
