@@ -29,6 +29,7 @@ Node* createNYT(int i);
 Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
 Node* findNYT(Node* root);
 int isNYT(Node *pNode);
+int isInternalNode(Node *pNode);
 Node* check_move(Node* root, Node* node);
 void check_move_weight(Node* root, Node* node);
 Node* last_of_weight(Node* root, int wtc, int* last);

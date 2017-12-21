@@ -35,122 +35,179 @@ void weights_increment(Node* root, Node* node){
     }
 }
 
+void node_positioner(HuffmanTree* ht, Node* target){
+    Node* last = highest_numbered_node(ht, target->weight);
+
+    if(last != target){
+        swap_nodes(ht, target, last);
+    }
+
+    target->weight++;
+}
+
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
+
     // Character already is already in the tree?
-    if(target != NULL) {
-        // Yep, go to the node (target = node)
-        char string[50];
-        sprintf(string, "Target = %p", target);
-        debug(string);
+    if(target != NULL){
+        node_positioner(ht, target);
     } else {
-        debug("Character not found");
         Node* old_nyt = ht->nyt;
-        Node* new_nyt = createNYT(old_nyt->node_number-2);
-        Node* new_char = createNode(old_nyt->node_number-1, 1, c, NULL, NULL, old_nyt);
+        Node* new_nyt = createNYT(old_nyt->node_number - 2);
+        Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
-
-        // Fix HT Array
-        /*
-         *       (1)               OLD NYT              --- OLD NYT LEVEL
-         *  (N)      (C)    NEW NYT     NEW CHAR        --- NEW NYT LEVEL = NEW CHAR LEVEL = OLD NYT LEVEL + 1
-         */
-        int old_nyt_position = getNodePosition(ht, ht->nyt);
-        // int old_nyt_level = getNodeLevel(ht->nyt);
-
-        // int new_nyt_level = old_nyt_level+1;
-        int new_nyt_position = 2*(old_nyt_position+1)-1;
+        int old_nyt_position = getNodePosition(ht, old_nyt);
+        int new_nyt_position = old_nyt_position * 2 + 1;
         int new_char_position = new_nyt_position + 1;
 
+        printf("OLD NYT: %s\n", getElement(old_nyt));
 
-        //printf("NNPOS: %d\n", new_nyt_position);
-
-        // OLD NYT becomes our new parent for the new NYT and the new element
+        old_nyt->weight++;
         old_nyt->left = new_nyt;
         old_nyt->right = new_char;
         old_nyt->element = -1;
-        old_nyt->weight = 1;
-        new_nyt->parent = old_nyt;
 
-        ht->tree[old_nyt_position] = old_nyt;
+
+        ht->nyt = new_nyt;
+
+        new_nyt->parent = old_nyt;
+        new_char->parent = old_nyt;
+
         ht->tree[new_nyt_position] = new_nyt;
         ht->tree[new_char_position] = new_char;
 
-
-        // Set the new NYT pointer
-        ht->nyt = new_nyt;
-
-        if(ht->nyt == ht->root) {
-            ht->root = old_nyt;
-        }
-
-        if(ht->root->left != ht->nyt){
-            //ht->root->weight++;
-        }
-
-        int size;
-        Node** level_siblings = siblings(ht, getNodeLevel(old_nyt), &size);
-        if(size != 0){
-            // Last = level_siblings[size-1]
-
-            Node* last = level_siblings[size-1];
-
-            if(last != NULL) {
-                printf("Level Siblings Size: %d\n", size);
-                printf("Last sibling: %p\n", last);
-                printf("Last sibling Element: %x\n", last->element);
-                printf("Last Sibling: %d\n", last->node_number);
-
-                if (last != old_nyt) {
-                    printf("We need to swap %d w/ %d\n", old_nyt->node_number, last->node_number);
-                    swap_nodes(ht, old_nyt, last);
-                }
-            } else {
-                printf("Last is null.\n");
-            }
-        }
-
-        free(level_siblings);
-        target = old_nyt; // p = parent of the new symbol node
-
-        if(target == ht->root){
-            return ht;
-        }
-        target = target->parent;
-    }
-    weights_increment(node, target);
-    /*
-    while(target != ht->root) {
-        Node *highest = highest_numbered_node(ht, target->weight);
-        if(highest != target){
-            swap_nodes(ht, target, highest);
-        }
-        target->weight++;
-        target = target->parent;
-    }
-    /*if(target->parent == ht->nyt->parent){
-        Node* highest = highest_numbered_node(ht, target->weight);
-        if(highest != NULL){
-            swap_nodes(ht, target, highest);
-        }
-        free(highest);
-        target->weight++;
-        target = target->parent;
+        target = old_nyt;
     }
 
     while(target != ht->root){
-        Node* swap_target = highest_numbered_node(ht, target->weight);
-
-        if(swap_target != NULL){
-            swap_nodes(ht, target, swap_target);
-        }
-
-        target->weight++;
         target = target->parent;
+        node_positioner(ht, target);
     }
-    */
+
     return ht;
+
+
+//    if(target != NULL) {
+//        // Yep, go to the node (target = node)
+//        char string[50];
+//        sprintf(string, "Target = %p", target);
+//        debug(string);
+//        Node* last;
+//        int t = 0;
+//        last = last_of_weight(ht->root, target->weight, &t);
+//        //target->weight++;
+//        if(last != target && last != NULL) {
+//            swap_nodes(ht, target, last);
+//        }
+//
+//    } else {
+//        debug("Character not found");
+//        Node *old_nyt = ht->nyt;
+//        Node *new_nyt = createNYT(old_nyt->node_number - 2);
+//        Node *new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
+//
+//
+//        // Fix HT Array
+//        /*
+//         *       (1)               OLD NYT              --- OLD NYT LEVEL
+//         *  (N)      (C)    NEW NYT     NEW CHAR        --- NEW NYT LEVEL = NEW CHAR LEVEL = OLD NYT LEVEL + 1
+//         */
+//        int old_nyt_position = getNodePosition(ht, ht->nyt);
+//        // int old_nyt_level = getNodeLevel(ht->nyt);
+//
+//        // int new_nyt_level = old_nyt_level+1;
+//        int new_nyt_position = 2 * (old_nyt_position + 1) - 1;
+//        int new_char_position = new_nyt_position + 1;
+//
+//
+//        //printf("NNPOS: %d\n", new_nyt_position);
+//
+//        // OLD NYT becomes our new parent for the new NYT and the new element
+//        old_nyt->left = new_nyt;
+//        old_nyt->right = new_char;
+//        old_nyt->element = -1;
+//        old_nyt->weight = 1;
+//        new_nyt->parent = old_nyt;
+//
+//        ht->tree[old_nyt_position] = old_nyt;
+//        ht->tree[new_nyt_position] = new_nyt;
+//        ht->tree[new_char_position] = new_char;
+//
+//
+//        // Set the new NYT pointer
+//        ht->nyt = new_nyt;
+//
+//        if (ht->nyt == ht->root) {
+//            ht->root = old_nyt;
+//        }
+//
+//        if (ht->root->left != ht->nyt) {
+//            //ht->root->weight++;
+//        }
+//
+//        int size;
+//        Node **level_siblings = siblings(ht, getNodeLevel(old_nyt), &size);
+//        if (size != 0) {
+//            // Last = level_siblings[size-1]
+//
+//            Node *last = level_siblings[size - 1];
+//
+//            if (last != NULL) {
+//                printf("Level Siblings Size: %d\n", size);
+//                printf("Last sibling: %p\n", last);
+//                printf("Last sibling Element: %x\n", last->element);
+//                printf("Last Sibling: %d\n", last->node_number);
+//
+//                if (last != old_nyt) {
+//                    printf("We need to swap %d w/ %d\n", old_nyt->node_number, last->node_number);
+//                    swap_nodes(ht, old_nyt, last);
+//                }
+//            } else {
+//                printf("Last is null.\n");
+//            }
+//        }
+//
+//        free(level_siblings);
+//        target = old_nyt; // p = parent of the new symbol node
+//
+//        if (target == ht->root) {
+//            return ht;
+//        }
+//        target = target->parent;
+//        weights_increment(node, target);
+//    }
+//    /*
+//    while(target != ht->root) {
+//        Node *highest = highest_numbered_node(ht, target->weight);
+//        if(highest != target){
+//            swap_nodes(ht, target, highest);
+//        }
+//        target->weight++;
+//        target = target->parent;
+//    }
+//    /*if(target->parent == ht->nyt->parent){
+//        Node* highest = highest_numbered_node(ht, target->weight);
+//        if(highest != NULL){
+//            swap_nodes(ht, target, highest);
+//        }
+//        free(highest);
+//        target->weight++;
+//        target = target->parent;
+//    }
+//
+//    while(target != ht->root){
+//        Node* swap_target = highest_numbered_node(ht, target->weight);
+//
+//        if(swap_target != NULL){
+//            swap_nodes(ht, target, swap_target);
+//        }
+//
+//        target->weight++;
+//        target = target->parent;
+//    }
+//    */
+//    return ht;
 }
 
 Node* findNYT(Node* root){
@@ -175,6 +232,16 @@ int isNYT(Node *pNode) {
         return 0;
     }
     if(pNode->weight == 0 && pNode->element == NYT_ELEMENT){
+        return 1;
+    }
+    return 0;
+}
+
+int isInternalNode(Node *pNode){
+    if(pNode == NULL){
+        return 0;
+    }
+    if(pNode->weight != 0 && pNode->element == -1){
         return 1;
     }
     return 0;

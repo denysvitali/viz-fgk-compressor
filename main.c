@@ -156,7 +156,7 @@ static char * test_create_ht_array(){
     printHuffmanTree(ht);
 
     mu_assert("HT.TREE[0] does not exist", ht->tree[0] != NULL);
-    mu_assert("HT.TREE[0] element is not 256", ht->tree[0]->element == -1);
+    mu_assert("HT.TREE[0] element is not -1", ht->tree[0]->element == -1);
     mu_assert("HT.TREE[0] weight is not 2", ht->tree[0]->weight == 2);
     mu_assert("HT.TREE[0] NN is not 511", ht->tree[0]->node_number == 511);
 
@@ -178,7 +178,7 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
     mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
 
-    mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
+    /*mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
     mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
     mu_assert("HT.TREE[1] doesn't have weight 1", ht->tree[1]->weight == 1);
     mu_assert("HT.TREE[1] left is not null", ht->tree[1]->left == NULL);
@@ -197,6 +197,7 @@ static char * test_create_ht_array(){
     mu_assert("HT.TREE[2] left doesn't have NN 507", ht->tree[2]->left->node_number == 507);
     mu_assert("HT.TREE[2] right doesn't have NN 508", ht->tree[2]->right->node_number == 508);
     mu_assert("HT.TREE[2] right doesn't have weight 1", ht->tree[2]->right->weight == 1);
+     */
 
 
     freeHuffman(ht);
@@ -206,58 +207,167 @@ static char * test_create_ht_array(){
 static char * test_huffman_coding(){
     mu_tag("Huffman Coding");
     HuffmanTree* ht = createHuffmanTree();
-    printHuffmanTree(ht);
-    printf("Step 1\n");
-    add_new_element(ht, 'A');
 
-    mu_assert("Root doesn't have weight 1", ht->root->weight == 1);
+    mu_assert("Root is not the NYT", ht->root == ht->nyt);
+    mu_assert("Root is not the NYT", isNYT(ht->root));
+    mu_assert("Root NN is not 511", ht->root->node_number == 511);
+
+    // Encode "aardvark"
+    add_new_element(ht, 'a');
+
+    mu_assert("Root is the NYT", !isNYT(ht->root));
+    mu_assert("Root is not an internal node", isInternalNode(ht->root));
+    mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
     mu_assert("Root -> Left is not the NYT", isNYT(ht->root->left));
-    mu_assert("Root -> Right is a NYT", !isNYT(ht->root->right));
-    mu_assert("Root -> Right is NULL", ht->root->right != NULL);
-    mu_assert("Root -> Right doesn't have 1 as a weight", ht->root->right->weight == 1);
-    mu_assert("Root -> Right isn't an 'A'", ht->root->right->element == 'A');
-    mu_assert("Root -> Right NN is not 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+    mu_assert("Root -> Right isn't NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right element isn't 'a'", ht->root->right->element == 'a');
+    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 1);
 
-    printHuffmanTree(ht);
-    printf("Step 2\n");
-    add_new_element(ht, 'B');
+    add_new_element(ht, 'a');
 
+    mu_assert("Root is the NYT", !isNYT(ht->root));
+    mu_assert("Root is not an internal node", isInternalNode(ht->root));
     mu_assert("Root doesn't have weight 2", ht->root->weight == 2);
     mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
-    mu_assert("Root -> Left doesn't have weight 1", ht->root->left->weight == 1);
-    mu_assert("Root -> Left isn't the letter 'A'", ht->root->left->element == 'A');
-    mu_assert("Root -> Left doesn't have NN 509", ht->root->left->node_number == 509);
+    mu_assert("Root -> Left is not the NYT", isNYT(ht->root->left));
     mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
-    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 1);
-    mu_assert("Root -> Right contains a character (-1 needed!)", ht->root->right->element == -1);
-    mu_assert("Root -> Right doesn't have NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right isn't NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right element isn't 'a'", ht->root->right->element == 'a');
+    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 2);
 
-    printf("Root %p (%d), Root => Right: %p (%d)\n", ht->root, ht->root->node_number, ht->root->right, ht->root->right->node_number);
+    add_new_element(ht, 'r');
+    mu_assert("Root is the NYT", !isNYT(ht->root));
+    mu_assert("Root is not an internal node", isInternalNode(ht->root));
+    mu_assert("Root doesn't have weight 3", ht->root->weight == 3);
+    mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
+    mu_assert("Root -> Left is not an internal node", isInternalNode(ht->root->left));
+    mu_assert("Root -> Left doesn't have an element on its left", ht->root->left->left != NULL);
+    mu_assert("Root -> Left doesn't have an element on its right", ht->root->left->right != NULL);
+    mu_assert("Root -> Left -> Left isn't the NYT", isNYT(ht->root->left->left));
+    mu_assert("Root -> Left -> Right is an internal node", !isInternalNode(ht->root->left->right));
+    mu_assert("Root -> Left -> Right isn't 'r'", ht->root->left->right->element == 'r');
+    mu_assert("Root -> Left -> Right doesn't have weight 1", ht->root->left->right->weight == 1);
+    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+    mu_assert("Root -> Right isn't NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right element isn't 'a'", ht->root->right->element == 'a');
+    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 2);
+
+    add_new_element(ht, 'd');
+    mu_assert("Root is the NYT", !isNYT(ht->root));
+    mu_assert("Root is not an internal node", isInternalNode(ht->root));
+    mu_assert("Root doesn't have weight 4", ht->root->weight == 4);
+    mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
+    mu_assert("Root -> Left is not an internal node", isInternalNode(ht->root->left));
+    mu_assert("Root -> Left doesn't have an element on its left", ht->root->left->left != NULL);
+    mu_assert("Root -> Left doesn't have an element on its right", ht->root->left->right != NULL);
+    mu_assert("Root -> Left -> Left isn't an internal node", isInternalNode(ht->root->left->left));
+    mu_assert("Root -> Left -> Right is an internal node", !isInternalNode(ht->root->left->right));
+    mu_assert("Root -> Left -> Right isn't 'r'", ht->root->left->right->element == 'r');
+    mu_assert("Root -> Left -> Right doesn't have weight 1", ht->root->left->right->weight == 1);
+
+    mu_assert("Root -> Left -> Left -> Left doesn't exists", ht->root->left->left->left != NULL);
+    mu_assert("Root -> Left -> Left -> Left isn't the NYT", isNYT(ht->root->left->left->left));
+    mu_assert("Root -> Left -> Left -> Right doesn't exists", ht->root->left->left->right != NULL);
+    mu_assert("Root -> Left -> Left -> Right is an internal node", !isInternalNode(ht->root->left->left->right));
+    mu_assert("Root -> Left -> Left -> Right isn't 'd'", ht->root->left->left->right->element == 'd');
+
+    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+    mu_assert("Root -> Right isn't NN 510", ht->root->right->node_number == 510);
+    mu_assert("Root -> Right element isn't 'a'", ht->root->right->element == 'a');
+    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 2);
+
+    add_new_element(ht, 'v');
+    mu_assert("Root is the NYT", !isNYT(ht->root));
+    mu_assert("Root is not an internal node", isInternalNode(ht->root));
+    mu_assert("Root doesn't have weight 5", ht->root->weight == 5);
+    mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
+    mu_assert("Root -> Left is an internal node", !isInternalNode(ht->root->left));
+    mu_assert("Root -> Left isn't 'a'", ht->root->left->element == 'a');
+
+    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+    mu_assert("Root -> Right is not an internal node", isInternalNode(ht->root->right));
+    mu_assert("Root -> Right doesn't have weight 3", ht->root->right->weight==3);
 
     mu_assert("Root -> Right -> Left doesn't exist", ht->root->right->left != NULL);
-    mu_assert("Root -> Right -> Left is not the NYT", isNYT(ht->root->right->left));
-    mu_assert("Root -> Right -> Left doesn't have NN 507", ht->root->right->left->node_number == 507);
+    mu_assert("Root -> Right -> Left is an internal node", !isInternalNode(ht->root->right->left));
+    mu_assert("Root -> Right -> Left isn't an 'r'", ht->root->right->left->element == 'r');
+    mu_assert("Root -> Right -> Left doesn't have weight 1", ht->root->right->left->weight == 1);
+
     mu_assert("Root -> Right -> Right doesn't exist", ht->root->right->right != NULL);
-    mu_assert("Root -> Right -> Right doesn't have weight 1", ht->root->right->right->weight == 1);
-    mu_assert("Root -> Right -> Right isn't a 'B'", ht->root->right->right->element == 'B');
-    mu_assert("Root -> Right -> Right doesn't have NN 508", ht->root->right->right->node_number == 508);
+    mu_assert("Root -> Right -> Right isn't an internal node", isInternalNode(ht->root->right->right));
+    mu_assert("Root -> Right -> Right doesn't have weight 2", ht->root->right->right->weight == 2);
 
-    printHuffmanTree(ht);
-    printf("%sStep 3%s\n", STYLE_BOLD, STYLE_NO_BOLD);
-    add_new_element(ht, 'C');
+    mu_assert("Root -> Right -> Right -> Left doesn't exist", ht->root->right->right->left != NULL);
+    mu_assert("Root -> Right -> Right -> Left isn't an internal node", isInternalNode(ht->root->right->right->left));
+    mu_assert("Root -> Right -> Right -> Left doesn't have weight 1", ht->root->right->right->left->weight == 1);
 
-    printf("Printing tree\n");
-    printHuffmanTree(ht);
+    mu_assert("Root -> Right -> Right -> Left -> Left doesn't exist", ht->root->right->right->left->left != NULL);
+    mu_assert("Root -> Right -> Right -> Left -> Left isn't the NYT", isNYT(ht->root->right->right->left->left));
 
-    mu_assert("Root doesn't have weight 3", ht->root->weight == 3);
-    /*mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
-    mu_assert("Root -> Left doesn't have weight 1", ht->root->left->weight == 1);
-    mu_assert("Root -> Left isn't the letter 'A'", ht->root->left->element == 'A');
-    mu_assert("Root -> Left doesn't have NN 509", ht->root->left->node_number == 509);
-    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
-    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 1);
-    mu_assert("Root -> Right contains a character (-1 needed!)", ht->root->right->element == -1);
-    mu_assert("Root -> Right doesn't have NN 510", ht->root->right->node_number == 510);*/
+    mu_assert("Root -> Right -> Right -> Left -> Right is an internal node", !isInternalNode(ht->root->right->right->left->right));
+    mu_assert("Root -> Right -> Right -> Left -> Right isn't 'v'", ht->root->right->right->left->right->element == 'v');
+    mu_assert("Root -> Right -> Right -> Left -> Right doesn't have weight 1", ht->root->right->right->left->right->weight == 1);
+
+    mu_assert("Root -> Right -> Right -> Right doesn't exist", ht->root->right->right->right != NULL);
+    mu_assert("Root -> Right -> Right -> Right is an internal node", !isInternalNode(ht->root->right->right->right));
+    mu_assert("Root -> Right -> Right -> Right isn't 'd'", ht->root->right->right->right->element == 'd');
+    mu_assert("Root -> Right -> Right -> Right doesn't have weight 1", ht->root->right->right->right->weight == 1);
+
+
+
+//    printHuffmanTree(ht);
+//    printf("Step 1\n");
+//    add_new_element(ht, 'A');
+//
+//    mu_assert("Root doesn't have weight 1", ht->root->weight == 1);
+//    mu_assert("Root -> Left is not the NYT", isNYT(ht->root->left));
+//    mu_assert("Root -> Right is a NYT", !isNYT(ht->root->right));
+//    mu_assert("Root -> Right is NULL", ht->root->right != NULL);
+//    mu_assert("Root -> Right doesn't have 1 as a weight", ht->root->right->weight == 1);
+//    mu_assert("Root -> Right isn't an 'A'", ht->root->right->element == 'A');
+//    mu_assert("Root -> Right NN is not 510", ht->root->right->node_number == 510);
+//
+//    printHuffmanTree(ht);
+//    printf("Step 2\n");
+//    add_new_element(ht, 'B');
+//
+//    mu_assert("Root doesn't have weight 2", ht->root->weight == 2);
+//    mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
+//    mu_assert("Root -> Left doesn't have weight 1", ht->root->left->weight == 1);
+//    mu_assert("Root -> Left isn't the letter 'A'", ht->root->left->element == 'A');
+//    mu_assert("Root -> Left doesn't have NN 509", ht->root->left->node_number == 509);
+//    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+//    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 1);
+//    mu_assert("Root -> Right contains a character (-1 needed!)", ht->root->right->element == -1);
+//    mu_assert("Root -> Right doesn't have NN 510", ht->root->right->node_number == 510);
+//
+//    printf("Root %p (%d), Root => Right: %p (%d)\n", ht->root, ht->root->node_number, ht->root->right, ht->root->right->node_number);
+//
+//    mu_assert("Root -> Right -> Left doesn't exist", ht->root->right->left != NULL);
+//    mu_assert("Root -> Right -> Left is not the NYT", isNYT(ht->root->right->left));
+//    mu_assert("Root -> Right -> Left doesn't have NN 507", ht->root->right->left->node_number == 507);
+//    mu_assert("Root -> Right -> Right doesn't exist", ht->root->right->right != NULL);
+//    mu_assert("Root -> Right -> Right doesn't have weight 1", ht->root->right->right->weight == 1);
+//    mu_assert("Root -> Right -> Right isn't a 'B'", ht->root->right->right->element == 'B');
+//    mu_assert("Root -> Right -> Right doesn't have NN 508", ht->root->right->right->node_number == 508);
+//
+//    printHuffmanTree(ht);
+//    printf("%sStep 3%s\n", STYLE_BOLD, STYLE_NO_BOLD);
+//    add_new_element(ht, 'C');
+//
+//    printf("Printing tree\n");
+//    printHuffmanTree(ht);
+//
+//    mu_assert("Root doesn't have weight 3", ht->root->weight == 3);
+//    /*mu_assert("Root -> Left doesn't exist", ht->root->left != NULL);
+//    mu_assert("Root -> Left doesn't have weight 1", ht->root->left->weight == 1);
+//    mu_assert("Root -> Left isn't the letter 'A'", ht->root->left->element == 'A');
+//    mu_assert("Root -> Left doesn't have NN 509", ht->root->left->node_number == 509);
+//    mu_assert("Root -> Right doesn't exist", ht->root->right != NULL);
+//    mu_assert("Root -> Right doesn't have weight 1", ht->root->right->weight == 1);
+//    mu_assert("Root -> Right contains a character (-1 needed!)", ht->root->right->element == -1);
+//    mu_assert("Root -> Right doesn't have NN 510", ht->root->right->node_number == 510);*/
 
     return 0;
 }
@@ -433,6 +543,7 @@ static char * all_tests(){
 	mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
     mu_run_test(test_create_ht_array);
+    mu_run_test(test_huffman_coding);
     /*
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
@@ -597,7 +708,7 @@ int main(int argc, char *argv[]){
 			if(ferror(fh)) break;
             if(DEBUG) {
                 // DEBUG ONLY!
-                if (i == 4) break;
+                if (i == 5) break;
             }
 
             char buffer[200];
@@ -605,6 +716,7 @@ int main(int argc, char *argv[]){
             debug(buffer);
             add_new_element(ht, c);
             printHuffmanTreeInfo(ht);
+            saveHuffmanTree(ht, "./out.dot");
             i++;
         }
 		printf("\n");
