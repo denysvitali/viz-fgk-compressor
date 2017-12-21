@@ -31,12 +31,12 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
+    // Character already is already in the tree?
     if(target != NULL) {
-        // Add weight
+        // Yep, go to the node (target = node)
         char string[50];
         sprintf(string, "Target = %p", target);
         debug(string);
-        target = target->parent;
     } else {
         debug("Character not found");
         Node* old_nyt = ht->nyt;
@@ -106,9 +106,22 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         free(level_siblings);
         target = old_nyt; // p = parent of the new symbol node
+
+        if(target == ht->root){
+            return ht;
+        }
+        target = target->parent;
     }
 
-    if(target->parent == ht->nyt->parent){
+    while(target != ht->root) {
+        Node *highest = highest_numbered_node(ht, target->weight);
+        if(highest != target){
+            swap_nodes(ht, target, highest);
+        }
+        target->weight++;
+        target = target->parent;
+    }
+    /*if(target->parent == ht->nyt->parent){
         Node* highest = highest_numbered_node(ht, target->weight);
         if(highest != NULL){
             swap_nodes(ht, target, highest);
@@ -128,8 +141,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         target->weight++;
         target = target->parent;
     }
-
-
+    */
     return ht;
 }
 
