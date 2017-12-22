@@ -315,6 +315,7 @@ static char * test_huffman_coding(){
     mu_assert("Root -> Right -> Right -> Right doesn't have weight 1", ht->root->right->right->right->weight == 1);
 
     printHuffmanTree(ht);
+    free(ht);
 
 //    printHuffmanTree(ht);
 //    printf("Step 1\n");
@@ -703,7 +704,7 @@ int main(int argc, char *argv[]){
 
         int i = 0;
         for(;;){
-			char c = (char) fgetc(fh);
+			unsigned char c = (unsigned char) fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
 
