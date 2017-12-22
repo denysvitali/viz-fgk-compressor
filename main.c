@@ -61,7 +61,7 @@ static char* test_simple_swap(){
     HuffmanTree* ht = createHuffmanTree();
     free(ht->root);
     ht->root = createNode(511, 1, -1, NULL, NULL, NULL);
-    ht->tree[0] = ht->root;
+    ht->tree[0][0] = ht->root;
 
     Node* original_left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
     Node* original_right = createNode(510, 1, 'a', NULL, NULL, ht->root);
@@ -139,44 +139,44 @@ static char * test_last_of_weight(){
 static char * test_create_ht_array(){
     mu_tag("Create Huffman Tree Array");
     HuffmanTree* ht = createHuffmanTree();
-    mu_assert("HT.TREE[0] is not NYT / Root", ht->tree[0] == ht->nyt && ht->tree[0] == ht->root);
+    mu_assert("HT.TREE[0] is not NYT / Root", ht->tree[0][0] == ht->nyt && ht->tree[0][0] == ht->root);
     add_new_element(ht, 'A');
-    mu_assert("HT.TREE[0] doesn't exist", ht->tree[0] != NULL);
-    mu_assert("HT.TREE[0] doesn't have weight 1", ht->tree[0]->weight == 1);
-    mu_assert("HT.TREE[0] doesn't have NN 511", ht->tree[0]->node_number == 511);
-    mu_assert("HT.TREE[0] has a parent", ht->tree[0]->parent == NULL);
-    mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
-    mu_assert("HT.TREE[1] is not the NYT", isNYT(ht->tree[1]));
-    mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
-    mu_assert("HT.TREE[2] doesn't exist", ht->tree[2] != NULL);
-    mu_assert("HT.TREE[2] doesn't have weight 1", ht->tree[2]->weight == 1);
-    mu_assert("HT.TREE[2] doesn't have NN 510", ht->tree[2]->node_number == 510);
+    mu_assert("HT.TREE[0][0] doesn't exist", ht->tree[0] != NULL);
+    mu_assert("HT.TREE[0][0] doesn't have weight 1", ht->tree[0][0]->weight == 1);
+    mu_assert("HT.TREE[0][0] doesn't have NN 511", ht->tree[0][0]->node_number == 511);
+    mu_assert("HT.TREE[0][0] has a parent", ht->tree[0][0]->parent == NULL);
+    mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1][0] != NULL);
+    mu_assert("HT.TREE[1][0] is not the NYT", isNYT(ht->tree[1][0]));
+    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
+    mu_assert("HT.TREE[1][1] doesn't exist", ht->tree[1][1] != NULL);
+    mu_assert("HT.TREE[1][1] doesn't have weight 1", ht->tree[1][1]->weight == 1);
+    mu_assert("HT.TREE[1][1] doesn't have NN 510", ht->tree[1][1]->node_number == 510);
 
     add_new_element(ht, 'B');
     printHuffmanTree(ht);
 
-    mu_assert("HT.TREE[0] does not exist", ht->tree[0] != NULL);
-    mu_assert("HT.TREE[0] element is not -1", ht->tree[0]->element == -1);
-    mu_assert("HT.TREE[0] weight is not 2", ht->tree[0]->weight == 2);
-    mu_assert("HT.TREE[0] NN is not 511", ht->tree[0]->node_number == 511);
+    mu_assert("HT.TREE[0][0] does not exist", ht->tree[0][0] != NULL);
+    mu_assert("HT.TREE[0][0] element is not -1", ht->tree[0][0]->element == -1);
+    mu_assert("HT.TREE[0][0] weight is not 2", ht->tree[0][0]->weight == 2);
+    mu_assert("HT.TREE[0][0] NN is not 511", ht->tree[0][0]->node_number == 511);
 
     //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
 
 
-    if(ht->tree[0]->left != ht->tree[1]){
-        printf("HT.TREE[0] (%s) doesn't have HT.TREE[1] (%s) on its left\n", getElement(ht->tree[0]), getElement(ht->tree[1]));
+    if(ht->tree[0][0]->left != ht->tree[1][0]){
+        printf("HT.TREE[0] (%s) doesn't have HT.TREE[1] (%s) on its left\n", getElement(ht->tree[0][0]), getElement(ht->tree[1][0]));
     }
 
-    if(ht->tree[0]->right != ht->tree[2]){
-        printf("HT.TREE[0] (%s) doesn't have HT.TREE[2] (%s) on its right\n", getElement(ht->tree[0]), getElement(ht->tree[2]));
+    if(ht->tree[0][0]->right != ht->tree[1][1]){
+        printf("HT.TREE[0][0] (%s) doesn't have HT.TREE[1][1] (%s) on its right\n", getElement(ht->tree[0][0]), getElement(ht->tree[1][1]));
     }
 
 
 
 
 
-    mu_assert("HT.TREE[0] doesn't have HT.TREE[1] on its left", ht->tree[0]->left == ht->tree[1]);
-    mu_assert("HT.TREE[0] doesn't have HT.TREE[2] on its right", ht->tree[0]->right == ht->tree[2]);
+    mu_assert("HT.TREE[0][0] doesn't have HT.TREE[1][0] on its left", ht->tree[0][0]->left == ht->tree[1][0]);
+    mu_assert("HT.TREE[0][0] doesn't have HT.TREE[1][1] on its right", ht->tree[0][0]->right == ht->tree[1][1]);
 
     /*mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
     mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
@@ -448,20 +448,20 @@ static char* test_swap_nodes(){
     mu_assert("Root -> Right -> Left is incorrect", ht->root->right->left == first.left);
     mu_assert("Root -> Right -> Right is incorrect", ht->root->right->right == first.right);
 
-    mu_assert("ht[1] (Root -> Left) does not exist", ht->tree[1] != NULL);
-    mu_assert("ht[1] (Root -> Left) is incorrect", ht->tree[1] == second_p);
-    mu_assert("ht[2] (Root -> Right) doesn't exist", ht->tree[2] != NULL);
-    mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == first_p);
+    mu_assert("ht[1][0] (Root -> Left) does not exist", ht->tree[1][0] != NULL);
+    mu_assert("ht[1][0] (Root -> Left) is incorrect", ht->tree[1][0] == second_p);
+    mu_assert("ht[1][1] (Root -> Right) doesn't exist", ht->tree[1][1] != NULL);
+    mu_assert("ht[1][1] (Root -> Right) is incorrect", ht->tree[1][1] == first_p);
     saveHuffmanTree(ht, "./test/results/t_sn_2.dot");
 
     // Test swap back
 
     debug("Swap: 2/3");
     swap_nodes(ht, ht->root->left, ht->root->right);
-    mu_assert("ht[1] (Root -> Left) does not exist", ht->tree[1] != NULL);
-    mu_assert("ht[1] (Root -> Left) is incorrect", ht->tree[1] == first_p);
-    mu_assert("ht[2] (Root -> Right) doesn't exist", ht->tree[2] != NULL);
-    mu_assert("ht[2] (Root -> Right) is incorrect", ht->tree[2] == second_p);
+    mu_assert("ht[1][0] (Root -> Left) does not exist", ht->tree[1][0] != NULL);
+    mu_assert("ht[1][0] (Root -> Left) is incorrect", ht->tree[1][0] == first_p);
+    mu_assert("ht[1][1] (Root -> Right) doesn't exist", ht->tree[1][1] != NULL);
+    mu_assert("ht[1][1] (Root -> Right) is incorrect", ht->tree[1][1] == second_p);
     saveHuffmanTree(ht, "./test/results/t_sn_3.dot");
 
 
@@ -469,8 +469,6 @@ static char* test_swap_nodes(){
     // Swap 507 w/ 510
     swap_nodes(ht, ht->root->left->left, ht->root->right);
     saveHuffmanTree(ht, "./test/results/t_sn_4.dot");
-
-    int i;
 
     printf("Swapped HT Array:\n");
     printHuffmanArray(ht);

@@ -58,7 +58,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
         int old_nyt_position = getNodePosition(ht, old_nyt);
-        int new_nyt_position = old_nyt_position * 2 + 1;
+        int old_nyt_level = getNodeLevel(old_nyt);
+
+        int new_nyt_position = (int) pow(2,old_nyt_level + 1) + 2*(old_nyt_position - (int) pow(2,old_nyt_level));
         int new_char_position = new_nyt_position + 1;
 
         printf("OLD NYT: %s\n", getElement(old_nyt));
@@ -78,8 +80,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         new_nyt->parent = old_nyt;
         new_char->parent = old_nyt;
 
-        ht->tree[new_nyt_position] = new_nyt;
-        ht->tree[new_char_position] = new_char;
+        ht->tree[old_nyt_level+1][new_nyt_position] = new_nyt;
+        ht->tree[old_nyt_level+1][new_char_position] = new_char;
 
         target = old_nyt;
     }
@@ -314,13 +316,15 @@ HuffmanTree* createHuffmanTree(){
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
 
-    int i;
+    int i, k;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
-        ht->tree[i] = NULL;
-        //printf("%p", ht->tree[i]);
+        for(k = 0; k<HUFFMAN_SYMBOLS; k++) {
+            ht->tree[i][k] = NULL;
+            //printf("%p", ht->tree[i]);
+        }
     }
 
-    ht->tree[0] = ht->root;
+    ht->tree[0][0] = ht->root;
     return ht;
 }
 
@@ -346,19 +350,6 @@ void freeHuffman(HuffmanTree* ht){
     free(ht);
 }
 
-HuffmanTree* generateHTFromArray(Node** array){
-    HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    ht->root = array[0];
-    int i;
-    for(i=0; i<HUFFMAN_ARRAY_SIZE;i++) {
-        ht->tree[i] = array[i];
-        if(isNYT(ht->tree[i])){
-            ht->nyt = ht->tree[i];
-        }
-    }
-    return ht;
-}
-
 void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, int level, int i){
     if(levelRoot == NULL){
         return;
@@ -378,7 +369,7 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
         debug(buffer);
         free(element);
 
-        ht->tree[index] = levelRoot;
+        ht->tree[level][index - (int) pow(2, level)] = levelRoot;
     } else {
         fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
         fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
@@ -541,10 +532,12 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node **result, int po
 }
 
 void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
-    //debug("[rebuilding_from_array] Starting rebuild");
+    debug("[rebuilding_from_array] Starting rebuild");
     //printf("Pos: %d\n", pos);
+    int node_level = getLevel(pos);
+    int pos_r = pos - (int) pow(2, node_level);
     if(pos<HUFFMAN_TOTAL_NODES){
-        ht->tree[pos] = arr[i];
+        ht->tree[node_level][pos] = arr[i];
         if((2 * pos) + 1 < HUFFMAN_TOTAL_NODES) {
             rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
             rebuilding_from_array(ht, (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
@@ -623,7 +616,14 @@ int calculate_weight(Node* node){
 void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     Node* tmp;
     int nn;
-    tmp = ht->tree[pos];
+    int level = getLevel(pos);
+    int level2 = getLevel(pos2);
+
+    int pos_r = pos - (int) pow(2, level);
+    int pos2_r = pos2 - (int) pow(2, level2);
+
+    tmp = ht->tree[level][pos_r];
+
     char db[50];
     sprintf(db, "swapping pos %d and %d", pos, pos2);
     debug(db);
@@ -633,32 +633,32 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     }
     if(tmp == tmp->parent->left){
         debug("parent left");
-        tmp->parent->left = ht->tree[pos2];
+        tmp->parent->left = ht->tree[level2][pos2_r];
     }else{
         if(tmp->parent->right != NULL) {
             debug("parent right");
-            tmp->parent->right = ht->tree[pos2];
+            tmp->parent->right = ht->tree[level2][pos2_r];
         }
     }
-    if(ht->tree[pos2] == NULL || ht->tree[pos2]->parent == NULL || ht->tree[pos2]->parent->left == NULL ) {
+    if(ht->tree[pos2] == NULL || ht->tree[level][pos2_r]->parent == NULL || ht->tree[level2][pos2_r]->parent->left == NULL ) {
         debug("check4null true");
         return;
     }
-    if(ht->tree[pos2] == ht->tree[pos2]->parent->left){
+    if(ht->tree[level2][pos2] == ht->tree[level2][pos2_r]->parent->left){
         debug("parent 2 left");
-        ht->tree[pos2]->parent->left = tmp;
+        ht->tree[level2][pos2]->parent->left = tmp;
     }else{
-        if(ht->tree[pos2]->parent->right != NULL) {
+        if(ht->tree[level2][pos2]->parent->right != NULL) {
             debug("parent 2 right");
-            ht->tree[pos2]->parent->right = tmp;
+            ht->tree[level2][pos2]->parent->right = tmp;
         }
     }
-    nn =  ht->tree[pos2]->node_number;
-    ht->tree[pos] = ht->tree[pos2];
-    ht->tree[pos]->node_number = tmp->node_number;
-    ht->tree[pos2] = tmp;
-    ht->tree[pos2]->parent = ht->tree[pos]->parent;
-    ht->tree[pos]->parent = tmp->parent;
+    nn =  ht->tree[level2][pos2]->node_number;
+    ht->tree[level][pos] = ht->tree[level2][pos2];
+    ht->tree[level][pos]->node_number = tmp->node_number;
+    ht->tree[level2][pos2] = tmp;
+    ht->tree[level2][pos2]->parent = ht->tree[level][pos]->parent;
+    ht->tree[level][pos]->parent = tmp->parent;
     tmp->node_number = nn;
 }
 

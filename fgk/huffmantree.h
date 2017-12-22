@@ -5,7 +5,7 @@
 
 #define HUFFMAN_SYMBOLS 256
 #define HUFFMAN_TOTAL_NODES ((2*HUFFMAN_SYMBOLS)-1)
-#define HUFFMAN_ARRAY_SIZE HUFFMAN_SYMBOLS*2
+#define HUFFMAN_ARRAY_SIZE 512
 
 typedef struct Node {
     int node_number;
@@ -19,7 +19,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HUFFMAN_ARRAY_SIZE];
+    Node* tree[HUFFMAN_ARRAY_SIZE][HUFFMAN_SYMBOLS];
     Node* nyt;
 } HuffmanTree;
 

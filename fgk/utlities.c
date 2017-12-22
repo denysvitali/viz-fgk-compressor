@@ -55,17 +55,22 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
     free(ht_string);
 }
 
-void printNodeArray(Node** array){
-    int i;
+void printNodeArray(Node* array[HUFFMAN_ARRAY_SIZE][HUFFMAN_SYMBOLS]){
+    int i, k;
     for(i=0; i< HUFFMAN_TOTAL_NODES; i++){ // We use HUFFMAN_NODES here to truncate the output
-        if(array[i] == NULL){
-            printf(" ");
-        } else {
-            printElement(array[i]);
-            //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
-        }
-        if(i<HUFFMAN_TOTAL_NODES-1){
-            printf(",");
+        for(k = 0; k<HUFFMAN_ARRAY_SIZE; k++){
+            if(k >= (int) pow(2, i)){
+                break;
+            }
+            if(array[i][k] == NULL){
+                printf(" ");
+            } else {
+                printElement(array[i][k]);
+                //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
+            }
+            if(i<HUFFMAN_TOTAL_NODES-1){
+                printf(",");
+            }
         }
     }
 }
@@ -226,7 +231,7 @@ int getNodePosition(HuffmanTree* ht, Node* node){
         }
         node = node->parent;
     }
-    return nn-1;
+    return nn - 1 - (int) pow(2, nl);
 }
 
 int checkNodeRelationships(Node* node){
