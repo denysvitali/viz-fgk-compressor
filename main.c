@@ -349,7 +349,7 @@ static char * test_huffman_coding(){
     mu_assert("Root -> Right -> Right -> Right doesn't have weight 1", ht->root->right->right->right->weight == 1);
 
     printHuffmanTree(ht);
-    free(ht);
+    freeHuffman(ht);
 
 //    printHuffmanTree(ht);
 //    printf("Step 1\n");
