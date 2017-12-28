@@ -584,14 +584,13 @@ static char * all_tests(){
 	mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
     mu_run_test(test_huffman_coding);
-    /*
 	mu_run_test(test_create_huffman_tree);
 	mu_run_test(test_create_ht_array);
-    mu_run_test(test_utility_get_node_position);
+    //mu_run_test(test_utility_get_node_position);
     mu_run_test(test_utility_siblings);
 	//mu_run_test(test_add_weight_to_element);
     mu_run_test(test_last_of_weight);
-    mu_run_test(test_huffman_coding);*/
+    mu_run_test(test_huffman_coding);
 
 	return 0;
 }

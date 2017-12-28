@@ -768,11 +768,12 @@ void* siblings(HuffmanTree* ht, int level, int* size){
     int array_size = (int) pow(2,level);
     *size = array_size;
 
-    Node **siblings = malloc(sizeof(Node) * array_size);
+    Node **siblings = malloc(sizeof(Node) * HA_DIM_Y);
     int i;
 
-    for(i=0; i<*size; i++){
-        siblings[i] = ht->tree[*size - 1 + i];
+    for(i=0; i<HA_DIM_Y; i++){
+        if(ht->tree[level * HA_DIM_X + i] != NULL)
+        siblings[i] = ht->tree[level * HA_DIM_X + i];
     }
 
     return siblings;
