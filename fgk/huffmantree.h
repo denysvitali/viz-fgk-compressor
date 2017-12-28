@@ -7,6 +7,9 @@
 #define HUFFMAN_TOTAL_NODES ((2*HUFFMAN_SYMBOLS)-1)
 #define HUFFMAN_ARRAY_SIZE 512
 
+#define HA_DIM_X (HUFFMAN_SYMBOLS + 1)
+#define HA_DIM_Y HUFFMAN_ARRAY_SIZE
+
 typedef struct Node {
     int node_number;
     int weight;
@@ -19,7 +22,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HUFFMAN_ARRAY_SIZE][HUFFMAN_SYMBOLS];
+    Node* tree[HA_DIM_X][HA_DIM_Y];
     Node* nyt;
 } HuffmanTree;
 
@@ -41,5 +44,5 @@ void* siblings(HuffmanTree* ht, int level, int* size);
 void swap_nodes_array(HuffmanTree* ht, int pos, int pos2);
 void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2);
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2);
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node*** result, int* pos);
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos);
 void generateHTArrayFromTree(HuffmanTree* ht);

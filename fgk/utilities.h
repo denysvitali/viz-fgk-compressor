@@ -24,10 +24,10 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename);
 void printHuffmanTreeInfo(HuffmanTree *ht);
 void printHuffmanArray(HuffmanTree* ht);
 
-void printNodeArray(Node* array[HUFFMAN_ARRAY_SIZE][HUFFMAN_SYMBOLS]);
+void printNodeArray(Node** array);
 int getNodeLevel(Node* node);
 int* getNodePosition(HuffmanTree* ht, Node* node);
 
 int getLevel(int pos);
 Node *getParent(HuffmanTree *ht, Node *pNode);
-void printPartialArray(Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES]);
+void printPartialArray(Node** arr);

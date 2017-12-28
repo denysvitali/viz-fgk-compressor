@@ -55,17 +55,17 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
     free(ht_string);
 }
 
-void printNodeArray(Node* array[HUFFMAN_ARRAY_SIZE][HUFFMAN_SYMBOLS]){
+void printNodeArray(Node** array){
     int i, k;
-    for(i=0; i< HUFFMAN_TOTAL_NODES; i++){ // We use HUFFMAN_NODES here to truncate the output
-        for(k = 0; k<HUFFMAN_ARRAY_SIZE; k++){
+    for(i=0; i< HA_DIM_X; i++){ // We use HUFFMAN_NODES here to truncate the output
+        for(k = 0; k<HA_DIM_Y; k++){
             if(k >= (int) pow(2, i)){
                 break;
             }
-            if(array[i][k] == NULL){
+            if(array[i*HA_DIM_X + k] == NULL){
                 printf(" ");
             } else {
-                printElement(array[i][k]);
+                printElement(array[i * HA_DIM_X + k]);
                 //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
             }
             if(i<HUFFMAN_TOTAL_NODES-1){
@@ -297,15 +297,15 @@ int getLevel(int pos){
     return getLevelInternal(pos, 0);
 }
 
-void printPartialArray(Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES]){
+void printPartialArray(Node** arr){
     warn("Printing partial array!");
     int i, k;
-    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
-            if(arr[i][k] == NULL){
+    for(i=0; i<HA_DIM_X; i++){
+        for(k=0; k<HA_DIM_Y; k++){
+            if(arr[i*HA_DIM_X + k] == NULL){
                 printf("");
             } else {
-                char* string = getElement(arr[i][k]);
+                char* string = getElement(arr[i * HA_DIM_X + k]);
                 printf("%s,", string);
                 free(string);
             }

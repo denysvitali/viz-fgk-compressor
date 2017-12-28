@@ -15,8 +15,8 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
     int max_nn = 0;
     int stop = 0;
     Node* result = NULL;
-    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k=0; k<HUFFMAN_SYMBOLS; k++){
+    for(i=0; i<HA_DIM_X; i++){
+        for(k=0; k<HA_DIM_Y; k++){
             Node* curr = ht->tree[i][k];
             if(curr == NULL){
                 continue;
@@ -331,8 +331,8 @@ HuffmanTree* createHuffmanTree(){
     ht->nyt = ht->root;
 
     int i, k;
-    for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k = 0; k<HUFFMAN_SYMBOLS; k++) {
+    for(i = 0; i<HA_DIM_X; i++){
+        for(k = 0; k<HA_DIM_Y; k++) {
             ht->tree[i][k] = NULL;
             //printf("%p", ht->tree[i]);
         }
@@ -518,10 +518,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 }
 
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node*** result, int* pos){
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos){
     if(node != NULL) {
         printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
-        result[pos[0]][pos[1]] = node;
+        result[pos[0] * HA_DIM_X + pos[1]] = node;
         //ht->tree[node->node_number] = NULL;
 
         int left[2] = {pos[0]+1, pos[1]*2};
@@ -571,16 +571,16 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node*** arr, int i, int lv
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //debug("Swapping on different levels");
-    Node** arr = malloc(sizeof(Node*) * HUFFMAN_ARRAY_SIZE * HUFFMAN_SYMBOLS);
-    Node** arr2 = malloc(sizeof(Node*) * HUFFMAN_ARRAY_SIZE * HUFFMAN_SYMBOLS);
+    Node** arr = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
+    Node** arr2 = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
     //Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
 
     int i, k;
-    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k=0; k<HUFFMAN_SYMBOLS; k++){
-            printf("I: %d/%d, K: %d/%d\n", i, HUFFMAN_ARRAY_SIZE, k, HUFFMAN_SYMBOLS);
-            arr[i * HUFFMAN_ARRAY_SIZE + k] = NULL;
-            arr2[i * HUFFMAN_ARRAY_SIZE + k] = NULL;
+    for(i=0; i<HA_DIM_X; i++){
+        for(k=0; k<HA_DIM_Y; k++){
+            printf("I: %d/%d, K: %d/%d\n", i, HA_DIM_X, k, HA_DIM_Y);
+            arr[i * HA_DIM_X + k] = NULL;
+            arr2[i * HA_DIM_X + k] = NULL;
         }
     }
 
