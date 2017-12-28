@@ -546,7 +546,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
         create_subtree_from_node(ht, n_left, result, left);
         create_subtree_from_node(ht, n_right, result, right);
     } else {
-        //warn("[create_subtree_from_node] Node is null!");
+        warn("[create_subtree_from_node] Node is null!");
     }
 }
 
@@ -583,10 +583,18 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     int* pos2;
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
+
+    int nullpos[2] = {0,0};
+
     debug("[swap_on_diff_lvls] Creating arr");
-    create_subtree_from_node(ht, node, arr, pos);
+    create_subtree_from_node(ht, node, arr, nullpos);
+    debug("[swap_on_diff_lvls] End arr creation");
+    printNodeArray(arr);
+
     debug("[swap_on_diff_lvls] Creating arr2");
-    create_subtree_from_node(ht, node2, arr2, pos2);
+    create_subtree_from_node(ht, node2, arr2, nullpos);
+    debug("[swap_on_diff_lvls] End arr2 creation");
+    printNodeArray(arr2);
 
 
     rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
