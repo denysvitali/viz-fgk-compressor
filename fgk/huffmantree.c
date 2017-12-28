@@ -574,8 +574,8 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node* arr[HUFFMAN_ARRAY_SI
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //debug("Swapping on different levels");
-    Node *arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
-    Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
+    //Node *arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
+    //Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
     /*
     int i, k;
     for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
