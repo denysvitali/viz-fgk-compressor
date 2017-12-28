@@ -218,7 +218,7 @@ int* getNodePosition(HuffmanTree* ht, Node* node){
     printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
 
     if(node == NULL){
-        return-1;
+        return NULL;
     }
 
     int nn = (int) pow(2,nl);

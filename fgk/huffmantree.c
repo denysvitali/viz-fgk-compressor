@@ -519,6 +519,9 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 }
 
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos){
+    if(pos[0] * HA_DIM_X + pos[1] >= HA_DIM_X * HA_DIM_Y){
+        return;
+    }
     if(node != NULL) {
         printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
         result[pos[0] * HA_DIM_X + pos[1]] = node;
@@ -547,18 +550,17 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
     }
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int* pos, Node** arr, int i, int lvl){
+void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
-    printf("Pos: %d\n", pos[0]);
-    printf("Pos: %d\n", pos[1]);
+    printf("Pos: %d\n", pos);
 
     printPartialArray(arr);
     printHuffmanArray(ht);
 
-    ht->tree[pos[0] * HA_DIM_X + pos[1]] = arr[i];
-    if((2 *(pos[0] * HA_DIM_X + pos[1])) + 1 < HUFFMAN_TOTAL_NODES) {
-        rebuilding_from_array(ht, (2 * (pos[0] * HA_DIM_X + pos[1])) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
-        rebuilding_from_array(ht,  (2 * (pos[0] * HA_DIM_X + pos[1])) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
+    ht->tree[pos] = arr[i];
+    if((2 *pos) + 1 < HA_DIM_X) {
+        rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
+        rebuilding_from_array(ht,  (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
     }
 
 
@@ -586,8 +588,14 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("[swap_on_diff_lvls] Creating arr2");
     create_subtree_from_node(ht, node2, arr2, pos2);
 
-    rebuilding_from_array(ht, pos2, arr, 0, 0);
-    rebuilding_from_array(ht, pos, arr2, 0, 0);
+
+    Node* tmp = ht->tree[pos2[0] * HA_DIM_X + pos2[1]];
+    ht->tree[pos2[0] * HA_DIM_X + pos2[1]] = ht->tree[pos[0] * HA_DIM_X + pos[1]];
+    ht->tree[pos[0] * HA_DIM_X + pos[1]] = ht->tree[pos[0] * HA_DIM_X + pos[1]];
+
+
+    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
+    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, 0);
 
     free(pos);
     free(pos2);
@@ -653,7 +661,7 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
         }
     }
     nn =  ht->tree[level2 * HA_DIM_X + pos2]->node_number;
-    ht->tree[level][pos] = ht->tree[level2][pos2];
+    ht->tree[level* HA_DIM_X + pos] = ht->tree[level2* HA_DIM_X + pos2];
     ht->tree[level * HA_DIM_X + pos]->node_number = tmp->node_number;
     ht->tree[level2 * HA_DIM_X + pos2] = tmp;
     ht->tree[level2 * HA_DIM_X + pos2]->parent = ht->tree[level * HA_DIM_X + pos]->parent;
