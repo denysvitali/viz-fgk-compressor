@@ -511,7 +511,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 }
 
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node ***result, int* pos){
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node* result[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES], int* pos){
     if(node != NULL) {
         if(pos[0] >= HUFFMAN_ARRAY_SIZE){
             return;
@@ -560,8 +560,17 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl)
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
-    Node ***arr = calloc(HUFFMAN_ARRAY_SIZE*HUFFMAN_TOTAL_NODES, sizeof(Node*));
-    Node ***arr2 = calloc(HUFFMAN_ARRAY_SIZE*HUFFMAN_TOTAL_NODES, sizeof(Node*));
+    Node *arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
+    Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
+
+    int i, k;
+    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+        for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
+            printf("i: %d, k: %d\n", i, k);
+            arr[i][k] = NULL;
+            arr2[i][k] = NULL;
+        }
+    }
 
     int* pos;
     int* pos2;
