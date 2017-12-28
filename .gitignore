@@ -45,6 +45,7 @@
 
 # Memcheck Output
 *.memcheck
+/vgcore.*
 
 # Intellij / CLion
 /.idea
