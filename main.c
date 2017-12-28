@@ -567,6 +567,7 @@ static char* test_utility_siblings(){
     mu_assert("Sibling 2 is not NN 510", node_siblings[1]->node_number == 510);
     mu_assert("Sibling 2 is not 'A'", node_siblings[1]->element == 'A');
 
+    free(node_siblings);
     freeHuffman(ht);
 
     //mu_assert("", ht->)
