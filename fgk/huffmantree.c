@@ -17,7 +17,7 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
     Node* result = NULL;
     for(i=0; i<HA_DIM_X; i++){
         for(k=0; k<HA_DIM_Y; k++){
-            Node* curr = ht->tree[i][k];
+            Node* curr = ht->tree[i* HA_DIM_X + k];
             if(curr == NULL){
                 continue;
             }
@@ -92,8 +92,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         new_nyt->parent = old_nyt;
         new_char->parent = old_nyt;
 
-        ht->tree[new_nyt_position[0]][new_nyt_position[1]] = new_nyt;
-        ht->tree[new_char_position[0]][new_char_position[1]] = new_char;
+        ht->tree[new_nyt_position[0] * HA_DIM_X + new_nyt_position[1]] = new_nyt;
+        ht->tree[new_char_position[0] * HA_DIM_X + new_char_position[1]] = new_char;
 
         printHuffmanArray(ht);
 
@@ -333,12 +333,12 @@ HuffmanTree* createHuffmanTree(){
     int i, k;
     for(i = 0; i<HA_DIM_X; i++){
         for(k = 0; k<HA_DIM_Y; k++) {
-            ht->tree[i][k] = NULL;
+            ht->tree[i * HA_DIM_X + k] = NULL;
             //printf("%p", ht->tree[i]);
         }
     }
 
-    ht->tree[0][0] = ht->root;
+    ht->tree[0] = ht->root;
     return ht;
 }
 
@@ -383,7 +383,7 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
         debug(buffer);
         free(element);
 
-        ht->tree[originalLevel][i] = levelRoot;
+        ht->tree[originalLevel * HA_DIM_X + i] = levelRoot;
     } else {
         fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
         fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
@@ -555,19 +555,7 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node** arr, int i, int lvl
     printPartialArray(arr);
     printHuffmanArray(ht);
 
-    /*
-    int node_level = pos[0];
-    int pos_r = pos - (int) pow(2, node_level);
-    if(pos<HUFFMAN_TOTAL_NODES){
-        ht->tree[node_level][pos] = arr[i];
-        if((2 * pos) + 1 < HUFFMAN_TOTAL_NODES) {
-            rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
-            rebuilding_from_array(ht, (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
-        }
-    } else {
-        error("[OUT OF BOUNDS] while rebuilding!");
-    }
-     */
+
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //debug("Swapping on different levels");
@@ -627,7 +615,7 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     int pos_r = pos - (int) pow(2, level);
     int pos2_r = pos2 - (int) pow(2, level2);
 
-    tmp = ht->tree[level][pos_r];
+    tmp = ht->tree[level *HA_DIM_X + pos_r];
 
     char db[50];
     sprintf(db, "swapping pos %d and %d", pos, pos2);
@@ -638,32 +626,32 @@ void swap_nodes_array(HuffmanTree* ht, int pos, int pos2){
     }
     if(tmp == tmp->parent->left){
         debug("parent left");
-        tmp->parent->left = ht->tree[level2][pos2_r];
+        tmp->parent->left = ht->tree[level2 * HA_DIM_X + pos2_r];
     }else{
         if(tmp->parent->right != NULL) {
             debug("parent right");
-            tmp->parent->right = ht->tree[level2][pos2_r];
+            tmp->parent->right = ht->tree[level2 * HA_DIM_X + pos2_r];
         }
     }
-    if(ht->tree[pos2] == NULL || ht->tree[level][pos2_r]->parent == NULL || ht->tree[level2][pos2_r]->parent->left == NULL ) {
+    if(ht->tree[pos2] == NULL || ht->tree[level * HA_DIM_X + pos2_r]->parent == NULL || ht->tree[level2 * HA_DIM_X + pos2_r]->parent->left == NULL ) {
         debug("check4null true");
         return;
     }
-    if(ht->tree[level2][pos2] == ht->tree[level2][pos2_r]->parent->left){
+    if(ht->tree[level2* HA_DIM_X + pos2] == ht->tree[level2 * HA_DIM_X + pos2_r]->parent->left){
         debug("parent 2 left");
-        ht->tree[level2][pos2]->parent->left = tmp;
+        ht->tree[level2 * HA_DIM_X + pos2]->parent->left = tmp;
     }else{
-        if(ht->tree[level2][pos2]->parent->right != NULL) {
+        if(ht->tree[level2 * HA_DIM_X + pos2]->parent->right != NULL) {
             debug("parent 2 right");
-            ht->tree[level2][pos2]->parent->right = tmp;
+            ht->tree[level2 * HA_DIM_X + pos2]->parent->right = tmp;
         }
     }
-    nn =  ht->tree[level2][pos2]->node_number;
+    nn =  ht->tree[level2 * HA_DIM_X + pos2]->node_number;
     ht->tree[level][pos] = ht->tree[level2][pos2];
-    ht->tree[level][pos]->node_number = tmp->node_number;
-    ht->tree[level2][pos2] = tmp;
-    ht->tree[level2][pos2]->parent = ht->tree[level][pos]->parent;
-    ht->tree[level][pos]->parent = tmp->parent;
+    ht->tree[level * HA_DIM_X + pos]->node_number = tmp->node_number;
+    ht->tree[level2 * HA_DIM_X + pos2] = tmp;
+    ht->tree[level2 * HA_DIM_X + pos2]->parent = ht->tree[level * HA_DIM_X + pos]->parent;
+    ht->tree[level * HA_DIM_X + pos]->parent = tmp->parent;
     tmp->node_number = nn;
 }
 

@@ -22,7 +22,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HA_DIM_X][HA_DIM_Y];
+    Node* tree[HA_DIM_X * HA_DIM_Y];
     Node* nyt;
 } HuffmanTree;
 
