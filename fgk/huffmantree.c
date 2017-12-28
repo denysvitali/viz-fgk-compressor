@@ -569,9 +569,9 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
     debug("[swap_on_diff_lvls] Creating arr");
-    create_subtree_from_node(ht, node, arr, 0);
+    create_subtree_from_node(ht, node, arr, pos);
     debug("[swap_on_diff_lvls] Creating arr2");
-    create_subtree_from_node(ht, node2, arr2, 0);
+    create_subtree_from_node(ht, node2, arr2, pos2);
 
 
     if(DEBUG_SWAP_SHOW_ARRAYS) {
