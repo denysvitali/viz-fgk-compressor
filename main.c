@@ -139,26 +139,45 @@ static char * test_last_of_weight(){
 static char * test_create_ht_array(){
     mu_tag("Create Huffman Tree Array");
     HuffmanTree* ht = createHuffmanTree();
+
+    // Step 1
+    mu_assert("HT.TREE[0][0] doesn't exist", ht->tree[0] != NULL);
+    mu_assert("HT.TREE[0][0] doesn't have NN 511", ht->tree[0][0]->node_number == 511);
+    mu_assert("HT.TREE[0][0] has a parent", ht->tree[0][0]->parent == NULL);
+    mu_assert("HT.TREE[0][0] isn't the NYT", isNYT(ht->tree[0][0]));
+
     mu_assert("HT.TREE[0] is not NYT / Root", ht->tree[0][0] == ht->nyt && ht->tree[0][0] == ht->root);
     add_new_element(ht, 'A');
+
+    // Step 2
     mu_assert("HT.TREE[0][0] doesn't exist", ht->tree[0] != NULL);
     mu_assert("HT.TREE[0][0] doesn't have weight 1", ht->tree[0][0]->weight == 1);
     mu_assert("HT.TREE[0][0] doesn't have NN 511", ht->tree[0][0]->node_number == 511);
     mu_assert("HT.TREE[0][0] has a parent", ht->tree[0][0]->parent == NULL);
+
+
     mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1][0] != NULL);
     mu_assert("HT.TREE[1][0] is not the NYT", isNYT(ht->tree[1][0]));
     mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
+
     mu_assert("HT.TREE[1][1] doesn't exist", ht->tree[1][1] != NULL);
+    mu_assert("HT.TREE[1][1] is not 'A'", ht->tree[1][1]->element == 'A');
     mu_assert("HT.TREE[1][1] doesn't have weight 1", ht->tree[1][1]->weight == 1);
     mu_assert("HT.TREE[1][1] doesn't have NN 510", ht->tree[1][1]->node_number == 510);
 
     add_new_element(ht, 'B');
     printHuffmanTree(ht);
 
+    // Step 3
     mu_assert("HT.TREE[0][0] does not exist", ht->tree[0][0] != NULL);
     mu_assert("HT.TREE[0][0] element is not -1", ht->tree[0][0]->element == -1);
     mu_assert("HT.TREE[0][0] weight is not 2", ht->tree[0][0]->weight == 2);
     mu_assert("HT.TREE[0][0] NN is not 511", ht->tree[0][0]->node_number == 511);
+
+    mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1][0] != NULL);
+    mu_assert("HT.TREE[1][0] is the NYT", !isNYT(ht->tree[1][0]));
+    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
+    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
 
     //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
 
