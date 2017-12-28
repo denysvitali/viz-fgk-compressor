@@ -117,6 +117,8 @@ static char * test_last_of_weight(){
     three_one->left = four_one;
     three_one->right = four_two;
 
+    free(ht->nyt);
+
     ht->nyt = four_one;
 
     ht->root = root;
