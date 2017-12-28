@@ -539,9 +539,9 @@ static char* test_utility_siblings(){
 static char * all_tests(){
 	mu_run_test(test_debug);
 	mu_run_test(test_get_level);
+    mu_run_test(test_create_ht_array);
 	mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
-    mu_run_test(test_create_ht_array);
     mu_run_test(test_huffman_coding);
     /*
 	mu_run_test(test_create_huffman_tree);
