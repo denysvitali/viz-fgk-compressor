@@ -578,7 +578,6 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     int i, k;
     for(i=0; i<HA_DIM_X; i++){
         for(k=0; k<HA_DIM_Y; k++){
-            printf("I: %d/%d, K: %d/%d\n", i, HA_DIM_X, k, HA_DIM_Y);
             arr[i * HA_DIM_X + k] = NULL;
             arr2[i * HA_DIM_X + k] = NULL;
         }
