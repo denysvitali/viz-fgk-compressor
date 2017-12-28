@@ -613,9 +613,6 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
 
     rebuilding_from_array(ht, pos2, arr, 0, 0);
     rebuilding_from_array(ht, pos, arr2, 0, 0);
-
-    free(arr);
-    free(arr2);
 }
 
 
