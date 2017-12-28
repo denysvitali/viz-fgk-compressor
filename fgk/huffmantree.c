@@ -577,14 +577,7 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     Node *arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
     Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
 
-    int i, k;
-    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
-            arr[i][k] = NULL;
-            arr2[i][k] = NULL;
-        }
-    }
-
+    
     int* pos;
     int* pos2;
     pos = getNodePosition(ht, node);
