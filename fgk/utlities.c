@@ -296,3 +296,19 @@ int getLevelInternal(int pos, int i){
 int getLevel(int pos){
     return getLevelInternal(pos, 0);
 }
+
+void printPartialArray(Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES]){
+    warn("Printing partial array!");
+    int i, k;
+    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+        for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
+            if(arr[i][k] == NULL){
+                printf("");
+            } else {
+                printf("%s,", getElement(arr[i][k]));
+            }
+        }
+        //printf("\n");
+    }
+    printf("\n");
+}

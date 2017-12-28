@@ -380,7 +380,7 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
         debug(buffer);
         free(element);
 
-        ht->tree[originalLevel][index - (int) pow(2, level)] = levelRoot;
+        ht->tree[originalLevel][i] = levelRoot;
     } else {
         fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
         fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
@@ -543,9 +543,14 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node* result[HUFFMAN_
     }
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int* pos, Node** arr, int i, int lvl){
+void rebuilding_from_array(HuffmanTree *ht, int* pos, Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES], int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
     printf("Pos: %d\n", pos[0]);
+    printf("Pos: %d\n", pos[1]);
+
+    printPartialArray(arr);
+    printHuffmanArray(ht);
+
     /*
     int node_level = pos[0];
     int pos_r = pos - (int) pow(2, node_level);

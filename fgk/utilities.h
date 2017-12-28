@@ -30,3 +30,4 @@ int* getNodePosition(HuffmanTree* ht, Node* node);
 
 int getLevel(int pos);
 Node *getParent(HuffmanTree *ht, Node *pNode);
+void printPartialArray(Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES]);
