@@ -51,6 +51,7 @@ static char * test_create_huffman_tree(){
     mu_assert("HT has no NYT", ht->nyt != NULL);
     mu_assert("Tree is NULL!", ht->tree != NULL);
     mu_assert("HT doesn't have a root!", ht->root != NULL);
+    freeHuffman(ht);
 	return 0;
 }
 
