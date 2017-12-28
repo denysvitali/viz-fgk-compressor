@@ -534,7 +534,9 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
 
         if(DEBUG_SWAP_SHOW_ARRAYS) {
             printf("Pos: [%d][%d]\n", pos[0], pos[1]);
-            printf("Node itself: %s\n", getElement(node));
+            char* string;
+            string = getElement(node);
+            printf("Node itself: %s\n", string);
 
             printf("LEFT: \n");
             printElement(n_left);
