@@ -589,11 +589,6 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     create_subtree_from_node(ht, node2, arr2, pos2);
 
 
-    Node* tmp = ht->tree[pos2[0] * HA_DIM_X + pos2[1]];
-    ht->tree[pos2[0] * HA_DIM_X + pos2[1]] = ht->tree[pos[0] * HA_DIM_X + pos[1]];
-    ht->tree[pos[0] * HA_DIM_X + pos[1]] = ht->tree[pos[0] * HA_DIM_X + pos[1]];
-
-
     rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
     rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, 0);
 
