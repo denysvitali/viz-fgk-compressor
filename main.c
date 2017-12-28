@@ -176,8 +176,23 @@ static char * test_create_ht_array(){
 
     mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1][0] != NULL);
     mu_assert("HT.TREE[1][0] is the NYT", !isNYT(ht->tree[1][0]));
+    mu_assert("HT.TREE[1][0] is not an internal node", isInternalNode(ht->tree[1][0]));
     mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
-    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1][0]->node_number == 509);
+
+    mu_assert("HT.TREE[1][1] doesn't exist", ht->tree[1][1] != NULL);
+    mu_assert("HT.TREE[1][1] is the NYT", !isNYT(ht->tree[1][1]));
+    mu_assert("HT.TREE[1][1] is an internal node", !isInternalNode(ht->tree[1][1]));
+    mu_assert("HT.TREE[1][1] doesn't have weight == 1", ht->tree[1][1]->weight == 1);
+    mu_assert("HT.TREE[1][1] isn't the letter 'A'", ht->tree[1][1]->weight == 1);
+
+
+    mu_assert("HT.TREE[2][0] doesn't exist", ht->tree[2][0] != NULL);
+    mu_assert("HT.TREE[2][0] is not the NYT", isNYT(ht->tree[2][0]));
+
+    mu_assert("HT.TREE[2][1] doesn't exist", ht->tree[2][1] != NULL);
+    mu_assert("HT.TREE[2][1] is the NYT", !isNYT(ht->tree[2][1]));
+    mu_assert("HT.TREE[2][1] is not NN 508", ht->tree[2][1]->node_number == 508);
+
 
     //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
 
