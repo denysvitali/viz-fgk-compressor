@@ -536,9 +536,16 @@ static char* test_utility_siblings(){
     return 0;
 }
 
+static char* test_get_node_level(){
+    HuffmanTree* ht = createHuffmanTree();
+    freeHuffman(ht);
+    return 0;
+}
+
 static char * all_tests(){
 	mu_run_test(test_debug);
 	mu_run_test(test_get_level);
+    mu_run_test(test_get_node_level);
     mu_run_test(test_create_ht_array);
 	mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);

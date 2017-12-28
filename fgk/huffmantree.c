@@ -66,16 +66,17 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
-        int old_nyt_position = getNodePosition(ht, old_nyt);
-        int old_nyt_level = getNodeLevel(old_nyt);
 
-        int new_nyt_position = old_nyt_position*2;
-        int new_char_position = new_nyt_position + 1;
+
+        int* old_nyt_position = getNodePosition(ht, old_nyt);
+
+        int new_nyt_position[2] = {old_nyt_position[0] + 1, old_nyt_position[1] * 2};
+        int new_char_position[2] = {new_nyt_position[0], new_nyt_position[1] + 1};
 
         printf("OLD NYT: %s\n", getElement(old_nyt));
 
         char buffer[500];
-        sprintf(buffer,"[add_new_element] old_nyt_pos: %d, new_nyt_pos: %d", old_nyt_position, new_nyt_position);
+        sprintf(buffer,"[add_new_element] old_nyt_pos: [%d][%d], new_nyt_pos: [%d][%d]", old_nyt_position[0], old_nyt_position[1], new_nyt_position[0], new_nyt_position[1]);
         debug(buffer);
 
         old_nyt->weight++;
@@ -89,8 +90,10 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         new_nyt->parent = old_nyt;
         new_char->parent = old_nyt;
 
-        ht->tree[old_nyt_level+1][new_nyt_position] = new_nyt;
-        ht->tree[old_nyt_level+1][new_char_position] = new_char;
+        ht->tree[new_nyt_position[0]][new_nyt_position[1]] = new_nyt;
+        ht->tree[new_char_position[0]][new_char_position[1]] = new_char;
+
+        printHuffmanArray(ht);
 
         target = old_nyt;
     }
