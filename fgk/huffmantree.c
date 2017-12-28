@@ -547,7 +547,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
     }
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int* pos, Node*** arr, int i, int lvl){
+void rebuilding_from_array(HuffmanTree *ht, int* pos, Node** arr, int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
     printf("Pos: %d\n", pos[0]);
     printf("Pos: %d\n", pos[1]);
