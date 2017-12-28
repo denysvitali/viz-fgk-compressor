@@ -72,11 +72,14 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         int new_nyt_position[2] = {old_nyt_position[0] + 1, old_nyt_position[1] * 2};
         int new_char_position[2] = {new_nyt_position[0], new_nyt_position[1] + 1};
 
-        printf("OLD NYT: %s\n", getElement(old_nyt));
+        char* string = getElement(old_nyt);
+        printf("OLD NYT: %s\n", string);
+        free(string);
 
         char buffer[500];
         sprintf(buffer,"[add_new_element] old_nyt_pos: [%d][%d], new_nyt_pos: [%d][%d]", old_nyt_position[0], old_nyt_position[1], new_nyt_position[0], new_nyt_position[1]);
         debug(buffer);
+        free(old_nyt_position);
 
         old_nyt->weight++;
         old_nyt->left = new_nyt;
@@ -466,6 +469,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     sprintf(buffer, "[Swapping] Pos1: [%d][%d] (NN %d), Pos2: [%d][%d] (NN %d)", pos1[0], pos1[1], node->node_number, pos2[0], pos2[1], node2->node_number);
     debug(buffer);
 
+    free(pos1);
+    free(pos2);
+
+
 
     if(node2->parent == node || node->parent == node2){
         error("[swap_nodes] I can't a child with its parent");
@@ -619,6 +626,9 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
 
     rebuilding_from_array(ht, pos2, arr, 0, 0);
     rebuilding_from_array(ht, pos, arr2, 0, 0);
+
+    free(pos);
+    free(pos2);
 }
 
 

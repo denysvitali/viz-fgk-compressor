@@ -305,7 +305,9 @@ void printPartialArray(Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES]){
             if(arr[i][k] == NULL){
                 printf("");
             } else {
-                printf("%s,", getElement(arr[i][k]));
+                char* string = getElement(arr[i][k]);
+                printf("%s,", string);
+                free(string);
             }
         }
         //printf("\n");
