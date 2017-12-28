@@ -547,7 +547,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node*** result, int* 
     }
 }
 
-void rebuilding_from_array(HuffmanTree *ht, int* pos, Node* arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES], int i, int lvl){
+void rebuilding_from_array(HuffmanTree *ht, int* pos, Node*** arr, int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
     printf("Pos: %d\n", pos[0]);
     printf("Pos: %d\n", pos[1]);
@@ -571,15 +571,16 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node* arr[HUFFMAN_ARRAY_SI
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //debug("Swapping on different levels");
-    Node ***arr = calloc(sizeof(Node*), HUFFMAN_ARRAY_SIZE * HUFFMAN_TOTAL_NODES);
-    Node ***arr2 = calloc(sizeof(Node*), HUFFMAN_ARRAY_SIZE * HUFFMAN_TOTAL_NODES);
+    Node** arr = malloc(sizeof(Node*) * HUFFMAN_ARRAY_SIZE * HUFFMAN_SYMBOLS);
+    Node** arr2 = malloc(sizeof(Node*) * HUFFMAN_ARRAY_SIZE * HUFFMAN_SYMBOLS);
     //Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
 
     int i, k;
     for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
-            arr[i][k] = NULL;
-            arr2[i][k] = NULL;
+        for(k=0; k<HUFFMAN_SYMBOLS; k++){
+            printf("I: %d/%d, K: %d/%d\n", i, HUFFMAN_ARRAY_SIZE, k, HUFFMAN_SYMBOLS);
+            arr[i * HUFFMAN_ARRAY_SIZE + k] = NULL;
+            arr2[i * HUFFMAN_ARRAY_SIZE + k] = NULL;
         }
     }
 
