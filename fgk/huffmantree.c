@@ -555,6 +555,12 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node** arr, int i, int lvl
     printPartialArray(arr);
     printHuffmanArray(ht);
 
+    ht->tree[pos[0] * HA_DIM_X + pos[1]] = arr[i];
+    if((2 *(pos[0] * HA_DIM_X + pos[1])) + 1 < HUFFMAN_TOTAL_NODES) {
+        rebuilding_from_array(ht, (2 * (pos[0] * HA_DIM_X + pos[1])) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
+        rebuilding_from_array(ht,  (2 * (pos[0] * HA_DIM_X + pos[1])) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
+    }
+
 
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
