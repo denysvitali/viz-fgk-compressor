@@ -518,11 +518,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 }
 
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node* result[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES], int* pos){
+void create_subtree_from_node(HuffmanTree *ht, Node *node, Node*** result, int* pos){
     if(node != NULL) {
-        if(pos[0] >= HUFFMAN_ARRAY_SIZE){
-            return;
-        }
         printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
         result[pos[0]][pos[1]] = node;
         //ht->tree[node->node_number] = NULL;
@@ -533,7 +530,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node* result[HUFFMAN_
         Node* n_right = node->right;
 
         if(DEBUG_SWAP_SHOW_ARRAYS) {
-            printf("Pos: %d\n", pos);
+            printf("Pos: [%d][%d]\n", pos[0], pos[1]);
             printf("Node itself: %s\n", getElement(node));
 
             printf("LEFT: \n");
@@ -574,9 +571,10 @@ void rebuilding_from_array(HuffmanTree *ht, int* pos, Node* arr[HUFFMAN_ARRAY_SI
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     //debug("Swapping on different levels");
-    //Node *arr[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
+    Node ***arr = calloc(sizeof(Node*), HUFFMAN_ARRAY_SIZE * HUFFMAN_TOTAL_NODES);
+    Node ***arr2 = calloc(sizeof(Node*), HUFFMAN_ARRAY_SIZE * HUFFMAN_TOTAL_NODES);
     //Node *arr2[HUFFMAN_ARRAY_SIZE][HUFFMAN_TOTAL_NODES];
-    /*
+
     int i, k;
     for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
         for(k=0; k<HUFFMAN_TOTAL_NODES; k++){
@@ -594,42 +592,13 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("[swap_on_diff_lvls] Creating arr2");
     create_subtree_from_node(ht, node2, arr2, pos2);
 
-
-    if(DEBUG_SWAP_SHOW_ARRAYS) {
-        int i;
-        int nulls = 0;
-        for (i = 0; i < 256; i++) {
-            if (nulls >= 5) {
-                printf("... (truncated)\n");
-                break;
-            }
-            if (arr[i] == NULL) {
-                nulls++;
-            }
-            printf("%d: %s\n", i, getElement(arr[i]));
-        }
-        nulls = 0;
-
-        printf("Array 2\n");
-
-        for (i = 0; i < 256; i++) {
-            if (nulls >= 5) {
-                printf("... (truncated)\n");
-                break;
-            }
-            if (arr2[i] == NULL) {
-                nulls++;
-            }
-            printf("%d: %s\n", i, getElement(arr2[i]));
-        }
-    }
-
     rebuilding_from_array(ht, pos2, arr, 0, 0);
     rebuilding_from_array(ht, pos, arr2, 0, 0);
 
     free(pos);
     free(pos2);
-     */
+    free(arr);
+    free(arr2);
 }
 
 
