@@ -11,18 +11,27 @@
 
 
 Node* highest_numbered_node(HuffmanTree* ht, int weight){
-    int i;
+    int i,k;
     int max_nn = 0;
+    int stop = 0;
     Node* result = NULL;
     for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
-        Node* curr = ht->tree[i];
-        if(curr == NULL){
-            continue;
-        }
+        for(k=0; k<HUFFMAN_SYMBOLS; k++){
+            Node* curr = ht->tree[i][k];
+            if(curr == NULL){
+                continue;
+            }
 
-        if(curr->weight == weight && curr->node_number > max_nn){
-            max_nn = curr->node_number;
-            result = curr;
+            if(curr->weight == weight && curr->node_number > max_nn){
+                max_nn = curr->node_number;
+                result = curr;
+                stop = 1;
+            }
+        }
+        if(stop == 1){
+            // We're not interested in nodes that are below the ones with required weight
+            // because they have a lower NN.
+            break;
         }
     }
     return result;
@@ -60,7 +69,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         int old_nyt_position = getNodePosition(ht, old_nyt);
         int old_nyt_level = getNodeLevel(old_nyt);
 
-        int new_nyt_position = (int) pow(2,old_nyt_level + 1) + 2*(old_nyt_position - (int) pow(2,old_nyt_level));
+        int new_nyt_position = old_nyt_position*2;
         int new_char_position = new_nyt_position + 1;
 
         printf("OLD NYT: %s\n", getElement(old_nyt));
