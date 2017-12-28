@@ -214,6 +214,7 @@ int getNodeLevel(Node* node){
 // Get node position in ht->elements array
 int* getNodePosition(HuffmanTree* ht, Node* node){
     int nl = getNodeLevel(node);
+    int originalLvl = nl;
     printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
 
     if(node == NULL){
@@ -232,10 +233,10 @@ int* getNodePosition(HuffmanTree* ht, Node* node){
         node = node->parent;
     }
 
-    int node_position = nn - (int) pow(2, nl);
+    int node_position = nn - (int) pow(2, originalLvl);
 
     int* result = calloc(sizeof(int), 2);
-    result[0] = getNodeLevel(node);
+    result[0] = originalLvl;
     result[1] = node_position;
 
     return result;

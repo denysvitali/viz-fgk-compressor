@@ -69,7 +69,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
 
         int* old_nyt_position = getNodePosition(ht, old_nyt);
-
         int new_nyt_position[2] = {old_nyt_position[0] + 1, old_nyt_position[1] * 2};
         int new_char_position[2] = {new_nyt_position[0], new_nyt_position[1] + 1};
 
@@ -513,10 +512,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 }
 
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node ***result, int* pos){
-    if(pos[0] >= HUFFMAN_ARRAY_SIZE){
-        return;
-    }
     if(node != NULL) {
+        if(pos[0] >= HUFFMAN_ARRAY_SIZE){
+            return;
+        }
         printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
         result[pos[0]][pos[1]] = node;
         //ht->tree[node->node_number] = NULL;
