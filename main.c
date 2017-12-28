@@ -98,6 +98,7 @@ static char* test_simple_swap(){
 static char * test_last_of_weight(){
     mu_tag("Last Of Weight");
     HuffmanTree* ht = createHuffmanTree();
+    Node* old_nyt = ht->nyt;
     Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
     Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
     Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
@@ -116,8 +117,6 @@ static char * test_last_of_weight(){
 
     three_one->left = four_one;
     three_one->right = four_two;
-
-    free(ht->nyt);
 
     ht->nyt = four_one;
 
@@ -138,6 +137,7 @@ static char * test_last_of_weight(){
     mu_assert("Node Number isn't equal to pointed value", node->node_number == a);
 
     freeHuffman(ht);
+    free(old_nyt);
     return 0;
 }
 
