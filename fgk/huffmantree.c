@@ -381,7 +381,7 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
         debug(buffer);
         free(element);
 
-        ht->tree[level][index - (int) pow(2, level)] = levelRoot;
+        ht->tree[originalLevel][index - (int) pow(2, level)] = levelRoot;
     } else {
         fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
         fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
@@ -458,13 +458,13 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //printHuffmanTree(ht);
 
 
-    int pos1 = getNodePosition(ht, node);
-    int pos2 = getNodePosition(ht, node2);
+    int* pos1 = getNodePosition(ht, node);
+    int* pos2 = getNodePosition(ht, node2);
     //int lvl1 = getNodeLevel(node);
     //int lvl2 = getNodeLevel(node2);
 
     char buffer[500];
-    sprintf(buffer, "[Swapping] Pos1: %d (NN %d), Pos2: %d (NN %d)", pos1, node->node_number, pos2, node2->node_number);
+    sprintf(buffer, "[Swapping] Pos1: [%d][%d] (NN %d), Pos2: [%d][%d] (NN %d)", pos1[0], pos1[1], node->node_number, pos2[0], pos2[1], node2->node_number);
     debug(buffer);
 
 
