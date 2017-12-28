@@ -31,5 +31,7 @@ test:
 massif: test
 	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
 	massif-visualizer viz-test.massif
-
+massif_prod: main
+	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz -c out.viz test/files/text/fitnessgram.txt
+	massif-visualizer viz.massif
 .PHONY: test
