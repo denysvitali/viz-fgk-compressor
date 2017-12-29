@@ -37,19 +37,28 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
     return result;
 }
 
-void weights_increment(Node* root, Node* node){
-    node->weight++;
-    if(node!=root){
-        weights_increment(root, node->parent);
-    }
-}
-
 void node_positioner(HuffmanTree* ht, Node* target){
     Node* last = highest_numbered_node(ht, target->weight);
+    char buffer[250];
+    char* element1 = getElement(last);
+    sprintf(buffer, "Highest numbered node (aka LAST): %s", element1);
+    debug(buffer);
+    if(element1 != NULL){
+        free(element1);
+    }
 
-    if(last != target){
+    if(last != target) {
+        debug("[node_positioner] LAST != TARGET, swapping!");
+        char* element2 = getElement(target);
+        sprintf(buffer, "[node_positioner] TARTGET: %s", element2);
+        debug(buffer);
+        free(element2);
         swap_nodes(ht, target, last);
     }
+    char* element = getElement(target);
+    sprintf(buffer, "Updating weight for %s", element);
+    free(element);
+    debug(buffer);
     target->weight++;
 
 }
@@ -60,8 +69,10 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
     // Is the character already in the tree?
     if(target != NULL){
+        debug("[add_new_element] AS");
         node_positioner(ht, target);
     } else {
+        debug("[add_new_element] NS");
         Node* old_nyt = ht->nyt;
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
@@ -101,7 +112,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         target = target->parent;
         node_positioner(ht, target);
     }
-
     return ht;
 
 
@@ -502,7 +512,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
         create_subtree_from_node(ht, n_left, result, left);
         create_subtree_from_node(ht, n_right, result, right);
     } else {
-        warn("[create_subtree_from_node] Node is null!");
+        //warn("[create_subtree_from_node] Node is null!");
     }
 }
 
