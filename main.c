@@ -613,19 +613,17 @@ static char* test_huffman_coding_bookkeeper(){
 }
 
 static char * all_tests(){
-	if(0) {
-        mu_run_test(test_debug);
-        mu_run_test(test_get_level);
-        mu_run_test(test_get_node_level);
-        mu_run_test(test_create_ht_array);
-        mu_run_test(test_simple_swap);
-        mu_run_test(test_swap_nodes);
-        mu_run_test(test_huffman_coding);
-        mu_run_test(test_create_huffman_tree);
-        mu_run_test(test_create_ht_array);
-        mu_run_test(test_utility_siblings);
-        mu_run_test(test_huffman_coding);
-    }
+    mu_run_test(test_debug);
+    mu_run_test(test_get_level);
+    mu_run_test(test_get_node_level);
+    mu_run_test(test_create_ht_array);
+    mu_run_test(test_simple_swap);
+    mu_run_test(test_swap_nodes);
+    mu_run_test(test_huffman_coding);
+    mu_run_test(test_create_huffman_tree);
+    mu_run_test(test_create_ht_array);
+    mu_run_test(test_utility_siblings);
+    mu_run_test(test_huffman_coding);
     //mu_run_test(test_huffman_coding_abracadabra);
     //mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_bookkeeper);
