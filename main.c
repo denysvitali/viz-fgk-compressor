@@ -540,8 +540,10 @@ static char* test_utility_get_node_position(){
     mu_assert("A is not at Node Level 1", getNodeLevel(ht->root->right) == 1);
     mu_assert("NYT is not at Node Level 1", getNodeLevel(ht->nyt) == 1);
     // getNodePosition tests
-    mu_assert("NYT isn't at position 1 (Root->Left, 0-based index)", getNodePosition(ht, ht->nyt) == 1);
-    mu_assert("Root -> Right isn't at position 2 (0-based index)", getNodePosition(ht, ht->root->right) == 2);
+    int* node_position = getNodePosition(ht, ht->nyt);
+    mu_assert("NYT isn't at position 1 (Root->Left, 0-based index)", node_position[0] == 1 && node_position[1] == 0);
+    node_position = getNodePosition(ht, ht->root->right);
+    mu_assert("Root -> Right isn't at position 2 (0-based index)", node_position[0] == 1 && node_position[1] == 1);
     freeHuffman(ht);
     return 0;
 }
