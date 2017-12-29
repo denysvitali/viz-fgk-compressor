@@ -35,7 +35,7 @@ void printHuffmanTree(HuffmanTree *ht){
     }
     printTree(ht->root, 0);
     printf("----\n");
-    printHuffmanArray(ht);
+    //printHuffmanArray(ht);
 }
 
 void saveHuffmanTree(HuffmanTree *ht, char* filename){
@@ -59,22 +59,36 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
 
 void printNodeArray(Node** array){
     int i, k;
+    int stop=0;
     for(i=0; i< HA_DIM_X; i++){ // We use HUFFMAN_NODES here to truncate the output
         for(k = 0; k<HA_DIM_Y; k++){
+
+            // Truncate (DEBUG!)
+            if(DEBUG && i*HA_DIM_X + k >= 50){
+                printf("(truncating the output.)");
+                stop=1;
+                break;
+            }
+
             if(k >= (int) pow(2, i)){
                 break;
             }
             if(array[i*HA_DIM_X + k] == NULL){
-                printf(" ");
+                printf("");
             } else {
                 printElement(array[i * HA_DIM_X + k]);
                 //printf("%x (%d) @%d", ht->tree[i]->element&0xff, ht->tree[i]->weight, ht->tree[i]->node_number);
             }
-            if(i<HUFFMAN_TOTAL_NODES-1){
+            if(i<HUFFMAN_TOTAL_NODES-1) {
                 printf(",");
             }
         }
+
+        if(stop == 1){
+            break;
+        }
     }
+    printf("\n");
 }
 
 void printHuffmanArray(HuffmanTree* ht){
@@ -159,12 +173,13 @@ void printTree(Node* root, int level){
 }
 
 char* getElement(Node* root){
+    char* string = calloc(sizeof(char), 100);
 
     if(root == NULL){
-        return "(nil)";
+        sprintf(string, "(nil)");
+        return string;
     }
 
-    char* string = calloc(sizeof(char), 100);
 
     // Node:
     // character (weight, node number)
@@ -221,7 +236,7 @@ int getNodeLevel(Node* node){
 int* getNodePosition(HuffmanTree* ht, Node* node){
     int nl = getNodeLevel(node);
     int originalLvl = nl;
-    printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
+    //printf("Node is between %d and %d\n", (int) pow(2.0, nl)-1, (int) pow(2,nl+1)-2); // 0-indexed
 
     if(node == NULL){
         return NULL;
