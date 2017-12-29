@@ -109,6 +109,11 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     }
 
     while(target != ht->root){
+        char dbg[200];
+        char* element = getElement(target);
+        sprintf(dbg, "[add_new_element] TARGET: %s", element);
+        free(element);
+        debug(dbg);
         target = target->parent;
         node_positioner(ht, target);
     }
@@ -478,6 +483,9 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     int nn = node->node_number;
     node->node_number = node2->node_number;
     node2->node_number = nn;
+
+    node->parent = parent2;
+    node2->parent = parent1;
 
     debug("End swap");
 }
