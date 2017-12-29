@@ -609,6 +609,8 @@ static char* test_huffman_coding_bookkeeper(){
     free(f);
     free(buffer);
 
+    freeHuffman(ht);
+
     return 0;
 }
 
