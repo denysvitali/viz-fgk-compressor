@@ -431,7 +431,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 
     if(node2->parent == node || node->parent == node2){
-        error("[swap_nodes] I can't a child with its parent");
+        error("[swap_nodes] I can't swap a child with its parent");
         return;
     }
     //int distance = pos1-pos2;
