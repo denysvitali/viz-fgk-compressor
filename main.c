@@ -577,14 +577,29 @@ static char* test_huffman_coding_bookkeeper(){
     HuffmanTree* ht = createHuffmanTree();
 
     char* string = "bookkeeper";
-    int i;
+    /*int i;
     for(i=0; i<strlen(string); i++){
         char dbg[50];
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
         printHuffmanTree(ht);
-    }
+    }*/
+
+
+    add_new_element(ht, 'b');
+    mu_assert("1) root->right->parent != root", ht->root->right->parent == ht->root);
+    add_new_element(ht, 'o');
+    printHuffmanTree(ht);
+    mu_assert("2) root->right->parent != root", ht->root->right->parent == ht->root);
+    add_new_element(ht, 'o');
+    printHuffmanTree(ht);
+    mu_assert("3) root->right->parent != root", ht->root->right->parent == ht->root);
+    add_new_element(ht, 'k');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'k');
+    printHuffmanTree(ht);
+
     /*
 
     add_new_element(ht, 'a');
