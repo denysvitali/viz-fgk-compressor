@@ -302,9 +302,7 @@ void printPartialArray(Node** arr){
     int i, k;
     for(i=0; i<HA_DIM_X; i++){
         for(k=0; k<HA_DIM_Y; k++){
-            if(arr[i*HA_DIM_X + k] == NULL){
-                printf("");
-            } else {
+            if(arr[i*HA_DIM_X + k] != NULL){
                 char* string = getElement(arr[i * HA_DIM_X + k]);
                 printf("%s,", string);
                 free(string);
