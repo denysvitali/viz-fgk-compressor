@@ -95,52 +95,6 @@ static char* test_simple_swap(){
     return 0;
 }
 
-static char * test_last_of_weight(){
-    mu_tag("Last Of Weight");
-    HuffmanTree* ht = createHuffmanTree();
-    Node* old_nyt = ht->nyt;
-    Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
-    Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
-    Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
-
-    root->left = two_one;
-    root->right = two_two;
-
-    Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
-    Node* three_two = createNode(508, 1, 'A', NULL, NULL, two_one);
-
-    two_one->left = three_one;
-    two_one->right = three_two;
-
-    Node* four_one = createNYT(505);
-    Node* four_two = createNode(506, 1, 'C', NULL, NULL, three_one);
-
-    three_one->left = four_one;
-    three_one->right = four_two;
-
-    ht->nyt = four_one;
-
-    ht->root = root;
-
-    printf("Root L: %p\n", root->left);
-    printf("Root D: %p\n", root->right);
-
-    printHuffmanTree(ht);
-
-    int a = 0;
-    Node* node = last_of_weight(ht->root, 2, &a);
-
-    mu_assert("Last of Weight returned NULL", node != NULL);
-    printf("A: %d\n", a);
-    printf("Node: %p\n\n", node);
-    mu_assert("Last Of Weight is not correct", a == 510);
-    mu_assert("Node Number isn't equal to pointed value", node->node_number == a);
-
-    freeHuffman(ht);
-    free(old_nyt);
-    return 0;
-}
-
 static char * test_create_ht_array(){
     mu_tag("Create Huffman Tree Array");
     HuffmanTree* ht = createHuffmanTree();
@@ -584,22 +538,94 @@ static char* test_get_node_level(){
     return 0;
 }
 
-static char * all_tests(){
-	mu_run_test(test_debug);
-	mu_run_test(test_get_level);
-    mu_run_test(test_get_node_level);
-    mu_run_test(test_create_ht_array);
-	mu_run_test(test_simple_swap);
-    mu_run_test(test_swap_nodes);
-    mu_run_test(test_huffman_coding);
-	mu_run_test(test_create_huffman_tree);
-	mu_run_test(test_create_ht_array);
-    //mu_run_test(test_utility_get_node_position);
-    mu_run_test(test_utility_siblings);
-	//mu_run_test(test_add_weight_to_element);
-    mu_run_test(test_last_of_weight);
-    mu_run_test(test_huffman_coding);
+static char* test_huffman_coding_abracadabra(){
+    mu_tag("Huffman Coding (ABRACADABRA)");
+    HuffmanTree* ht = createHuffmanTree();
+    add_new_element(ht, 'A');
+    add_new_element(ht, 'B');
+    add_new_element(ht, 'R');
+    add_new_element(ht, 'A');
+    add_new_element(ht, 'C');
+    printHuffmanTree(ht);
+    freeHuffman(ht);
+    return 0;
+}
 
+static char* test_huffman_coding_abcbaaa(){
+    mu_tag("Huffman Coding (abcbaaa)");
+    HuffmanTree* ht = createHuffmanTree();
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'b');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'c');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'b');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    freeHuffman(ht);
+    return 0;
+}
+
+static char* test_huffman_coding_bookkeeper(){
+    mu_tag("Huffman Coding (bookkeeper)");
+    HuffmanTree* ht = createHuffmanTree();
+
+    char* string = "bookkeeper";
+    int i;
+    for(i=0; i<strlen(string); i++){
+        char dbg[50];
+        sprintf(dbg, "Adding character %c", string[i]);
+        debug(dbg);
+        add_new_element(ht, string[i]);
+        printHuffmanTree(ht);
+    }
+    /*
+
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'b');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'c');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'b');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    add_new_element(ht, 'a');
+    printHuffmanTree(ht);
+    freeHuffman(ht);
+     */
+    return 0;
+}
+
+static char * all_tests(){
+	if(0) {
+        mu_run_test(test_debug);
+        mu_run_test(test_get_level);
+        mu_run_test(test_get_node_level);
+        mu_run_test(test_create_ht_array);
+        mu_run_test(test_simple_swap);
+        mu_run_test(test_swap_nodes);
+        mu_run_test(test_huffman_coding);
+        mu_run_test(test_create_huffman_tree);
+        mu_run_test(test_create_ht_array);
+        mu_run_test(test_utility_siblings);
+        mu_run_test(test_huffman_coding);
+    }
+    //mu_run_test(test_huffman_coding_abracadabra);
+    //mu_run_test(test_huffman_coding_abcbaaa);
+    mu_run_test(test_huffman_coding_bookkeeper);
+
+    //mu_run_test(test_utility_get_node_position);
+	//mu_run_test(test_add_weight_to_element);
 	return 0;
 }
 #endif
