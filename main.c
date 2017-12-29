@@ -577,47 +577,38 @@ static char* test_huffman_coding_bookkeeper(){
     HuffmanTree* ht = createHuffmanTree();
 
     char* string = "bookkeeper";
-    /*int i;
+    int i;
     for(i=0; i<strlen(string); i++){
         char dbg[50];
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
         printHuffmanTree(ht);
-    }*/
+    }
 
+    char * buffer = 0;
+    long length;
+    FILE * f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
 
-    add_new_element(ht, 'b');
-    mu_assert("1) root->right->parent != root", ht->root->right->parent == ht->root);
-    add_new_element(ht, 'o');
-    printHuffmanTree(ht);
-    mu_assert("2) root->right->parent != root", ht->root->right->parent == ht->root);
-    add_new_element(ht, 'o');
-    printHuffmanTree(ht);
-    mu_assert("3) root->right->parent != root", ht->root->right->parent == ht->root);
-    add_new_element(ht, 'k');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'k');
-    printHuffmanTree(ht);
+    if (f)
+    {
+        fseek (f, 0, SEEK_END);
+        length = ftell (f);
+        fseek (f, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, f);
+        }
+        fclose (f);
+    }
 
-    /*
+    char* resultingTree = getTree(ht->root, 0);
+    mu_assert("Invalid HT", strcmp(buffer, resultingTree) == 0);
+    free(resultingTree);
+    free(f);
+    free(buffer);
 
-    add_new_element(ht, 'a');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'b');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'c');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'b');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'a');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'a');
-    printHuffmanTree(ht);
-    add_new_element(ht, 'a');
-    printHuffmanTree(ht);
-    freeHuffman(ht);
-     */
     return 0;
 }
 
