@@ -50,7 +50,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
     if(last != target) {
         debug("[node_positioner] LAST != TARGET, swapping!");
         char* element2 = getElement(target);
-        sprintf(buffer, "[node_positioner] TARTGET: %s", element2);
+        sprintf(buffer, "[node_positioner] TARGET: %s", element2);
         debug(buffer);
         free(element2);
         swap_nodes(ht, target, last);
