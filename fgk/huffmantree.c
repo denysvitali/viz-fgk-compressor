@@ -58,7 +58,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
 
-    // Character already is already in the tree?
+    // Is the character already in the tree?
     if(target != NULL){
         node_positioner(ht, target);
     } else {
