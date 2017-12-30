@@ -586,9 +586,15 @@ static char* test_huffman_coding_bookkeeper(){
         printHuffmanTree(ht);
     }
 
+
     char * buffer = 0;
     long length;
+#ifdef UTILITIES_PRINT_CHARS
     FILE * f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
+
+#else
+    FILE * f = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
+#endif
 
     if (f)
     {
@@ -605,10 +611,10 @@ static char* test_huffman_coding_bookkeeper(){
 
     char* resultingTree = getTree(ht->root, 0);
     mu_assert("Invalid HT", strcmp(buffer, resultingTree) == 0);
+
     free(resultingTree);
     free(f);
     free(buffer);
-
     freeHuffman(ht);
 
     return 0;
