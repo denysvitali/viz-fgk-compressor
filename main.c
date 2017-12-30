@@ -729,8 +729,8 @@ int main(int argc, char *argv[]){
 
 		char* file_output = (char*) malloc(sizeof(argv[2]));
 		char* file_input = (char*) malloc(sizeof(argv[3]));
-		strncpy(file_output, argv[2], strlen(file_output));
-		strncpy(file_input, argv[3], strlen(file_input));
+		memcpy(file_output, argv[2], strlen(argv[2]));
+		memcpy(file_input, argv[3], strlen(argv[3]));
 
 		if(DEBUG){
 			sprintf(debug_buffer, "Input: %s", file_input);
