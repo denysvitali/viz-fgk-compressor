@@ -616,7 +616,7 @@ static char* test_huffman_coding_bookkeeper(){
     free(resulting_tree);
     free(buffer);
     freeHuffman(ht);
-    
+
     return 0;
 }
 
@@ -727,8 +727,8 @@ int main(int argc, char *argv[]){
 
 		debug("Compression");
 
-		char* file_output = (char*) malloc(strlen(argv[2]));
-		char* file_input = (char*) malloc(strlen(argv[3]));
+		char* file_output = (char*) malloc(sizeof(argv[2]));
+		char* file_input = (char*) malloc(sizeof(argv[3]));
 		strcpy(file_output, argv[2]);
 		strcpy(file_input, argv[3]);	
 
