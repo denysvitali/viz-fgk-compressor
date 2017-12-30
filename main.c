@@ -587,13 +587,14 @@ static char* test_huffman_coding_bookkeeper(){
     }
 
 
-    char * buffer = 0;
+    char * buffer = "";
     long length;
+    FILE * f;
 #ifdef UTILITIES_PRINT_CHARS
-    FILE * f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
+    f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
 
 #else
-    FILE * f = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
+    f = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
 #endif
 
     if (f)
@@ -609,11 +610,10 @@ static char* test_huffman_coding_bookkeeper(){
         fclose (f);
     }
 
-    char* resultingTree = getTree(ht->root, 0);
-    mu_assert("Invalid HT", strcmp(buffer, resultingTree) == 0);
+    char* resulting_tree = getTree(ht->root, 0);
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
 
-    free(resultingTree);
-    free(f);
+    free(resulting_tree);
     free(buffer);
     freeHuffman(ht);
 
