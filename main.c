@@ -616,7 +616,7 @@ static char* test_huffman_coding_bookkeeper(){
     free(resulting_tree);
     free(buffer);
     freeHuffman(ht);
-
+    
     return 0;
 }
 
@@ -649,6 +649,7 @@ int main(int argc, char *argv[]){
 		if (result != 0) {
 			//printf("%s\n", result);
             printf("Test failed.\n");
+            return 1; // Fail on test failed
 		}
 		else {
 			test_successful("ALL TESTS PASSED");
