@@ -73,7 +73,7 @@ void printNodeArray(Node** array){
             if(k >= (int) pow(2, i)){
                 break;
             }
-            if(!array[i*HA_DIM_X + k] == NULL){
+            if(array[i*HA_DIM_X + k] != NULL){
                 printElement(array[i * HA_DIM_X + k]);
             }
             if(i<HUFFMAN_TOTAL_NODES-1) {
