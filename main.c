@@ -727,10 +727,13 @@ int main(int argc, char *argv[]){
 
 		debug("Compression");
 
-		char* file_output = (char*) malloc(sizeof(argv[2]));
-		char* file_input = (char*) malloc(sizeof(argv[3]));
-		memcpy(file_output, argv[2], strlen(argv[2]));
-		memcpy(file_input, argv[3], strlen(argv[3]));
+		char* file_output = (char*) malloc(strlen(argv[2])+1);
+		char* file_input = (char*) malloc(strlen(argv[3])+1);
+
+        strcpy(file_output, argv[2]);
+        strcpy(file_input, argv[3]);
+		//memcpy(file_output, argv[2], strlen(argv[2]));
+        //memcpy(file_input, argv[3], strlen(argv[3]));
 
 		if(DEBUG){
 			sprintf(debug_buffer, "Input: %s", file_input);
