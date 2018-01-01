@@ -22,6 +22,14 @@ VIZ compressor v0.0.1 (dad96c6-dirty)
 Compress:        viz -c output.viz inputfile
 Extract:         viz -d input.viz
 ```
+
+## Roadmap
+### October 4, 2017
+First commit
+
+### January 15, 2018
+Deadline
+
 ## Resources
 [Adaptive Huffman Coding - FGK - Stringology.org](http://www.stringology.org/DataCompression/fgk/index_en.html)  
 [Adaptive Huffman Coding - Wikipedia](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding)  
