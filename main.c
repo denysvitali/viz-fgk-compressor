@@ -807,6 +807,9 @@ int main(int argc, char *argv[]){
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);
+
+        free(file_input);
+        free(file_output);
 		
 		return 0;
 	}
