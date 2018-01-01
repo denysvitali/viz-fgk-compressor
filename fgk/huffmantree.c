@@ -410,6 +410,23 @@ void generateHTArrayFromTree(HuffmanTree* ht){
     }
 }
 
+
+char* node_path(Node* node){
+    char* ret = malloc(HUFFMAN_ARRAY_SIZE);
+
+    if(node == NULL || node->parent == NULL){
+        return ret;
+    }
+
+    if(node->parent->left == node){
+        sprintf(ret, "%s0", node_path(node->parent));
+        return ret;
+    }
+
+    sprintf(ret, "%s1", node_path(node->parent));
+    return ret;
+}
+
 void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //Node* aux = node;
     if(node == NULL || node2 == NULL){

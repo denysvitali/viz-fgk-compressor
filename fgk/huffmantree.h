@@ -46,3 +46,4 @@ void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2);
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2);
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos);
 void generateHTArrayFromTree(HuffmanTree* ht);
+char* node_path(Node* node);

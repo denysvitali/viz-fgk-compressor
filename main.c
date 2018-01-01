@@ -366,6 +366,50 @@ static char * test_huffman_coding(){
     return 0;
 }
 
+static char* test_node_path(){
+    mu_tag("Node Path");
+    Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
+    Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
+    Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
+
+    root->left = two_one;
+    root->right = two_two;
+
+    Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
+    Node* three_two = createNode(508, 1, 'A', NULL, NULL, two_one);
+
+    two_one->left = three_one;
+    two_one->right = three_two;
+
+    Node* four_one = createNode(505, 1, 'C', NULL, NULL, three_one);
+    Node* four_two = createNode(506, 1, 'C', NULL, NULL, three_one);
+
+    three_one->left = four_one;
+    three_one->right = four_two;
+
+
+    char* path = node_path(three_one);
+    mu_assert("31 is not 00", strcmp("00", path) == 0);
+    free(path);
+
+    path = node_path(three_two);
+    printf("Node path: %s\n", path);
+    mu_assert("32 is not 01", strcmp("01", path) == 0);
+    free(path);
+
+    path = node_path(four_one);
+    printf("Node path: %s\n", path);
+    mu_assert("41 is not 000", strcmp("000", path) == 0);
+    free(path);
+
+    path = node_path(four_two);
+    printf("Node path: %s\n", path);
+    mu_assert("42 is not 001", strcmp("001", path) == 0);
+    free(path);
+
+    return 0;
+}
+
 static char* test_swap_nodes(){
     mu_tag("Swap Nodes");
 
@@ -627,13 +671,14 @@ static char * all_tests(){
     mu_run_test(test_create_ht_array);
     mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
+    mu_run_test(test_node_path);
     mu_run_test(test_huffman_coding);
     mu_run_test(test_create_huffman_tree);
     mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_siblings);
     mu_run_test(test_huffman_coding);
-    //mu_run_test(test_huffman_coding_abracadabra);
-    //mu_run_test(test_huffman_coding_abcbaaa);
+    mu_run_test(test_huffman_coding_abracadabra);
+    mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_bookkeeper);
 
     //mu_run_test(test_utility_get_node_position);
@@ -732,8 +777,6 @@ int main(int argc, char *argv[]){
 
         strcpy(file_output, argv[2]);
         strcpy(file_input, argv[3]);
-		//memcpy(file_output, argv[2], strlen(argv[2]));
-        //memcpy(file_input, argv[3], strlen(argv[3]));
 
 		if(DEBUG){
 			sprintf(debug_buffer, "Input: %s", file_input);
@@ -791,6 +834,7 @@ int main(int argc, char *argv[]){
         HuffmanTree* ht = createHuffmanTree();
 
         int i = 0;
+
         for(;;){
 			unsigned char c = (unsigned char) fgetc(fh);
 			if(feof(fh)) break;
