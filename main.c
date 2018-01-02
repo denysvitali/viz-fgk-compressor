@@ -666,10 +666,11 @@ static char* test_huffman_coding_bookkeeper(){
         fclose (fh);
     } else {
         error("Can't open the file.");
-        printf("Error number: %d", ferror(fh));
+        printf("Error number: %d\n", ferror(fh));
     }
 
     char* resulting_tree = getTree(ht->root, 0);
+    printf("Strncmp result was %d\n", strncmp(buffer, resulting_tree, length));
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
 
     free(resulting_tree);
