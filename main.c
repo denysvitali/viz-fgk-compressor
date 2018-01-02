@@ -650,7 +650,7 @@ static char* test_huffman_coding_bookkeeper(){
 
 #else
     debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
+    fh = fopen ("./test/expected-results/bookkeeper.hex", "rb");
 #endif
 
     if (fh)
