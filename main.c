@@ -389,6 +389,7 @@ static char* test_node_path(){
 
 
     char* path = node_path(three_one);
+    printf("Node path: %s\n", path);
     mu_assert("31 is not 00", strcmp("00", path) == 0);
     free(path);
 
@@ -674,7 +675,6 @@ static char * all_tests(){
     mu_run_test(test_node_path);
     mu_run_test(test_huffman_coding);
     mu_run_test(test_create_huffman_tree);
-    mu_run_test(test_create_ht_array);
     mu_run_test(test_utility_siblings);
     mu_run_test(test_huffman_coding);
     mu_run_test(test_huffman_coding_abracadabra);

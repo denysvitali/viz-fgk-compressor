@@ -68,10 +68,19 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* target = find_node(node, c);
 
     // Is the character already in the tree?
+    free(ht->output);
+    ht->output = calloc(1, 50);
+
     if(target != NULL){
         debug("[add_new_element] AS");
         node_positioner(ht, target);
+        char* path = node_path(target);
+        sprintf(ht->output, "%s", path);
+        free(path);
     } else {
+        char* path = node_path(ht->nyt);
+        sprintf(ht->output, "%s%c", path, c);
+        free(path);
         debug("[add_new_element] NS");
         Node* old_nyt = ht->nyt;
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
@@ -342,6 +351,7 @@ HuffmanTree* createHuffmanTree(){
     Node* tmp_nyt = createNYT(HUFFMAN_TOTAL_NODES);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
+    ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
 
     int i, k;
     for(i = 0; i<HA_DIM_X; i++){
@@ -374,6 +384,7 @@ void freeNode(Node* node){
 
 void freeHuffman(HuffmanTree* ht){
     freeNode(ht->root);
+    free(ht->output);
     free(ht);
 }
 
@@ -412,18 +423,22 @@ void generateHTArrayFromTree(HuffmanTree* ht){
 
 
 char* node_path(Node* node){
-    char* ret = malloc(HUFFMAN_ARRAY_SIZE);
+    char* ret = calloc(1, HUFFMAN_ARRAY_SIZE);
 
     if(node == NULL || node->parent == NULL){
         return ret;
     }
 
+    char* path = node_path(node->parent);
+
     if(node->parent->left == node){
-        sprintf(ret, "%s0", node_path(node->parent));
+        sprintf(ret, "%s0", path);
+        free(path);
         return ret;
     }
 
-    sprintf(ret, "%s1", node_path(node->parent));
+    sprintf(ret, "%s1", path);
+    free(path);
     return ret;
 }
 
