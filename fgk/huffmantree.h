@@ -25,6 +25,7 @@ typedef struct{
     Node* tree[HA_DIM_X * HA_DIM_Y];
     Node* nyt;
     char* output;
+    int elements;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);

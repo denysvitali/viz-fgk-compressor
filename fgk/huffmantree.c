@@ -73,14 +73,23 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
     if(target != NULL){
         debug("[add_new_element] AS");
-        node_positioner(ht, target);
         char* path = node_path(target);
-        sprintf(ht->output, "%s", path);
+        node_positioner(ht, target);
+
+        int* length;
+        char* encoded_byte = bin2byte(ht, path, length);
+
+        sprintf(ht->output, "%s", encoded_byte);
         free(path);
     } else {
         char* path = node_path(ht->nyt);
-        sprintf(ht->output, "%s%c", path, c);
+
+        int* length;
+        char* encoded_byte = bin2byte(ht, path, length);
+
+        sprintf(ht->output, "%s%c", bin2byte(ht, path, length), c);
         free(path);
+        ht->elements++;
         debug("[add_new_element] NS");
         Node* old_nyt = ht->nyt;
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
@@ -527,7 +536,9 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
         return;
     }
     if(node != NULL) {
-        printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
+        if(DEBUG) {
+            printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
+        }
         result[pos[0] * HA_DIM_X + pos[1]] = node;
         //ht->tree[node->node_number] = NULL;
 
@@ -536,7 +547,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
         int right[2] = {pos[0]+1, pos[1]*2 + 1};
         Node* n_right = node->right;
 
-        if(DEBUG_SWAP_SHOW_ARRAYS) {
+        if(DEBUG && DEBUG_SWAP_SHOW_ARRAYS) {
             printf("Pos: [%d][%d]\n", pos[0], pos[1]);
             char* string;
             string = getElement(node);

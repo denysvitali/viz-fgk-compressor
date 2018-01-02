@@ -669,9 +669,8 @@ static char* test_huffman_coding_bookkeeper(){
         printf("Error number: %d\n", ferror(fh));
         mu_assert("Can't open the bookkeeper file", 0);
     }
-    
-
     char* resulting_tree = getTree(ht->root, 0);
+
     //printf("Strncmp result was %d\n", strncmp(buffer, resulting_tree, length));
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
 
@@ -843,6 +842,7 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+        FILE *o_fh = fopen(file_output, "wb");
 
 		// We'll eventually switch to a buffer for better performances,
 		// for now, we stick to our fgetc function since we're working w/ small files
@@ -860,11 +860,20 @@ int main(int argc, char *argv[]){
             char buffer[200];
             sprintf(buffer, "Parsing byte %02x", c & 0xff);
             debug(buffer);
+            //char filename[200];
+            //sprintf(filename, "./prev-%d.dot", i);
+            //printf(filename);
+            //saveHuffmanTree(ht, filename);
             add_new_element(ht, c);
+            printf("%s\n", ht->output);
+            fputs(ht->output, o_fh);
             i++;
         }
         printHuffmanTreeInfo(ht);
         saveHuffmanTree(ht, "./out.dot");
+
+
+
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);

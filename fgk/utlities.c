@@ -7,7 +7,8 @@
 
 #ifndef  ALGORITMI_FGK_COMPRESSION_UTILITIES_H
     #include "utilities.h"
-#include "../console.h"
+    #include "../console.h"
+
 #endif
 
 #ifndef ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
@@ -20,6 +21,9 @@
  * like HT address, Tree address, Root Node Number, Root Element, isNYT(root)
  */
 void printHuffmanTreeInfo(HuffmanTree *ht){
+    if(!DEBUG){
+        return;
+    }
     printf("HT:\t %p\n", ht);
     printf("Tree:\t %p\n", ht->tree);
     printf("Root:\t %p (NN: %d, Element: %d, isNYT: %d), \n", ht->root, ht->root->node_number, ht->root->element, isNYT(ht->root));
@@ -27,6 +31,9 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
 }
 
 void printHuffmanTree(HuffmanTree *ht){
+    if(!DEBUG) {
+        return;
+    }
     if(ht == NULL){
         return;
     }
@@ -58,13 +65,16 @@ void saveHuffmanTree(HuffmanTree *ht, char* filename){
 }
 
 void printNodeArray(Node** array){
+    if(!DEBUG){
+        return;
+    }
     int i, k;
     int stop=0;
     for(i=0; i< HA_DIM_X; i++){ // We use HUFFMAN_NODES here to truncate the output
         for(k = 0; k<HA_DIM_Y; k++){
 
             // Truncate (DEBUG!)
-            if(DEBUG && i*HA_DIM_X + k >= 50){
+            if(i*HA_DIM_X + k >= 50){
                 printf("(truncating the output.)");
                 stop=1;
                 break;
@@ -89,10 +99,12 @@ void printNodeArray(Node** array){
 }
 
 void printHuffmanArray(HuffmanTree* ht){
-    printf("HTA:\n");
-    printf("------\n");
-    printNodeArray(ht->tree);
-    printf("\n------\n");
+    if(DEBUG) {
+        printf("HTA:\n");
+        printf("------\n");
+        printNodeArray(ht->tree);
+        printf("\n------\n");
+    }
 }
 
 char* getTree(Node* root, int level) {
@@ -197,6 +209,9 @@ char* getElement(Node* root){
 }
 
 void printElement(Node* root){
+    if(!DEBUG){
+        return;
+    }
     if(root != NULL){
         char* elementText = getElement(root);
         printf("%s", elementText);
@@ -315,7 +330,92 @@ int getLevel(int pos){
     return getLevelInternal(pos, 0);
 }
 
+char* bin2byte(HuffmanTree* ht, char* bin, int* length){
+    long i;
+    long size = strlen(bin);
+
+    char* return_value;
+    int number = 0;
+    printf("-- Starting BIN2BYTE --\n");
+    printf("Encoding %s\n", bin);
+    printf("Size: %ld \n", size);
+    printf("Padding: %d\n", (int) (8-size));
+
+    if(size < 8){
+        char* newbin = calloc(1, 8);
+
+        for(i = 0; i<8; i++){
+            if(i< size){
+                newbin[i] = bin[i];
+            } else {
+                newbin[i] = '0'; // Pad w/ zeroes (https://photos.app.goo.gl/5eBsZnswzxLePqsZ2)
+            }
+        }
+
+        printf("Calling bin2byte w/ %s\n", newbin);
+        return bin2byte(ht, newbin, length);
+    } else if(size == 8) {
+        // YAY, 1 byte!
+        printf("Encoding %s in a byte...\n", bin);
+        for(i = 8; i>0; i--){
+            if(bin[i] == '1'){
+                number += pow(2, 7-i);
+            }
+        }
+
+        length = malloc(sizeof(int));
+        *length = 1;
+
+        return_value = calloc(0, 1);
+        return_value[0] = (char) number;
+
+    } else if(size == 16){
+        // Meh, 2 bytes
+
+        printf("Encoding %s in TWO bytes...\n", bin);
+        for(i = 16; i>0; i--){
+            if(bin[i] == '1'){
+                number += pow(2, 15-i);
+            }
+        }
+
+        length = malloc(sizeof(int));
+        *length = 2;
+
+        return_value = calloc(2, 1);
+        return_value[0] = (char) (number % 256);
+        return_value[1] = (char) (number - number % 256);
+
+    } else if(size > 16){
+        error("[bin2byte] Size is higher than 16 chars. This should *NEVER* happen.");
+        return NULL;
+    } else {
+        char* newbin = calloc(1, 8);
+
+        for(i = 0; i<8; i++){
+            if(i< size){
+                newbin[i] = bin[i];
+            } else {
+                newbin[i] = '0'; // Pad w/ zeroes (https://photos.app.goo.gl/5eBsZnswzxLePqsZ2)
+            }
+        }
+
+        printf("Calling bin2byte w/ %s\n", newbin);
+        return bin2byte(ht, newbin, length);
+    }
+
+
+    printf("Number: %d\n", number);
+    printf("Dec: %d\n", number);
+    printf("Hex: %02X\n", number % 0xff);
+    printf("-- END BIN2BYTE --\n\n");
+    return return_value;
+}
+
 void printPartialArray(Node** arr){
+    if(!DEBUG){
+        return;
+    }
     warn("Printing partial array!");
     int i, k;
     for(i=0; i<HA_DIM_X; i++){
