@@ -669,17 +669,10 @@ static char* test_huffman_coding_bookkeeper(){
         printf("Error number: %d\n", ferror(fh));
         mu_assert("Can't open the bookkeeper file", 0);
     }
-
-
-    for(i=0; i<length; i++){
-        printf("%02x ", 0xff & buffer[i]);
-    }
-
-    printf("\n");
-
+    
 
     char* resulting_tree = getTree(ht->root, 0);
-    printf("Strncmp result was %d\n", strncmp(buffer, resulting_tree, length));
+    //printf("Strncmp result was %d\n", strncmp(buffer, resulting_tree, length));
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
 
     free(resulting_tree);
