@@ -643,27 +643,30 @@ static char* test_huffman_coding_bookkeeper(){
 
     char * buffer = "";
     long length;
-    FILE * f;
+    FILE * fh;
 #ifdef UTILITIES_PRINT_CHARS
     debug("UTILITIES PRINT CHARS IS ON");
-    f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
+    fh = fopen ("./test/expected-results/bookkeeper.txt", "rb");
 
 #else
     debug("UTILITIES PRINT CHARS IS OFF");
-    f = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
+    fh = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
 #endif
 
-    if (f)
+    if (fh)
     {
-        fseek (f, 0, SEEK_END);
-        length = ftell (f);
-        fseek (f, 0, SEEK_SET);
+        fseek (fh, 0, SEEK_END);
+        length = ftell (fh);
+        fseek (fh, 0, SEEK_SET);
         buffer = malloc (length);
         if (buffer)
         {
-            fread (buffer, 1, length, f);
+            fread (buffer, 1, length, fh);
         }
-        fclose (f);
+        fclose (fh);
+    } else {
+        error("Can't open the file.");
+        printf("Error number: %d", ferror(fh));
     }
 
     char* resulting_tree = getTree(ht->root, 0);
