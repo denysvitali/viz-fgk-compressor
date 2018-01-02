@@ -408,6 +408,15 @@ static char* test_node_path(){
     mu_assert("42 is not 001", strcmp("001", path) == 0);
     free(path);
 
+    // Free nodes
+    free(root);
+    free(two_one);
+    free(two_two);
+    free(three_one);
+    free(three_two);
+    free(four_one);
+    free(four_two);
+
     return 0;
 }
 
