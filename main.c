@@ -645,9 +645,11 @@ static char* test_huffman_coding_bookkeeper(){
     long length;
     FILE * f;
 #ifdef UTILITIES_PRINT_CHARS
+    debug("UTILITIES PRINT CHARS IS ON");
     f = fopen ("./test/expected-results/bookkeeper.txt", "rb");
 
 #else
+    debug("UTILITIES PRINT CHARS IS OFF");
     f = fopen ("./test/expected-results/bookkeeper-hex.txt", "rb");
 #endif
 
