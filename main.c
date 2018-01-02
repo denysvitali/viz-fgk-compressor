@@ -667,6 +667,7 @@ static char* test_huffman_coding_bookkeeper(){
     } else {
         error("Can't open the file.");
         printf("Error number: %d\n", ferror(fh));
+        mu_assert("Can't open the bookkeeper file", 0);
     }
 
 
