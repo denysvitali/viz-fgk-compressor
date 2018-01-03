@@ -1124,7 +1124,7 @@ int main(int argc, char *argv[]){
                 sprintf(buffer,"File %s doesn't exist. (E%d)", file_input, result);
             } else {
                 char buffer[500];
-                sprintf(buffer,"File %s doesn't exist.", file_input, result);
+                sprintf(buffer,"File %s doesn't exist.", file_input);
                 error(buffer);
             }
         }
