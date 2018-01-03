@@ -35,6 +35,7 @@
 # Binary files
 /viz
 /viz-test
+/viz-release
 
 # Archive files
 /*.viz
