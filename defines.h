@@ -7,19 +7,27 @@
 
 #endif //ALGORITMI_FGK_COMPRESSION_DEFINES_H
 
-#define DEBUG 1
+#ifndef DEBUG
+    #define DEBUG 0
+#endif
+
+#ifndef RELEASE
+    #define RELEASE 1
+#endif
+
 #ifndef TEST
     #define TEST 0
 #endif
-#define VERSION "0.0.2"
+#define VERSION "0.0.3"
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "NO GIT VERSION PROVIDED!"
 #endif
 
 /* Compressor Magic Number */
-#define MAGIC_NUMBER 0x517D3C0
+#define MAGIC_NUMBER "\x51\x7D\x3C\xDE"
 #define NYT_ELEMENT 256
+
 
 /* DEBUG flags */
 #define DEBUG_SWAP_SHOW_ARRAYS 0
