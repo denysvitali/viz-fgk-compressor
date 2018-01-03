@@ -1158,6 +1158,12 @@ int main(int argc, char *argv[]){
 
 	if(strcmp(argv[1],"-d") == 0) {
         // Decompression
+
+        if(argc != 3){
+            usage();
+            return 1;
+        }
+
         debug("Decompressing");
         char* file_input = (char*) malloc(strlen(argv[2])+1);
         strcpy(file_input, argv[2]);
@@ -1174,6 +1180,46 @@ int main(int argc, char *argv[]){
                 error(buffer);
             }
         }
+
+        //info("Decompressing your file...");
+
+        FILE* fh = fopen(file_input, "rb");
+        // Parse headers
+        int buffer_size = 50;
+        char* buffer = calloc(buffer_size, sizeof(char));
+
+        size_t read_bytes;
+        read_bytes = fread(buffer, 1, 5, fh);
+
+        if(read_bytes != 5){
+            error("Invalid file.");
+            return 1;
+        }
+
+        int i;
+        if(strncmp(MAGIC_NUMBER, buffer, strlen(MAGIC_NUMBER)) != 0){
+            error("The provided file is not compatible because it wasn't generated with VIZ.");
+            return 1;
+        }
+
+        int compressed = 0;
+
+        if(buffer[strlen(MAGIC_NUMBER)] == '\x01'){
+            compressed = 0;
+        } else if(buffer[strlen(MAGIC_NUMBER)] == '\x02') {
+            compressed = 1;
+        } else {
+            error("The file provided is invalid or corrupted.");
+            return 1;
+        }
+
+        char info_buffer[50];
+        sprintf(info_buffer, "The file was%scompressed", (!compressed?" not ":" "));
+        info(info_buffer);
+
+        // TODO: Continue from here. Good night.
+
+        free(buffer);
 
     }
 }
