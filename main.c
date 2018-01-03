@@ -1183,7 +1183,7 @@ int main(int argc, char *argv[]){
 
         FILE* fh = fopen(file_input, "rb");
         // Parse headers
-        int buffer_size = 50;
+        size_t buffer_size = 50;
         char* buffer = calloc(buffer_size, sizeof(char));
 
         size_t read_bytes;
