@@ -383,3 +383,29 @@ void printPartialArray(Node** arr){
     }
     printf("\n");
 }
+
+char* get_filename(char* string){
+    int i;
+    long length = strlen(string);
+    int last_slash = -1;
+
+    for(i=0; i<length; i++){
+        if(string[i] == '/'){
+            last_slash = i;
+        }
+    }
+
+    if(last_slash == -1){
+        return string;
+    }
+
+    if(last_slash == length - 1){
+        return "";
+    }
+
+    char* output = calloc(length - last_slash, sizeof(char));
+    for(i = 0; i<length-last_slash; i++){
+        output[i] = string[last_slash + 1 + i];
+    }
+    return output;
+}

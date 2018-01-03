@@ -32,3 +32,6 @@ int getLevel(int pos);
 Node *getParent(HuffmanTree *ht, Node *pNode);
 void printPartialArray(Node** arr);
 char* bin2byte(char* bin, int* length);
+
+// File functions
+char* get_filename(char* string);
