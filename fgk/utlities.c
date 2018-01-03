@@ -402,7 +402,7 @@ char* get_filename(char* string){
     }
 
     if(last_slash == length - 1){
-        sprintf(output, "");
+        output[0] = '\0';
         return output;
     }
 
