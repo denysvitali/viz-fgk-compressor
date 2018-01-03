@@ -366,7 +366,7 @@ char* bin2byte(char* bin, int* length){
         length = malloc(sizeof(int));
         *length = 1;
 
-        return_value = calloc(0, 1);
+        return_value = calloc(1, sizeof(char));
         return_value[0] = (char) number;
 
     } else if(size == 16){
@@ -388,6 +388,7 @@ char* bin2byte(char* bin, int* length){
 
     } else if(size > 16){
         error("[bin2byte] Size is higher than 16 chars. This should *NEVER* happen.");
+        *length = 0;
         return NULL;
     } else {
         char* newbin = calloc(1, 8);
