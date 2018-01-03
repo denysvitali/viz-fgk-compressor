@@ -57,3 +57,6 @@
 
 # Test Results
 /test/results
+
+# Temporary Files
+*.tmp

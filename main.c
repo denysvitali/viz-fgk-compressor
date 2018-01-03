@@ -917,8 +917,11 @@ int main(int argc, char *argv[]){
 		char* file_output = (char*) malloc(strlen(argv[2])+1);
 		char* file_input = (char*) malloc(strlen(argv[3])+1);
 
+        char file_output_tmp[strlen(argv[2])+1 + 4]; // output.ext.tmp
+
         strcpy(file_output, argv[2]);
         strcpy(file_input, argv[3]);
+        sprintf(file_output_tmp, "%s.tmp", file_output);
 
 		if(DEBUG){
 			sprintf(debug_buffer, "Input: %s", file_input);
@@ -950,24 +953,35 @@ int main(int argc, char *argv[]){
                 sprintf(buffer,"File %s doesn't exist. This is normal. (E%d)", file_output, result);
                 warn(buffer);
             }
+        } else {
+            char buffer[500];
+            sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output_tmp, result);
+            error(buffer);
         }
 
-        result = access(file_output, W_OK);
+        result = access(file_output_tmp, W_OK);
         if (result != 0) {
-            // Cannot write file!
-            char buffer[500];
-            if (DEBUG) {
-                sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output, result);
+
+            if(result == -1){
+                // File doesn't exists
+
             } else {
-                sprintf(buffer, "Unable to write %s: permission denied.", file_output);
+                // Cannot write file!
+                char buffer[500];
+                if (DEBUG) {
+                    sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output_tmp, result);
+                } else {
+                    sprintf(buffer, "Unable to write %s: permission denied.", file_output_tmp);
+                }
+                error(buffer);
+                return 1;
             }
-            error(buffer);
-            return 1;
         }
 
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
+        FILE *o_tmp_fh = fopen(file_output_tmp, "wb");
         FILE *o_fh = fopen(file_output, "wb");
 
 		// We'll eventually switch to a buffer for better performances,
@@ -975,6 +989,14 @@ int main(int argc, char *argv[]){
 
         // Do the Huffman Coding Thing
         HuffmanTree* ht = createHuffmanTree();
+
+        if(o_tmp_fh == NULL){
+            // Can't open o_tmp_fh!
+            char buffer[200];
+            sprintf(buffer, "Can't open the temp file: %s", file_output_tmp);
+            error(buffer);
+            return 2;
+        }
 
         int i = 0;
 
@@ -992,17 +1014,38 @@ int main(int argc, char *argv[]){
             //saveHuffmanTree(ht, filename);
             add_new_element(ht, c);
             printf("%s\n", ht->output);
-            fputs(ht->output, o_fh);
+            fputs(ht->output, o_tmp_fh);
             i++;
         }
-        printHuffmanTreeInfo(ht);
-        saveHuffmanTree(ht, "./out.dot");
+        //printHuffmanTreeInfo(ht);
+        //saveHuffmanTree(ht, "./out.dot");
 
+        fseek(o_tmp_fh, 0L, SEEK_END);
+        long size = ftell(o_tmp_fh);
+
+        fseek(fh, 0L, SEEK_END);
+        long original_size = ftell(fh);
+
+        int buffer_size = 1024;
+        char buffer[buffer_size];
+
+        if(size > original_size || DEBUG){ // TODO: Remove || DEBUG
+            // Add just the headers
+            rewind(fh);
+            fprintf(o_fh, "%s", MAGIC_NUMBER);
+            fprintf(o_fh,"%s", "\x01"); // NOT compressed!
+            fprintf(o_fh, "TEST");
+            while(!feof(fh)){
+                int size = fread(buffer, 1, (size_t) sizeof(buffer), fh);
+                fwrite(buffer, 1, size, o_fh);
+            }
+        }
 
 
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);
+        fclose(o_tmp_fh);
         fclose(o_fh);
 
         free(file_input);

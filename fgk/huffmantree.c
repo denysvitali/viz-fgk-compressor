@@ -81,9 +81,13 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         char* encoded_byte = bin2byte(path, length);
         int i;
+        char bytes[*length + 1];
         for(i = 0; i<*length; i++){
-            sprintf(ht->output, "%02x", encoded_byte[i] & 0xff);
+            bytes[i] = encoded_byte[i];
         }
+        bytes[*length] = '\0';
+
+        sprintf(ht->output, "%s", bytes);
         free(path);
         free(encoded_byte);
         free(length);
@@ -91,12 +95,14 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     } else {
         char* path = node_path(ht->nyt);
         char* encoded_byte = bin2byte(path, length);
-        //sprintf(ht->output, "%s%c", bin2byte(path, &length), c);
 
         int i;
+        char bytes[*length + 1];
         for(i = 0; i<*length; i++){
-            sprintf(ht->output, "%02x", encoded_byte[i] & 0xff);
+            bytes[i] = encoded_byte[i];
         }
+        bytes[*length] = '\0';
+        sprintf(ht->output, "%s%c", bytes, c);
 
         free(path);
         free(encoded_byte);
