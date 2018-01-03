@@ -355,7 +355,9 @@ char* bin2byte(char* bin, int* length){
         newbin[8] = '\0';
 
         printf("Calling bin2byte w/ %s\n", newbin);
-        return bin2byte(newbin, length);
+        char *result = bin2byte(newbin, length);
+        free(newbin);
+        return result;
     } else if(size == 8) {
         // YAY, 1 byte!
         printf("Encoding %s in a byte...\n", bin);
@@ -365,7 +367,6 @@ char* bin2byte(char* bin, int* length){
             }
         }
 
-        length = malloc(sizeof(int));
         *length = 1;
 
         return_value = calloc(1, sizeof(char));
@@ -381,7 +382,6 @@ char* bin2byte(char* bin, int* length){
             }
         }
 
-        length = malloc(sizeof(int));
         *length = 2;
 
         return_value = calloc(2, 1);
@@ -406,7 +406,9 @@ char* bin2byte(char* bin, int* length){
         newbin[8] = '\0';
 
         printf("Calling bin2byte w/ %s\n", newbin);
-        return bin2byte(newbin, length);
+        char* result = bin2byte(newbin, length);
+        free(newbin);
+        return result;
     }
 
 

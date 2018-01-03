@@ -639,6 +639,9 @@ static char* test_bin2byte(){
         printf("result: %02x", result[i]);
     }
 
+    free(result);
+    free(length);
+
     return 0;
 }
 
