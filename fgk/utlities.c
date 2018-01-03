@@ -330,7 +330,7 @@ int getLevel(int pos){
     return getLevelInternal(pos, 0);
 }
 
-char* bin2byte(char* bin, int* length){
+/*char* bin2byte(char* bin, int* length){
     long i;
     long size = strlen(bin);
 
@@ -419,6 +419,41 @@ char* bin2byte(char* bin, int* length){
     printf("Hex: %02X\n", number & 0xff);
     printf("-- END BIN2BYTE --\n\n");
     return return_value;
+}*/
+
+char* bin2byte(char* bin, int* length) {
+    // https://photos.app.goo.gl/njS3AUvGThpDMWqL2
+    int size = (int) strlen(bin);
+    char *result;
+    int i, j;
+
+    if (size % 8 != 0) {
+        // String isn't a multiple of 8, add padding
+        int padding_size = 8 - (size % 8);
+        char *new_bin = malloc((size + padding_size + 1) * sizeof(char));
+        for (i = 0; i < size + padding_size; i++) {
+            new_bin[i] = (i < size ? bin[i] : '0');
+        }
+        new_bin[size + padding_size] = '\0';
+        result = bin2byte(new_bin, length);
+        free(new_bin);
+        return result;
+    }
+
+    // Size IS a multiple of 8 (e.g bin = '11111000')
+    *length = size / 8;
+    result = malloc(*length);
+    //printf("Returning result for %s\nLength: %d\n", bin, *length);
+    for(i = 0; i<*length; i++){
+        int dec = 0;
+        for(j = 0; j<8; j++){
+            //printf("bin[%d]\n", i*8+j);
+            dec += (bin[i*8+j] == '1' ? pow(2, 7-j) : 0);
+        }
+        //printf("dec: %d\n", dec);
+        result[*length - i - 1] = (char) dec;
+    }
+    return result;
 }
 
 void printPartialArray(Node** arr){
