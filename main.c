@@ -15,8 +15,12 @@
 
 int tests_run = 0;
 
+void version(){
+    printf("%sVIZ compressor %sv%s (%s%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, (RELEASE && !DEBUG?"R-":(DEBUG?"D-":"")), GIT_VERSION);
+}
+
 void usage(){
-	printf("%sVIZ compressor %sv%s (%s%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, (RELEASE?"R-":""), GIT_VERSION);
+    version();
 	printf("Compress: \t viz -c output.viz inputfile\n");
 	printf("Extract: \t viz -d input.viz\n");
 }
@@ -889,6 +893,11 @@ int main(int argc, char *argv[]){
 		usage();
 		return 0;
 	}
+
+    if(strcmp(argv[1],"-v") == 0){
+        version();
+        return 0;
+    }
 
 	if(DEBUG){
 		int i;
