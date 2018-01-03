@@ -633,10 +633,55 @@ static char* test_bin2byte(){
     char* result;
     int i;
 
-    result = bin2byte("001", length);
+    /*result = bin2byte("001", length);
     printf("Length: %d\n", *length);
     for(i=0; i<*length; i++){
         printf("result: %02x\n", result[i]);
+    }*/
+
+    char result_string[10];
+
+    char* tests[9] = {
+            "001",
+            "0101",
+            "0",
+            "1",
+            "11",
+            "1101",
+            "11111111",
+            "01111111",
+            "11111110"
+    };
+
+    char* expected_results[9] = {
+            "20",
+            "50",
+            "00",
+            "80",
+            "C0",
+            "D0",
+            "FF",
+            "7F",
+            "FE"
+    };
+
+    int size = (sizeof(expected_results)/sizeof(char*));
+
+    for(i = 0; i<size; i++) {
+        printf("Testing entry #%d\n", i);
+        printf("Testing w/ %s\n", tests[i]);
+
+        result = bin2byte(tests[i], length);
+        sprintf(result_string, "%02X", result[0] & 0xff);
+        mu_assert("Length is not 1", *length == 1);
+        char error_string[20];
+
+        int test_result = strncmp(result_string, expected_results[i], sizeof(expected_results[i]));
+        if(test_result != 0){
+            sprintf(error_string, "Result is not \"%s\" - was \"%s\"", expected_results[i], result_string);
+            printf("%s\n", error_string);
+        }
+        mu_assert("Value is not the expected result. Check previous output.", test_result == 0);
     }
 
     free(result);
