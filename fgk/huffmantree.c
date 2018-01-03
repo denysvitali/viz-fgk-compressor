@@ -71,22 +71,33 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     free(ht->output);
     ht->output = calloc(1, 50);
 
+    int* length = malloc(sizeof(int));
+    *length = 0;
+
     if(target != NULL){
         debug("[add_new_element] AS");
         char* path = node_path(target);
         node_positioner(ht, target);
 
-        int length = 0;
-        char* encoded_byte = bin2byte(path, &length);
-        sprintf(ht->output, "%s", encoded_byte);
+        char* encoded_byte = bin2byte(path, length);
+        int i;
+        for(i = 0; i<*length; i++){
+            sprintf(ht->output, "%02x", encoded_byte[i] & 0xff);
+        }
+
+
         free(path);
         free(encoded_byte);
     } else {
         char* path = node_path(ht->nyt);
-
-        int length = 0;
         char* encoded_byte = bin2byte(path, &length);
-        sprintf(ht->output, "%s%c", bin2byte(path, &length), c);
+        //sprintf(ht->output, "%s%c", bin2byte(path, &length), c);
+
+        int i;
+        for(i = 0; i<*length; i++){
+            sprintf(ht->output, "%02x", encoded_byte[i] & 0xff);
+        }
+
         free(path);
         free(encoded_byte);
         ht->elements++;

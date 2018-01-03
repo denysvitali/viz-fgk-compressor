@@ -342,7 +342,7 @@ char* bin2byte(char* bin, int* length){
     printf("Padding: %d\n", (int) (8-size));
 
     if(size < 8){
-        char* newbin = calloc(1, 8);
+        char* newbin = calloc(1, 9);
 
         for(i = 0; i<8; i++){
             if(i< size){
@@ -352,12 +352,14 @@ char* bin2byte(char* bin, int* length){
             }
         }
 
+        newbin[8] = '\0';
+
         printf("Calling bin2byte w/ %s\n", newbin);
         return bin2byte(newbin, length);
     } else if(size == 8) {
         // YAY, 1 byte!
         printf("Encoding %s in a byte...\n", bin);
-        for(i = 8; i>0; i--){
+        for(i = 7; i>=0; i--){
             if(bin[i] == '1'){
                 number += pow(2, 7-i);
             }
@@ -373,7 +375,7 @@ char* bin2byte(char* bin, int* length){
         // Meh, 2 bytes
 
         printf("Encoding %s in TWO bytes...\n", bin);
-        for(i = 16; i>0; i--){
+        for(i = 15; i>=0; i--){
             if(bin[i] == '1'){
                 number += pow(2, 15-i);
             }
@@ -391,7 +393,7 @@ char* bin2byte(char* bin, int* length){
         *length = 0;
         return NULL;
     } else {
-        char* newbin = calloc(1, 8);
+        char* newbin = calloc(1, 9);
 
         for(i = 0; i<8; i++){
             if(i< size){
@@ -400,6 +402,8 @@ char* bin2byte(char* bin, int* length){
                 newbin[i] = '0'; // Pad w/ zeroes (https://photos.app.goo.gl/5eBsZnswzxLePqsZ2)
             }
         }
+
+        newbin[8] = '\0';
 
         printf("Calling bin2byte w/ %s\n", newbin);
         return bin2byte(newbin, length);

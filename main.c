@@ -628,12 +628,14 @@ static char* test_huffman_coding_abcbaaa(){
 
 static char* test_bin2byte(){
     mu_tag("Binary to Byte (w/ padding)");
-    int length;
+    int* length = malloc(sizeof(int));
+    *length = 0;
     char* result;
     int i;
 
-    result = bin2byte("001", &length);
-    for(i=0; i<length; i++){
+    result = bin2byte("001", length);
+    printf("Length: %d", *length);
+    for(i=0; i<*length; i++){
         printf("result: %02x", result[i]);
     }
 
