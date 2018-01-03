@@ -339,10 +339,10 @@ char* bin2byte(char* bin, int* length){
     printf("-- Starting BIN2BYTE --\n");
     printf("Encoding %s\n", bin);
     printf("Size: %ld \n", size);
-    printf("Padding: %d\n", (int) (8-size));
 
     if(size < 8){
         char* newbin = calloc(1, 9);
+        printf("Padding: %d\n", (int) (8-size));
 
         for(i = 0; i<8; i++){
             if(i< size){
@@ -383,19 +383,21 @@ char* bin2byte(char* bin, int* length){
         }
 
         *length = 2;
-
         return_value = calloc(2, 1);
         return_value[0] = (char) (number % 256);
-        return_value[1] = (char) (number - number % 256);
+        return_value[1] = (char) (((number - (number % 256))/256) % 256);
+
+        printf("Return Value 1: %02X\n", return_value[1] & 0xff);
+        printf("Return Value 2: %02X\n", return_value[0] & 0xff);
 
     } else if(size > 16){
         error("[bin2byte] Size is higher than 16 chars. This should *NEVER* happen.");
         *length = 0;
         return NULL;
     } else {
-        char* newbin = calloc(1, 9);
-
-        for(i = 0; i<8; i++){
+        char* newbin = calloc(1, 17);
+        printf("Padding: %d\n", (int) (16-size));
+        for(i = 0; i<16; i++){
             if(i< size){
                 newbin[i] = bin[i];
             } else {
@@ -403,7 +405,7 @@ char* bin2byte(char* bin, int* length){
             }
         }
 
-        newbin[8] = '\0';
+        newbin[16] = '\0';
 
         printf("Calling bin2byte w/ %s\n", newbin);
         char* result = bin2byte(newbin, length);
@@ -414,7 +416,7 @@ char* bin2byte(char* bin, int* length){
 
     printf("Number: %d\n", number);
     printf("Dec: %d\n", number);
-    printf("Hex: %02X\n", number % 0xff);
+    printf("Hex: %02X\n", number & 0xff);
     printf("-- END BIN2BYTE --\n\n");
     return return_value;
 }

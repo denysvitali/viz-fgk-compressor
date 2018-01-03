@@ -690,6 +690,66 @@ static char* test_bin2byte(){
     return 0;
 }
 
+static char* test_bin2byte2(){
+    mu_tag("Binary to byte - 2 byte cases (w/ padding)");
+    int* length = malloc(sizeof(int));
+    *length = 0;
+    char* result;
+    int i;
+
+    /*result = bin2byte("001", length);
+    printf("Length: %d\n", *length);
+    for(i=0; i<*length; i++){
+        printf("result: %02x\n", result[i]);
+    }*/
+
+    char result_string[10];
+
+    char* tests[7] = {
+            "000000001",
+            "0110010101",
+            "00101000111",
+            "01111101000",
+            "10101100101010",
+            "111111111",
+            "000000000"
+    };
+
+    char* expected_results[7] = {
+            "0080",
+            "6540",
+            "28E0",
+            "7D00",
+            "ACA8",
+            "FF80",
+            "0000"
+    };
+
+    int size = (sizeof(expected_results)/sizeof(char*));
+
+    for(i = 0; i<size; i++) {
+        printf("Testing entry #%d\n", i);
+        printf("Testing w/ %s\n", tests[i]);
+
+        result = bin2byte(tests[i], length);
+        sprintf(result_string, "%02X%02X", result[1] & 0xff, result[0] & 0xff);
+        mu_assert("Length is not 2", *length == 2);
+        char error_string[20];
+
+        int test_result = strncmp(result_string, expected_results[i], sizeof(expected_results[i]));
+        if(test_result != 0){
+            sprintf(error_string, "Result is not \"%s\" - was \"%s\"", expected_results[i], result_string);
+            printf("%s\n", error_string);
+        }
+        mu_assert("Value is not the expected result. Check previous output.", test_result == 0);
+        free(result);
+    }
+
+    free(length);
+
+    return 0;
+}
+
 static char* test_huffman_coding_bookkeeper(){
     mu_tag("Huffman Coding (bookkeeper)");
     HuffmanTree* ht = createHuffmanTree();
@@ -761,6 +821,7 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_bin2byte);
+    mu_run_test(test_bin2byte2);
 
     //mu_run_test(test_utility_get_node_position);
 	//mu_run_test(test_add_weight_to_element);
