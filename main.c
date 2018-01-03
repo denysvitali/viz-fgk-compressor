@@ -1053,7 +1053,7 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
-        FILE *o_tmp_fh = fopen(file_output_tmp, "rwb");
+        FILE *o_tmp_fh = fopen(file_output_tmp, "rb+");
         FILE *o_fh = fopen(file_output, "wb");
 
 		// We'll eventually switch to a buffer for better performances,
@@ -1063,11 +1063,8 @@ int main(int argc, char *argv[]){
         HuffmanTree* ht = createHuffmanTree();
 
         if(o_tmp_fh == NULL){
-            // Can't open o_tmp_fh!
-            char buffer[200];
-            sprintf(buffer, "Can't open the temp file: %s", file_output_tmp);
-            error(buffer);
-            return 2;
+            // The file doesn't exist, create it
+            o_tmp_fh = fopen(file_output_tmp, "wb");
         }
 
         int i = 0;
