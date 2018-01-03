@@ -1147,6 +1147,7 @@ int main(int argc, char *argv[]){
         fclose(o_fh);
         fclose(o_tmp_fh);
 
+        free(buffer);
         free(file_input);
         free(file_output);
 
