@@ -682,9 +682,9 @@ static char* test_bin2byte(){
             printf("%s\n", error_string);
         }
         mu_assert("Value is not the expected result. Check previous output.", test_result == 0);
+        free(result);
     }
 
-    free(result);
     free(length);
 
     return 0;
