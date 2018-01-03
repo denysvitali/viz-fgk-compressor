@@ -1090,8 +1090,8 @@ int main(int argc, char *argv[]){
             fprintf(o_fh, "%s", "\x02"); // Start of compressed file
 
             while(!feof(fh)){
-                int size = fread(buffer, 1, (size_t) sizeof(buffer), fh);
-                fwrite(buffer, 1, size, o_fh);
+                size_t size_read = fread(buffer, 1, (size_t) sizeof(buffer), fh);
+                fwrite(buffer, 1, size_read, o_fh);
             }
 
             free(file_name);
