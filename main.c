@@ -634,9 +634,9 @@ static char* test_bin2byte(){
     int i;
 
     result = bin2byte("001", length);
-    printf("Length: %d", *length);
+    printf("Length: %d\n", *length);
     for(i=0; i<*length; i++){
-        printf("result: %02x", result[i]);
+        printf("result: %02x\n", result[i]);
     }
 
     free(result);
@@ -897,6 +897,7 @@ int main(int argc, char *argv[]){
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);
+        fclose(o_fh);
 
         free(file_input);
         free(file_output);
