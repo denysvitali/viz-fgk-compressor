@@ -16,7 +16,8 @@
 int tests_run = 0;
 
 void version(){
-    printf("%sVIZ compressor %sv%s (%s%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, (RELEASE && !DEBUG?"R-":(DEBUG?"D-":"")), GIT_VERSION);
+    printf("%sVIZ compressor %sv%s (%s%s)\n",
+           STYLE_BOLD, STYLE_NO_BOLD, VERSION, (RELEASE && !DEBUG? "R-" : (DEBUG ? "D-" : "") ), GIT_VERSION);
 }
 
 void usage(){
