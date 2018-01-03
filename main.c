@@ -16,7 +16,7 @@
 int tests_run = 0;
 
 void usage(){
-	printf("%sVIZ compressor %sv%s (%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, GIT_VERSION);
+	printf("%sVIZ compressor %sv%s (%s%s)\n", STYLE_BOLD, STYLE_NO_BOLD, VERSION, (RELEASE?"R-":""), GIT_VERSION);
 	printf("Compress: \t viz -c output.viz inputfile\n");
 	printf("Extract: \t viz -d input.viz\n");
 }
@@ -805,6 +805,42 @@ static char* test_huffman_coding_bookkeeper(){
     return 0;
 }
 
+static char * test_filename(){
+    mu_tag("File name");
+
+    char* values[5] = {
+            "some/very/long/path/that/ends/like/this.txt",
+            "some/very/long/path/that/ends/like/",
+            "file.txt",
+            "./file.bin",
+            "../a/.././my-name.jpg"
+    };
+
+    char* expected_results[5] = {
+            "this.txt",
+            "",
+            "file.txt",
+            "file.bin",
+            "my-name.jpg"
+    };
+
+    int i;
+    for(i=0; i<sizeof(values)/sizeof(char*); i++){
+        printf("Testing %s...\n", values[i]);
+        char buffer[100];
+        sprintf(buffer, "'%s' doesn't return '%s'", values[i], expected_results[i]);
+
+        char* result = get_filename(values[i]);
+
+        if(strcmp(result, expected_results[i]) != 0){
+            error(buffer);
+            mu_assert("test_filaname failed. Check previous output", 0);
+        }
+    }
+
+    return 0;
+}
+
 static char * all_tests(){
     mu_run_test(test_debug);
     mu_run_test(test_get_level);
@@ -822,6 +858,7 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
+    mu_run_test(test_filename);
 
     //mu_run_test(test_utility_get_node_position);
 	//mu_run_test(test_add_weight_to_element);
@@ -843,10 +880,11 @@ int main(int argc, char *argv[]){
 		}
 		printf("Tests run: %d\n", tests_run);
 		return 0;
-	#endif
+    #endif
+
+    debug("VIZ is running in DEBUG mode.");
 	
 	char debug_buffer[500];
-
 	if(argc == 1){
 		usage();
 		return 0;
@@ -1034,7 +1072,9 @@ int main(int argc, char *argv[]){
             rewind(fh);
             fprintf(o_fh, "%s", MAGIC_NUMBER);
             fprintf(o_fh,"%s", "\x01"); // NOT compressed!
-            fprintf(o_fh, "TEST");
+            fprintf(o_fh,"%s", get_filename(file_input)); // Extracted file name
+            fprintf(o_fh, "%s", "\x02"); // Start of compressed file
+            //fprintf(o_fh, "TEST");
             while(!feof(fh)){
                 int size = fread(buffer, 1, (size_t) sizeof(buffer), fh);
                 fwrite(buffer, 1, size, o_fh);
@@ -1050,7 +1090,28 @@ int main(int argc, char *argv[]){
 
         free(file_input);
         free(file_output);
-		
+
 		return 0;
 	}
+
+	if(strcmp(argv[1],"-d") == 0) {
+        // Decompression
+        debug("Decompressing");
+        char* file_input = (char*) malloc(strlen(argv[2])+1);
+        strcpy(file_input, argv[2]);
+
+
+        int result = access(file_input, F_OK);
+        if(result == -1){
+            if(DEBUG){
+                char buffer[500];
+                sprintf(buffer,"File %s doesn't exist. (E%d)", file_input, result);
+            } else {
+                char buffer[500];
+                sprintf(buffer,"File %s doesn't exist.", file_input, result);
+                error(buffer);
+            }
+        }
+
+    }
 }
