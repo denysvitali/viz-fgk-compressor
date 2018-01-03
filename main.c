@@ -1097,7 +1097,7 @@ int main(int argc, char *argv[]){
         fseek(fh, 0L, SEEK_END);
         long original_size = ftell(fh);
 
-        int buffer_size = 1024;
+        size_t buffer_size = 1024;
         char* buffer = calloc(buffer_size, sizeof(char));
 
         rewind(fh);
