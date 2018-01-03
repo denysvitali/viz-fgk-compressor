@@ -8,6 +8,7 @@
 #endif //ALGORITMI_FGK_COMPRESSION_CONSOLE_H
 
 void debug(char* string);
+void info(char* string);
 void error(char* string);
 void error_test_fail(char* string);
 void warn(char* string);

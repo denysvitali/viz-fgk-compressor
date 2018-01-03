@@ -13,6 +13,10 @@ void debug(char* string){
     }
 }
 
+void info(char* string){
+    printf("%s%s%s\n",STYLE_COLOR_CYAN, string, STYLE_COLOR_RESET);
+}
+
 void error(char* string){
     printf("%s[E] %s%s\n", STYLE_COLOR_RED, string, STYLE_COLOR_RESET);
 }
