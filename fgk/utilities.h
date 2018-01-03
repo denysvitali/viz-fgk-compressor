@@ -31,4 +31,4 @@ int* getNodePosition(HuffmanTree* ht, Node* node);
 int getLevel(int pos);
 Node *getParent(HuffmanTree *ht, Node *pNode);
 void printPartialArray(Node** arr);
-char* bin2byte(HuffmanTree* ht, char* bin, int* length);
+char* bin2byte(char* bin, int* length);

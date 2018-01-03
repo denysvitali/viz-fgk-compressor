@@ -330,7 +330,7 @@ int getLevel(int pos){
     return getLevelInternal(pos, 0);
 }
 
-char* bin2byte(HuffmanTree* ht, char* bin, int* length){
+char* bin2byte(char* bin, int* length){
     long i;
     long size = strlen(bin);
 
@@ -353,7 +353,7 @@ char* bin2byte(HuffmanTree* ht, char* bin, int* length){
         }
 
         printf("Calling bin2byte w/ %s\n", newbin);
-        return bin2byte(ht, newbin, length);
+        return bin2byte(newbin, length);
     } else if(size == 8) {
         // YAY, 1 byte!
         printf("Encoding %s in a byte...\n", bin);
@@ -401,7 +401,7 @@ char* bin2byte(HuffmanTree* ht, char* bin, int* length){
         }
 
         printf("Calling bin2byte w/ %s\n", newbin);
-        return bin2byte(ht, newbin, length);
+        return bin2byte(newbin, length);
     }
 
 

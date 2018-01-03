@@ -626,6 +626,20 @@ static char* test_huffman_coding_abcbaaa(){
     return 0;
 }
 
+static char* test_bin2byte(){
+    mu_tag("Binary to Byte (w/ padding)");
+    int length;
+    char* result;
+    int i;
+
+    result = bin2byte("001", &length);
+    for(i=0; i<length; i++){
+        printf("result: %02x", result[i]);
+    }
+
+    return 0;
+}
+
 static char* test_huffman_coding_bookkeeper(){
     mu_tag("Huffman Coding (bookkeeper)");
     HuffmanTree* ht = createHuffmanTree();
@@ -696,6 +710,7 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_abracadabra);
     mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_bookkeeper);
+    mu_run_test(test_bin2byte);
 
     //mu_run_test(test_utility_get_node_position);
 	//mu_run_test(test_add_weight_to_element);
