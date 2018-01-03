@@ -956,20 +956,30 @@ int main(int argc, char *argv[]){
 	}
 
 	if(strcmp(argv[1],"-c") == 0){
-		if(argc != 4){
+        int flag_overwrite = 0;
+        int flag_shift = 0;
+
+        if(strncmp(argv[2], "-", 1) == 0){
+            // Additional flag found
+            if(strcmp(argv[2], "-f") == 0){
+                flag_overwrite = 1;
+                flag_shift++;
+            }
+        }
+		if(argc != 4 && flag_shift == 0){
 			usage();
 			return 1;
 		}
 
 		debug("Compression");
 
-		char* file_output = (char*) malloc(strlen(argv[2])+1);
-		char* file_input = (char*) malloc(strlen(argv[3])+1);
+		char* file_output = (char*) malloc(strlen(argv[2+flag_shift])+1);
+		char* file_input = (char*) malloc(strlen(argv[3+flag_shift])+1);
 
-        char file_output_tmp[strlen(argv[2])+1 + 4]; // output.ext.tmp
+        char file_output_tmp[strlen(argv[2+flag_shift])+1 + 4]; // output.ext.tmp
 
-        strcpy(file_output, argv[2]);
-        strcpy(file_input, argv[3]);
+        strcpy(file_output, argv[2+flag_shift]);
+        strcpy(file_input, argv[3+flag_shift]);
         sprintf(file_output_tmp, "%s.tmp", file_output);
 
 		if(DEBUG){
@@ -996,15 +1006,27 @@ int main(int argc, char *argv[]){
 		}
 
 		result = access(file_output, F_OK);
-        if(result == -1){
-            if(DEBUG){
+        if(result == 0 && flag_overwrite){
+            char buffer[500];
+            sprintf(buffer, "%s will be overwritten", file_output);
+            info(buffer);
+        }
+        else if(result == 0 && flag_overwrite == 0){
+            char buffer[500];
+            sprintf(buffer, "%s already exists. If you really want to overwrite it, add '-f' to the flags.", file_output);
+            error(buffer);
+            return 1;
+        }
+        else if(result == -1) {
+            if (DEBUG) {
                 char buffer[500];
-                sprintf(buffer,"File %s doesn't exist. This is normal. (E%d)", file_output, result);
+                sprintf(buffer, "File %s doesn't exist. This is normal. (E%d)", file_output, result);
                 warn(buffer);
             }
-        } else {
+        }
+        else {
             char buffer[500];
-            sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output_tmp, result);
+            sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output, result);
             error(buffer);
         }
 
@@ -1023,6 +1045,7 @@ int main(int argc, char *argv[]){
                     sprintf(buffer, "Unable to write %s: permission denied.", file_output_tmp);
                 }
                 error(buffer);
+                warn("WTF");
                 return 1;
             }
         }
@@ -1030,7 +1053,7 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
-        FILE *o_tmp_fh = fopen(file_output_tmp, "wb");
+        FILE *o_tmp_fh = fopen(file_output_tmp, "rwb");
         FILE *o_fh = fopen(file_output, "wb");
 
 		// We'll eventually switch to a buffer for better performances,
@@ -1062,12 +1085,14 @@ int main(int argc, char *argv[]){
             //printf(filename);
             //saveHuffmanTree(ht, filename);
             add_new_element(ht, c);
-            printf("%s\n", ht->output);
+            //printf("%s\n", ht->output);
             fputs(ht->output, o_tmp_fh);
             i++;
         }
         //printHuffmanTreeInfo(ht);
         //saveHuffmanTree(ht, "./out.dot");
+
+        int compress = 0;
 
         fseek(o_tmp_fh, 0L, SEEK_END);
         long size = ftell(o_tmp_fh);
@@ -1076,33 +1101,54 @@ int main(int argc, char *argv[]){
         long original_size = ftell(fh);
 
         int buffer_size = 1024;
-        char buffer[buffer_size];
+        char* buffer = calloc(buffer_size, sizeof(char));
 
-        if(size > original_size || DEBUG){ // TODO: Remove || DEBUG
-            // Add just the headers
-            rewind(fh);
+        rewind(fh);
+        rewind(o_tmp_fh);
 
-            char* file_name = get_filename(file_input);
+        char* file_name = get_filename(file_input);
 
-            fprintf(o_fh, "%s", MAGIC_NUMBER);
-            fprintf(o_fh,"%s", "\x01"); // NOT compressed!
-            fprintf(o_fh,"%s", file_name); // Extracted file name
-            fprintf(o_fh, "%s", "\x02"); // Start of compressed file
+        fprintf(o_fh, "%s", MAGIC_NUMBER);
 
-            while(!feof(fh)){
-                size_t size_read = fread(buffer, 1, (size_t) sizeof(buffer), fh);
-                fwrite(buffer, 1, size_read, o_fh);
-            }
-
-            free(file_name);
+        if(size<original_size){
+            compress=1;
         }
 
+        if(compress == 0){
+            fprintf(o_fh,"%s", "\x01"); // NOT compressed!
+        } else {
+            fprintf(o_fh,"%s", "\x02"); // Compressed!
+        }
+        fprintf(o_fh,"%s", file_name); // Extracted file name
+        fprintf(o_fh, "%s", "\x02"); // Start of compressed file
+
+        if(compress == 0) {
+            info("The file won't be compressed because its size exceeds the original one");
+            while (!feof(fh)) {
+                size_t size_read = fread(buffer, 1, (size_t) buffer_size, fh);
+                fwrite(buffer, 1, size_read, o_fh);
+            }
+        } else {
+            info("The file was compressed successfully");
+            while (!feof(o_tmp_fh)) {
+                if(ferror(o_tmp_fh)){
+                    perror("Unable to process the file");
+                    break;
+                }
+                size_t size_read = fread(buffer, 1, (size_t) buffer_size, o_tmp_fh);
+                fwrite(buffer, 1, size_read, o_fh);
+            }
+        }
+
+        unlink(file_output_tmp);
+
+        free(file_name);
 
 		printf("\n");
         freeHuffman(ht);
 		fclose(fh);
-        fclose(o_tmp_fh);
         fclose(o_fh);
+        fclose(o_tmp_fh);
 
         free(file_input);
         free(file_output);
