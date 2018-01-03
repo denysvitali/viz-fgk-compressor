@@ -841,6 +841,7 @@ static char * test_filename(){
             error(buffer);
             mu_assert("test_filaname failed. Check previous output", 0);
         }
+        free(result);
     }
 
     return 0;
@@ -1080,15 +1081,20 @@ int main(int argc, char *argv[]){
         if(size > original_size || DEBUG){ // TODO: Remove || DEBUG
             // Add just the headers
             rewind(fh);
+
+            char* file_name = get_filename(file_input);
+
             fprintf(o_fh, "%s", MAGIC_NUMBER);
             fprintf(o_fh,"%s", "\x01"); // NOT compressed!
-            fprintf(o_fh,"%s", get_filename(file_input)); // Extracted file name
+            fprintf(o_fh,"%s", file_name); // Extracted file name
             fprintf(o_fh, "%s", "\x02"); // Start of compressed file
-            //fprintf(o_fh, "TEST");
+
             while(!feof(fh)){
                 int size = fread(buffer, 1, (size_t) sizeof(buffer), fh);
                 fwrite(buffer, 1, size, o_fh);
             }
+
+            free(file_name);
         }
 
 

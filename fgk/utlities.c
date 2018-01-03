@@ -394,16 +394,17 @@ char* get_filename(char* string){
             last_slash = i;
         }
     }
+    char* output = calloc(length, sizeof(char));
 
     if(last_slash == -1){
-        return string;
+        return strcpy(output, string);
     }
 
     if(last_slash == length - 1){
-        return "";
+        sprintf(output, "");
+        return output;
     }
 
-    char* output = calloc(length - last_slash, sizeof(char));
     for(i = 0; i<length-last_slash; i++){
         output[i] = string[last_slash + 1 + i];
     }
