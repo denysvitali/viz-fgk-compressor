@@ -1067,9 +1067,26 @@ int main(int argc, char *argv[]){
             o_tmp_fh = fopen(file_output_tmp, "wb");
         }
 
-        int i = 0;
+        int i;
 
-        for(;;){
+        size_t buffer_size = 1024;
+        char* buffer = calloc(buffer_size, sizeof(char));
+
+
+        while(!feof(fh)){
+            if(ferror(fh)){
+                perror("Error was");
+                break;
+            }
+
+            size_t read = fread(buffer, 1, buffer_size, fh);
+            for(i = 0; i<read; i++){
+                add_new_element(ht, buffer[i]);
+                fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+            }
+        }
+
+        /*for(;;){
 			unsigned char c = (unsigned char) fgetc(fh);
 			if(feof(fh)) break;
 			if(ferror(fh)) break;
@@ -1085,7 +1102,7 @@ int main(int argc, char *argv[]){
             //printf("%s\n", ht->output);
             fputs(ht->output, o_tmp_fh);
             i++;
-        }
+        }*/
         //printHuffmanTreeInfo(ht);
         //saveHuffmanTree(ht, "./out.dot");
 
@@ -1097,8 +1114,6 @@ int main(int argc, char *argv[]){
         fseek(fh, 0L, SEEK_END);
         long original_size = ftell(fh);
 
-        size_t buffer_size = 1024;
-        char* buffer = calloc(buffer_size, sizeof(char));
 
         rewind(fh);
         rewind(o_tmp_fh);
@@ -1122,6 +1137,10 @@ int main(int argc, char *argv[]){
         if(compress == 0) {
             info("The file won't be compressed because its size exceeds the original one");
             while (!feof(fh)) {
+                if(ferror(o_tmp_fh)){
+                    perror("Unable to process the file");
+                    break;
+                }
                 size_t size_read = fread(buffer, 1, (size_t) buffer_size, fh);
                 fwrite(buffer, 1, size_read, o_fh);
             }

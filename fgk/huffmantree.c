@@ -88,6 +88,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         bytes[*length] = '\0';
 
         sprintf(ht->output, "%s", bytes);
+        ht->output_length = *length;
+
         free(path);
         free(encoded_byte);
         free(length);
@@ -103,6 +105,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         }
         bytes[*length] = '\0';
         sprintf(ht->output, "%s%c", bytes, c);
+        ht->output_length = *length;
 
         free(path);
         free(encoded_byte);
@@ -375,10 +378,11 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
 
 HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(HUFFMAN_TOTAL_NODES);
+    Node* tmp_nyt = createNYT(HUFFMAN_TOTAL_NODES-2);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
+    ht->output_length = 0;
 
     int i, k;
     for(i = 0; i<HA_DIM_X; i++){

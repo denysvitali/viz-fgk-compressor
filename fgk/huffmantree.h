@@ -3,7 +3,7 @@
 
 #endif //ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
 
-#define HUFFMAN_SYMBOLS 256
+#define HUFFMAN_SYMBOLS 257
 #define HUFFMAN_TOTAL_NODES ((2*HUFFMAN_SYMBOLS)-1)
 #define HUFFMAN_ARRAY_SIZE 512
 
@@ -25,6 +25,7 @@ typedef struct{
     Node* tree[HA_DIM_X * HA_DIM_Y];
     Node* nyt;
     char* output;
+    int output_length;
     int elements;
 } HuffmanTree;
 
