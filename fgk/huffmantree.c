@@ -70,6 +70,9 @@ void huffman_partial_final_conversion(){
 
 void huffman_partial_convert_clear(HuffmanTree* ht){
     // Converts some part of the partial_output to output, then clear parts of its content
+
+    // https://photos.app.goo.gl/htEQWOnttDyag90U2
+
     int bits = 0;
     int bytes = 0;
     int i;
