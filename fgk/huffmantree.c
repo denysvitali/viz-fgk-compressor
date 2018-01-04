@@ -133,7 +133,12 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
         printf("0x%02X ", byte_result[*length - 1 -i] & 0xff);
         ht->partial_output[i] = byte_result[*length - 1 - i];
     }
+    free(byte_result);
     ht->partial_output_length = *length;
+    free(bytes);
+    free(bits);
+    free(result);
+    free(length);
     printf("\n");
 }
 
@@ -184,6 +189,8 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     }
     ht->output_length = length;
     printf("\n");
+
+    free(output);
 
     printf("reminder: %s\n", ht->partial_output);
 
