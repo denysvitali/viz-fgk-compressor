@@ -410,7 +410,7 @@ char* get_filename(char* string){
             last_slash = i;
         }
     }
-    char* output = calloc((size_t) length, sizeof(char));
+    char* output = calloc((size_t) length+1, sizeof(char));
 
     if(last_slash == -1){
         strcpy(output, string);
