@@ -63,9 +63,6 @@ void node_positioner(HuffmanTree* ht, Node* target){
     target->weight++;
 }
 
-void huffman_partial_final_conversion(HuffmanTree* ht){
-    // Add some padding to fill the last byte.
-}
 
 
 char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
@@ -112,11 +109,32 @@ char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
         }
     }
 
-    printf("(In get_po2) Bytes: %d, Bits: %d\n", *bytes, *bits);
-
+    //printf("(In get_po2) Bytes: %d, Bits: %d\n", *bytes, *bits);
     printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
 
     return po2;
+}
+
+void huffman_partial_final_conversion(HuffmanTree* ht){
+    // Add some padding to fill the last byte.
+    int* bytes = malloc(sizeof(int));
+    int* bits = malloc(sizeof(int));
+    char* result = get_po2(ht, bytes, bits);
+    int* length = malloc(sizeof(int));
+    int i;
+
+    printf("[huffman_partial_final_conversion] Output was: %s\n", result);
+    printf("[huffman_partial_final_conversion] Padded output is:\n");
+
+    free(ht->partial_output);
+    ht->partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
+    char* byte_result = bin2byte(result,length);
+    for(i = 0; i<*length; i++){
+        printf("0x%02X ", byte_result[*length - 1 -i] & 0xff);
+        ht->partial_output[i] = byte_result[*length - 1 - i];
+    }
+    ht->partial_output_length = *length;
+    printf("\n");
 }
 
 void huffman_partial_convert_clear(HuffmanTree* ht){
