@@ -193,6 +193,8 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     printf("\n");
 
     free(output);
+    free(bits);
+    free(bytes);
 
     printf("reminder: %s\n", ht->partial_output);
 
