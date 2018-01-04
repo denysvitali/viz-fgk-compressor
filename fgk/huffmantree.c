@@ -107,10 +107,10 @@ char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
                 }
             }
         }
+        printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
     }
 
     //printf("(In get_po2) Bytes: %d, Bits: %d\n", *bytes, *bits);
-    printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
 
     return po2;
 }
