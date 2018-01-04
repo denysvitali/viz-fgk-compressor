@@ -171,6 +171,7 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     printf("Final Output: %s (%d)\n", final_output, (int) strlen(final_output));
 
     char* output = bin2byte(final_output, &length);
+    free(final_output);
     printf("Output is: \n");
 
     free(ht->output);
