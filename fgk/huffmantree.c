@@ -68,18 +68,14 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
 }
 
 
-void huffman_partial_convert_clear(HuffmanTree* ht){
-    // Converts some part of the partial_output to output, then clear parts of its content
-    // https://photos.app.goo.gl/htEQWOnttDyag90U2
+char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
+    char* po2 = calloc(1, 9);
 
-    int bits = 0;
-    int bytes = 0;
     int i;
     int is_byte = 0;
-
+    *bytes = 0;
+    *bits = 0;
     int partial_length = ht->partial_output_length;
-
-    char* po2 = calloc(1, 9);
 
     printf("Partial output: %s\n", ht->partial_output);
     printf("Partial length: %d\n", partial_length);
@@ -104,11 +100,11 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
 
             if (is_byte) {
                 sprintf(po2, "%s%s", po2, byte2bit(current_c));
-                bytes++;
+                (*bytes)++;
             } else {
                 if (current_c == '1' || current_c == '0') {
                     sprintf(po2, "%s%c", po2, current_c);
-                    bits++;
+                    (*bits)++;
                 } else {
                     ht->partial_output_length--;
                 }
@@ -116,12 +112,29 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
         }
     }
 
+    printf("(In get_po2) Bytes: %d, Bits: %d\n", *bytes, *bits);
+
     printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
+
+    return po2;
+}
+
+void huffman_partial_convert_clear(HuffmanTree* ht){
+    // Converts some part of the partial_output to output, then clear parts of its content
+    // https://photos.app.goo.gl/htEQWOnttDyag90U2
+
+    int* bits = malloc(sizeof(int));
+    int* bytes = malloc(sizeof(int));
+    int i;
+
+    char* po2 = get_po2(ht, bytes, bits);
+
+    printf("Bytes: %d, bits: %d\n", *bytes, *bits);
 
     free(ht->partial_output);
     ht->partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
-    ht->partial_output_length -= 3*bytes;
-    ht->partial_output_length -= bits;
+    ht->partial_output_length -= 3* *bytes;
+    ht->partial_output_length -= *bits;
 
     size_t po2_length = (size_t) strlen(po2);
     if(po2_length % 8 != 0){
