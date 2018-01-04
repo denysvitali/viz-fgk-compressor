@@ -36,6 +36,7 @@
 /viz
 /viz-test
 /viz-release
+/viz-profiler*
 
 # Archive files
 /*.viz

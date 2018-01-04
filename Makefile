@@ -12,11 +12,13 @@ CFLAGS := $(CFLAGS) -lm
 PRJ_FILES := main.c console.c fgk/*.c
 
 TEST_FLAGS = -DTEST=1
-TEST_FLAGS := $(TEST_FLAGS) -DDEBUG=0 -pg
+TEST_FLAGS := $(TEST_FLAGS) -DDEBUG=0
 DEBUG_FLAGS = -DDEBUG=1
-DEBUG_FLAGS := $(DEBUG_FLAGS) -pg
+DEBUG_FLAGS := $(DEBUG_FLAGS)
 RELEASE_FLAGS = -DDEBUG=0
 RELEASE_FLAGS := $(RELEASE_FLAGS) -DRELEASE=1 -O3
+
+PROFILER_COMPILER_FLAGS = -pg
 
 .PHONY: clean
 .PHONY:	debug
@@ -32,8 +34,14 @@ endif
 debug:
 	$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(PRJ_FILES) -o viz
 
+debug_profiler:
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(PRJ_FILES) $(PROFILER_COMPILER_FLAGS) -o viz-profiler-debug
+
 release:
 	$(CC) $(CFLAGS) $(RELEASE_FLAGS) $(PRJ_FILES) -o viz-release
+
+release_profiler:
+	$(CC) $(CFLAGS) $(RELEASE_FLAGS) $(PRJ_FILES) $(PROFILER_COMPILER_FLAGS) -o viz-profiler-release
 
 test: clean
 	echo "Detected OS $(detected_OS)"
@@ -43,6 +51,9 @@ test: clean
 	#$(PROFILER) $(PROFILER_FLAGS) ./viz-test
  endif
 
+test_profiler: clean
+	$(CC) $(CFLAGS) $(TEST_FLAGS) $(PRJ_FILES) -o viz-profiler-test
+
 massif: test
 	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
 	massif-visualizer viz-test.massif
@@ -51,4 +62,4 @@ massif_prod: main
 	massif-visualizer viz.massif
 
 clean:
-	rm -f {viz,viz-test,viz-release} *.massif *.viz *.dot *.tmp
+	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp
