@@ -66,7 +66,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
 
 
 char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
-    char* po2 = calloc(1, 9);
+    char* po2 = calloc(50, sizeof(char));
 
     int i;
     int is_byte = 0;
@@ -173,6 +173,8 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
 
     char* final_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
     strncpy(final_output, po2, (size_t) po2_length - po2_length % 8);
+    free(bits);
+    free(bytes);
     free(po2);
     int length = 0;
     printf("Final Output: %s (%d)\n", final_output, (int) strlen(final_output));
@@ -193,8 +195,6 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     printf("\n");
 
     free(output);
-    free(bits);
-    free(bytes);
 
     printf("reminder: %s\n", ht->partial_output);
 
