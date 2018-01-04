@@ -1108,6 +1108,9 @@ int main(int argc, char *argv[]){
             }
         }
 
+        endHuffman(ht);
+        fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+
         /*for(;;){
 			unsigned char c = (unsigned char) fgetc(fh);
 			if(feof(fh)) break;
