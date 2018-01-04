@@ -365,6 +365,22 @@ char* bin2byte(char* bin, int* length) {
     return result;
 }
 
+char* byte2bit(char b){
+    char* result = calloc(9, sizeof(char));
+    unsigned int dec = (unsigned int) b;
+    int i;
+
+    for(i=0; i<8; i++){
+        result[7-i] = (char) ((dec % 2) == 1 ? '1' : '0');
+        dec -= dec%2;
+        dec /= 2;
+    }
+
+    result[8] = '\0';
+
+    return result;
+}
+
 void printPartialArray(Node** arr){
     if(!DEBUG){
         return;

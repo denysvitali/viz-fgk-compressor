@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 #include "../defines.h"
 #include "../console.h"
 #include "huffmantree.h"
@@ -60,7 +61,88 @@ void node_positioner(HuffmanTree* ht, Node* target){
     free(element);
     debug(buffer);
     target->weight++;
+}
 
+void huffman_partial_final_conversion(){
+    // Add some padding to fill the last byte.
+}
+
+
+void huffman_partial_convert_clear(HuffmanTree* ht){
+    // Converts some part of the partial_output to output, then clear parts of its content
+    int bits = 0;
+    int bytes = 0;
+    int i;
+    int is_byte = 0;
+
+    int partial_length = ht->partial_output_length;
+
+    char* po2 = calloc(1, 9);
+
+    printf("Partial length: %d\n", partial_length);
+    int o_braces = 0;
+
+
+    for(i = 0; i<partial_length; i++){
+        char current_c = ht->partial_output[i];
+        printf("Current c: %c\n", current_c);
+        if(o_braces == 0 && current_c == '('){
+            o_braces++;
+            is_byte = 1;
+            continue;
+        }
+
+        if(o_braces == 1 && current_c == ')'){
+            o_braces--;
+            is_byte = 0;
+            continue;
+        }
+
+        if(is_byte){
+            sprintf(po2, "%s%s", po2, byte2bit(current_c));
+            bytes++;
+        } else {
+            sprintf(po2, "%s%c", po2, current_c);
+            bits++;
+        }
+    }
+
+    printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
+
+    free(ht->partial_output);
+    ht->partial_output = calloc(1, HUFFMAN_ARRAY_SIZE);
+    ht->partial_output_length -= 3*bytes;
+    ht->partial_output_length -= bits;
+
+    int po2_length = (int) strlen(po2);
+    if(strlen(po2) % 8 != 0){
+        printf("%d bits will be kept in partial_output\n", (int) strlen(po2) % 8);
+        for(i=po2_length - po2_length % 8; i<po2_length; i++){
+            printf("i: %d\n", i);
+            sprintf(ht->partial_output, "%s%c", ht->partial_output, po2[i]);
+        }
+    }
+
+    printf("reminder: %s\n", ht->partial_output);
+
+
+    printf("\n");
+}
+
+void huffman_append_partial_path(HuffmanTree* ht, char* path){
+    if(ht != NULL) {
+        debug("[huffman_append_partial_path]");
+        huffman_partial_convert_clear(ht);
+        ht->partial_output_length+= strlen(path);
+        sprintf(ht->partial_output, "%s%s", ht->partial_output, path);
+    }
+}
+void huffman_append_partial_new_element(HuffmanTree* ht, char* nyt_path, char element){
+    if(ht != NULL) {
+        huffman_partial_convert_clear(ht);
+        ht->partial_output_length+= strlen(nyt_path) + 3; // path length + ( + char + )
+        sprintf(ht->partial_output, "%s%s(%c)", ht->partial_output, nyt_path, element);
+    }
 }
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
@@ -90,6 +172,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         sprintf(ht->output, "%s", bytes);
         ht->output_length = *length;
 
+        huffman_append_partial_path(ht, bytes);
+
         free(path);
         free(encoded_byte);
         free(length);
@@ -103,9 +187,12 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         for(i = 0; i<*length; i++){
             bytes[i] = encoded_byte[i];
         }
+
         bytes[*length] = '\0';
         sprintf(ht->output, "%s%c", bytes, c);
         ht->output_length = *length;
+
+        huffman_append_partial_new_element(ht, path, c);
 
         free(path);
         free(encoded_byte);
@@ -382,7 +469,9 @@ HuffmanTree* createHuffmanTree(){
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
+    ht->partial_output = calloc(1, HUFFMAN_ARRAY_SIZE);
     ht->output_length = 0;
+    ht->partial_output_length = 0;
 
     int i, k;
     for(i = 0; i<HA_DIM_X; i++){

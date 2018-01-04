@@ -695,6 +695,27 @@ static char* test_bin2byte(){
     return 0;
 }
 
+static char* test_byte2bin(){
+    mu_tag("Byte2Bin");
+    char* result;
+    result = byte2bit('\xff');
+    mu_assert("FF is not 11111111", strcmp(result, "11111111") == 0);
+    free(result);
+    result = byte2bit('\xfa');
+    mu_assert("FA is not 11111010", strcmp(result, "11111010") == 0);
+
+    free(result);
+    result = byte2bit('\x0a');
+    mu_assert("0A is not 00001010", strcmp(result, "00001010") == 0);
+
+    free(result);
+    result = byte2bit('\x00');
+    mu_assert("00 is not 00000000", strcmp(result, "00000000") == 0);
+
+    free(result);
+    return 0;
+}
+
 static char* test_bin2byte2(){
     mu_tag("Binary to byte - 2 byte cases (w/ padding)");
     int* length = malloc(sizeof(int));
@@ -864,6 +885,7 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
+    mu_run_test(test_byte2bin);
     mu_run_test(test_filename);
 
     //mu_run_test(test_utility_get_node_position);
@@ -1156,7 +1178,7 @@ int main(int argc, char *argv[]){
             }
         }
 
-        unlink(file_output_tmp);
+        // unlink(file_output_tmp); // TODO: Uncomment me
 
         free(file_name);
 
