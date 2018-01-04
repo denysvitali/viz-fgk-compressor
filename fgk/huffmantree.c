@@ -96,7 +96,9 @@ char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
             }
 
             if (is_byte) {
-                sprintf(po2, "%s%s", po2, byte2bit(current_c));
+                char* result = byte2bit(current_c);
+                sprintf(po2, "%s%s", po2, result);
+                free(result);
                 (*bytes)++;
             } else {
                 if (current_c == '1' || current_c == '0') {
@@ -581,6 +583,7 @@ void freeNode(Node* node){
 void freeHuffman(HuffmanTree* ht){
     freeNode(ht->root);
     free(ht->output);
+    free(ht->partial_output);
     free(ht);
 }
 
