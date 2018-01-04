@@ -18,6 +18,11 @@ DEBUG_FLAGS := $(DEBUG_FLAGS) -pg
 RELEASE_FLAGS = -DDEBUG=0
 RELEASE_FLAGS := $(RELEASE_FLAGS) -DRELEASE=1 -O3
 
+.PHONY: clean
+.PHONY:	debug
+
+all: clean debug
+
 ifeq ($(OS),Windows_NT)
     detected_OS := Windows
 else
@@ -27,13 +32,10 @@ endif
 debug:
 	$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(PRJ_FILES) -o viz
 
-main:
-	clean
-	debug
-
 release:
 	$(CC) $(CFLAGS) $(RELEASE_FLAGS) $(PRJ_FILES) -o viz-release
-test:
+
+test: clean
 	echo "Detected OS $(detected_OS)"
 	$(CC) $(CFLAGS) $(TEST_FLAGS) $(PRJ_FILES) -o viz-test && ./viz-test
 
@@ -47,8 +49,6 @@ massif: test
 massif_prod: main
 	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz -c out.viz test/files/text/fitnessgram.txt
 	massif-visualizer viz.massif
-.PHONY: test
-.PHONY: clean
 
 clean:
 	rm -f {viz,viz-test,viz-release} *.massif *.viz *.dot *.tmp
