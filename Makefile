@@ -20,6 +20,11 @@ RELEASE_FLAGS := $(RELEASE_FLAGS) -DRELEASE=1 -O3
 
 PROFILER_COMPILER_FLAGS = -pg
 
+DEBUG_ARGS = -c -f out.viz test/files/text/fitnessgram.txt
+DEBUG_ARGS_ALICE = -c -f out.viz test/files/provided/alice.txt
+RELEASE_ARGS = $(DEBUG_ARGS)
+RELEASE_ARGS_ALICE = $(DEBUG_ARGS_ALICE)
+
 .PHONY: clean
 .PHONY:	debug
 
@@ -54,12 +59,34 @@ test: clean
 test_profiler: clean
 	$(CC) $(CFLAGS) $(TEST_FLAGS) $(PRJ_FILES) -o viz-profiler-test
 
-massif: test
+massif: debug
+	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz $(DEBUG_ARGS)
+	massif-visualizer viz.massif
+massif_test: test
 	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
 	massif-visualizer viz-test.massif
 massif_prod: main
-	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz -c out.viz test/files/text/fitnessgram.txt
+	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz $(DEBUG_ARGS)
 	massif-visualizer viz.massif
 
+valgrind: debug
+	$(PROFILER) --leak-check=full -v ./viz $(DEBUG_ARGS)
+
+callgrind: debug
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-debug.callgrind ./viz $(DEBUG_ARGS)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-debug.callgrind > viz-debug.callgrind.dot && xdot viz-debug.callgrind.dot
+
+callgrind_release: release
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-release.callgrind ./viz-release $(RELEASE_ARGS)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-release.callgrind > viz-release.callgrind.dot && xdot viz-release.callgrind.dot
+
+callgrind_alice: debug
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-debug.callgrind ./viz $(DEBUG_ARGS_ALICE)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-debug.callgrind > viz-debug.callgrind.dot && xdot viz-debug.callgrind.dot
+
+callgrind_alice_release: release
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-release.callgrind ./viz-release $(RELEASE_ARGS_ALICE)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-release.callgrind > viz-release.callgrind.dot && xdot viz-release.callgrind.dot
+
 clean:
-	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out
+	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot

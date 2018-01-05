@@ -787,9 +787,7 @@ static char* test_huffman_coding_bookkeeper(){
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
-        printHuffmanTree(ht);
     }
-
 
     char * buffer = "";
     long length;
@@ -821,7 +819,215 @@ static char* test_huffman_coding_bookkeeper(){
     }
     char* resulting_tree = getTree(ht->root, 0);
 
-    //printf("Strncmp result was %d\n", strncmp(buffer, resulting_tree, length));
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
+
+    free(resulting_tree);
+    free(buffer);
+    freeHuffman(ht);
+
+    return 0;
+}
+
+
+static char* test_huffman_coding_mississippi(){
+    mu_tag("Huffman Coding (mississippi)");
+    HuffmanTree* ht = createHuffmanTree();
+
+    char* string = "mississippi";
+    int i;
+    for(i=0; i<strlen(string); i++){
+        char dbg[50];
+        sprintf(dbg, "Adding character %c", string[i]);
+        debug(dbg);
+        add_new_element(ht, string[i]);
+    }
+
+    char * buffer = "";
+    long length;
+    FILE * fh;
+#ifdef UTILITIES_PRINT_CHARS
+    debug("UTILITIES PRINT CHARS IS ON");
+    fh = fopen ("./test/expected-results/mississippi.txt", "r");
+
+#else
+    debug("UTILITIES PRINT CHARS IS OFF");
+    fh = fopen ("./test/expected-results/mississippi.hex", "r");
+#endif
+
+    if (fh)
+    {
+        fseek (fh, 0, SEEK_END);
+        length = ftell (fh);
+        fseek (fh, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, fh);
+        }
+        fclose (fh);
+    } else {
+        error("Can't open the file.");
+        printf("Error number: %d\n", ferror(fh));
+        mu_assert("Can't open the mississippi file", 0);
+    }
+    char* resulting_tree = getTree(ht->root, 0);
+
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
+
+    free(resulting_tree);
+    free(buffer);
+    freeHuffman(ht);
+
+    return 0;
+}
+
+static char* test_huffman_coding_engineering(){
+    mu_tag("Huffman Coding (engineering)");
+    HuffmanTree* ht = createHuffmanTree();
+
+    char* string = "engineering";
+    int i;
+    for(i=0; i<strlen(string); i++){
+        char dbg[50];
+        sprintf(dbg, "Adding character %c", string[i]);
+        debug(dbg);
+        add_new_element(ht, string[i]);
+    }
+
+    char * buffer = "";
+    long length;
+    FILE * fh;
+#ifdef UTILITIES_PRINT_CHARS
+    debug("UTILITIES PRINT CHARS IS ON");
+    fh = fopen ("./test/expected-results/engineering.txt", "r");
+
+#else
+    debug("UTILITIES PRINT CHARS IS OFF");
+    fh = fopen ("./test/expected-results/engineering.hex", "r");
+#endif
+
+    if (fh)
+    {
+        fseek (fh, 0, SEEK_END);
+        length = ftell (fh);
+        fseek (fh, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, fh);
+        }
+        fclose (fh);
+    } else {
+        error("Can't open the file.");
+        printf("Error number: %d\n", ferror(fh));
+        mu_assert("Can't open the engineering file", 0);
+    }
+    char* resulting_tree = getTree(ht->root, 0);
+
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
+
+    free(resulting_tree);
+    free(buffer);
+    freeHuffman(ht);
+
+    return 0;
+}
+
+static char* test_huffman_coding_sleeplessness(){
+    mu_tag("Huffman Coding (sleeplessness)");
+    HuffmanTree* ht = createHuffmanTree();
+
+    char* string = "sleeplessness";
+    int i;
+    for(i=0; i<strlen(string); i++){
+        char dbg[50];
+        sprintf(dbg, "Adding character %c", string[i]);
+        debug(dbg);
+        add_new_element(ht, string[i]);
+    }
+
+    char * buffer = "";
+    long length;
+    FILE * fh;
+#ifdef UTILITIES_PRINT_CHARS
+    debug("UTILITIES PRINT CHARS IS ON");
+    fh = fopen ("./test/expected-results/sleeplessness.txt", "r");
+
+#else
+    debug("UTILITIES PRINT CHARS IS OFF");
+    fh = fopen ("./test/expected-results/sleeplessness.hex", "r");
+#endif
+
+    if (fh)
+    {
+        fseek (fh, 0, SEEK_END);
+        length = ftell (fh);
+        fseek (fh, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, fh);
+        }
+        fclose (fh);
+    } else {
+        error("Can't open the file.");
+        printf("Error number: %d\n", ferror(fh));
+        mu_assert("Can't open the sleeplessness file", 0);
+    }
+    char* resulting_tree = getTree(ht->root, 0);
+
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
+
+    free(resulting_tree);
+    free(buffer);
+    freeHuffman(ht);
+
+    return 0;
+}
+
+static char* test_huffman_coding_aardvark(){
+    mu_tag("Huffman Coding (aardvark)");
+    HuffmanTree* ht = createHuffmanTree();
+
+    char* string = "aardvark";
+    int i;
+    for(i=0; i<strlen(string); i++){
+        char dbg[50];
+        sprintf(dbg, "Adding character %c", string[i]);
+        debug(dbg);
+        add_new_element(ht, string[i]);
+    }
+
+    char * buffer = "";
+    long length;
+    FILE * fh;
+#ifdef UTILITIES_PRINT_CHARS
+    debug("UTILITIES PRINT CHARS IS ON");
+    fh = fopen ("./test/expected-results/aardvark.txt", "r");
+
+#else
+    debug("UTILITIES PRINT CHARS IS OFF");
+    fh = fopen ("./test/expected-results/aardvark.hex", "r");
+#endif
+
+    if (fh)
+    {
+        fseek (fh, 0, SEEK_END);
+        length = ftell (fh);
+        fseek (fh, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, fh);
+        }
+        fclose (fh);
+    } else {
+        error("Can't open the file.");
+        printf("Error number: %d\n", ferror(fh));
+        mu_assert("Can't open the aardvark file", 0);
+    }
+    char* resulting_tree = getTree(ht->root, 0);
+
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
 
     free(resulting_tree);
@@ -888,7 +1094,7 @@ char * test_read_file(){
     int* error = malloc(sizeof(int));
     char* result = file_read("./out-test.viz", error);
     mu_assert("Error while reading from ./out-test.viz", result != NULL);
-    printf("Result is : %s\n", result);
+    //printf("Result is : %s\n", result);
     mu_assert("File content isn't 'Test\\n'", strncmp(result, "Test\n", 5) == 0);
     free(result);
     return 0;
@@ -915,6 +1121,10 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_abracadabra);
     mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_bookkeeper);
+    mu_run_test(test_huffman_coding_mississippi);
+    mu_run_test(test_huffman_coding_engineering);
+    mu_run_test(test_huffman_coding_sleeplessness);
+    mu_run_test(test_huffman_coding_aardvark);
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
     mu_run_test(test_byte2bin);
@@ -1114,7 +1324,7 @@ int main(int argc, char *argv[]){
 		// Input exists, Output can be written
 
 		FILE *fh = fopen(file_input, "rb");
-        FILE *o_tmp_fh = fopen(file_output_tmp, "rb+");
+        FILE *o_tmp_fh = fopen(file_output_tmp, "wb+");
         FILE *o_fh = fopen(file_output, "wb");
 
 		// We'll eventually switch to a buffer for better performances,
@@ -1220,7 +1430,10 @@ int main(int argc, char *argv[]){
             }
         }
 
-        // unlink(file_output_tmp); // TODO: Uncomment me
+        if(!DEBUG) {
+            // Debug mode keeps the .tmp file for future analysis
+            file_delete(file_output_tmp);
+        }
 
         free(file_name);
 
@@ -1277,7 +1490,6 @@ int main(int argc, char *argv[]){
             return 1;
         }
 
-        int i;
         if(strncmp(MAGIC_NUMBER, buffer, strlen(MAGIC_NUMBER)) != 0){
             error("The provided file is not compatible because it wasn't generated with VIZ.");
             return 1;

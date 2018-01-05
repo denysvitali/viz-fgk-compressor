@@ -16,9 +16,12 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
     int max_nn = 0;
     int stop = 0;
     Node* result = NULL;
-    for(i=0; i<HA_DIM_X; i++){
-        for(k=0; k<HA_DIM_Y; k++){
-            Node* curr = ht->tree[i* HA_DIM_X + k];
+
+    //printHuffmanArray(ht);
+
+    for(i=0; i<HA_DIM_Y; i++){
+        for(k=0; k<HA_DIM_X; k++){
+            Node* curr = ht->tree[i * HA_DIM_X + k];
             if(curr == NULL){
                 continue;
             }
@@ -26,40 +29,51 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
             if(curr->weight == weight && curr->node_number > max_nn){
                 max_nn = curr->node_number;
                 result = curr;
-                stop = 1;
             }
         }
-        if(stop == 1){
-            // We're not interested in nodes that are below the ones with required weight
-            // because they have a lower NN.
+
+        if(max_nn != 0){
             break;
         }
     }
+
+    warn("Printing Result from highest_numbered_node");
+    printElement(result);
+
     return result;
 }
 
 void node_positioner(HuffmanTree* ht, Node* target){
     Node* last = highest_numbered_node(ht, target->weight);
     char buffer[250];
-    char* element1 = getElement(last);
-    sprintf(buffer, "Highest numbered node (aka LAST): %s", element1);
-    debug(buffer);
-    if(element1 != NULL){
-        free(element1);
+
+    if(DEBUG) {
+        char *element1 = getElement(last);
+        sprintf(buffer, "Highest numbered node (aka LAST): %s", element1);
+        debug(buffer);
+
+        if (element1 != NULL) {
+            free(element1);
+        }
     }
 
     if(last != target) {
-        debug("[node_positioner] LAST != TARGET, swapping!");
-        char* element2 = getElement(target);
-        sprintf(buffer, "[node_positioner] TARGET: %s", element2);
-        debug(buffer);
-        free(element2);
+        if(DEBUG) {
+            debug("[node_positioner] LAST != TARGET, swapping!");
+            char *element2 = getElement(target);
+            sprintf(buffer, "[node_positioner] TARGET: %s", element2);
+            debug(buffer);
+            free(element2);
+        }
         swap_nodes(ht, target, last);
     }
-    char* element = getElement(target);
-    sprintf(buffer, "Updating weight for %s", element);
-    free(element);
-    debug(buffer);
+
+    if(DEBUG) {
+        char *element = getElement(target);
+        sprintf(buffer, "Updating weight for %s", element);
+        free(element);
+        debug(buffer);
+    }
     target->weight++;
 }
 
@@ -74,15 +88,19 @@ char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
     *bits = 0;
     int partial_length = ht->partial_output_length;
 
-    printf("Partial output: %s\n", ht->partial_output);
-    printf("Partial length: %d\n", partial_length);
+    if(DEBUG) {
+        //printf("Partial output: %s\n", ht->partial_output);
+        //printf("Partial length: %d\n", partial_length);
+    }
     int o_braces = 0;
 
     int partial_strlength = (int) strlen(ht->partial_output);
     if(partial_strlength != 0) {
         for (i = 0; i < partial_length; i++) {
             char current_c = ht->partial_output[i];
-            printf("Current c: %c\n", current_c);
+            if(DEBUG){
+                //printf("Current c: %c\n", current_c);
+            }
             if (o_braces == 0 && current_c == '(') {
                 o_braces++;
                 is_byte = 1;
@@ -109,7 +127,9 @@ char* get_po2(HuffmanTree *ht, int *bytes, int *bits){
                 }
             }
         }
-        printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
+        if(DEBUG){
+            //printf("Partial Output 2: %s (%d)\n", po2, (int) strlen(po2));
+        }
     }
 
     //printf("(In get_po2) Bytes: %d, Bits: %d\n", *bytes, *bits);
@@ -125,8 +145,10 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     int* length = malloc(sizeof(int));
     int i;
 
-    printf("[huffman_partial_final_conversion] Output was: %s\n", result);
-    printf("[huffman_partial_final_conversion] Padded output is:\n");
+    if(DEBUG) {
+        printf("[huffman_partial_final_conversion] Output was: %s\n", result);
+        printf("[huffman_partial_final_conversion] Padded output is:\n");
+    }
 
     free(ht->partial_output);
     ht->partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
@@ -141,7 +163,9 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     free(bits);
     free(result);
     free(length);
-    printf("\n");
+    if(DEBUG){
+        printf("\n");
+    }
 }
 
 void huffman_partial_convert_clear(HuffmanTree* ht){
@@ -154,7 +178,9 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
 
     char* po2 = get_po2(ht, bytes, bits);
 
-    printf("Bytes: %d, bits: %d\n", *bytes, *bits);
+    if(DEBUG) {
+        //printf("Bytes: %d, bits: %d\n", *bytes, *bits);
+    }
 
     free(ht->partial_output);
     ht->partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
@@ -163,9 +189,13 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
 
     size_t po2_length = (size_t) strlen(po2);
     if(po2_length % 8 != 0){
-        printf("%d bits will be kept in partial_output\n", (int) po2_length % 8);
+        if(DEBUG) {
+            //printf("%d bits will be kept in partial_output\n", (int) po2_length % 8);
+        }
         for(i=(int) (po2_length - po2_length % 8); i < po2_length; i++){
-            printf("i: %d\n", i);
+            if(DEBUG){
+                //printf("i: %d\n", i);
+            }
             sprintf(ht->partial_output, "%s%c", ht->partial_output, po2[i]);
         }
     }
@@ -177,35 +207,56 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     free(bytes);
     free(po2);
     int length = 0;
-    printf("Final Output: %s (%d)\n", final_output, (int) strlen(final_output));
+
+    if(DEBUG) {
+        //printf("Final Output: %s (%d)\n", final_output, (int) strlen(final_output));
+    }
 
     char* output = bin2byte(final_output, &length);
     free(final_output);
-    printf("Output is: \n");
+
+    if(DEBUG) {
+        //printf("Output is: \n");
+    }
 
     free(ht->output);
     ht->output = calloc(20, sizeof(char));
 
-    int j = 0;
+    char* d_bytes = calloc(10, sizeof(char));
     for(i = 0; i<length; i++){
         ht->output[length - 1 - i] = output[i];
-        printf("0x%02x ", output[length - 1 - i] & 0xff);
+        if(DEBUG) {
+            sprintf(d_bytes, "%s0x%02x ", d_bytes, output[length - 1 - i] & 0xff);
+        }
     }
     ht->output_length = length;
-    printf("\n");
+
+    //debug(d_bytes);
+
+    if(DEBUG){
+        //printf("\n");
+    }
+
+    free(d_bytes);
 
     free(output);
 
-    printf("reminder: %s\n", ht->partial_output);
+    if(DEBUG){
+        //printf("reminder: %s\n", ht->partial_output);
+    }
 
     ht->partial_output_length += po2_length%8;
 
-    printf("\n");
+    if(DEBUG){
+        //printf("\n");
+    }
 }
 
 void endHuffman(HuffmanTree* ht){
-    printf("We still have %d chars!\n", ht->partial_output_length);
-    printf("Partial (and final) output: %s\n", ht->partial_output);
+    if(DEBUG) {
+        printf("We still have %d chars!\n", ht->partial_output_length);
+        printf("Partial (and final) output: %s\n", ht->partial_output);
+    }
     huffman_partial_final_conversion(ht);
 }
 
@@ -229,12 +280,28 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
 
+    debug("\n\nNEW ELEMENT!\n=====================");
+
+    printHuffmanTree(ht);
+    printHuffmanArray(ht);
+
     // Is the character already in the tree?
     free(ht->output);
     ht->output = calloc(1, 50);
 
     int* length = malloc(sizeof(int));
     *length = 0;
+
+    char debug_buffer[100];
+    sprintf(debug_buffer, "[add_new_element] Character is %02x", c & 0xff);
+    debug(debug_buffer);
+
+    if(DEBUG){
+        char filename[200];
+        sprintf(filename, "d-%d.dot", ht->elements);
+        saveHuffmanTree(ht, filename);
+    }
+
 
     if(target != NULL){
         debug("[add_new_element] AS");
@@ -664,22 +731,32 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //printHuffmanTree(ht);
 
 
-    int* pos1 = getNodePosition(ht, node);
-    int* pos2 = getNodePosition(ht, node2);
     //int lvl1 = getNodeLevel(node);
     //int lvl2 = getNodeLevel(node2);
 
-    char buffer[500];
-    sprintf(buffer, "[Swapping] Pos1: [%d][%d] (NN %d), Pos2: [%d][%d] (NN %d)", pos1[0], pos1[1], node->node_number, pos2[0], pos2[1], node2->node_number);
-    debug(buffer);
-
-    free(pos1);
-    free(pos2);
+    if(DEBUG) {
+        int* pos1 = getNodePosition(ht, node);
+        int* pos2 = getNodePosition(ht, node2);
+        char buffer[500];
+        sprintf(buffer, "[Swapping] Pos1: [%d][%d] (NN %d), Pos2: [%d][%d] (NN %d)", pos1[0], pos1[1],
+                node->node_number, pos2[0], pos2[1], node2->node_number);
+        debug(buffer);
+        free(pos1);
+        free(pos2);
+    }
 
 
 
     if(node2->parent == node || node->parent == node2){
         error("[swap_nodes] I can't swap a child with its parent");
+        char* node_el1 = getElement(node);
+        char* node_el2 = getElement(node2);
+
+        char buffer[200];
+        sprintf(buffer, "Tried to swap %s w/ %s", node_el1, node_el2);
+        error(buffer);
+        saveHuffmanTree(ht, "error-1.dot");
+        exit(2);
         return;
     }
     //int distance = pos1-pos2;
@@ -763,10 +840,10 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl)
     debug("[rebuilding_from_array] Starting rebuild");
 
     printPartialArray(arr);
-    printHuffmanArray(ht);
+    //printHuffmanArray(ht);
 
     ht->tree[pos] = arr[i];
-    if((2 *pos) + 1 < HA_DIM_X) {
+    if((2 *pos) + 2 < HA_DIM_Y) {
         rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
         rebuilding_from_array(ht,  (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
     }
@@ -775,12 +852,15 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl)
 }
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
-    Node** arr = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
-    Node** arr2 = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
+    /*Node** arr = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
+    Node** arr2 = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);*/
+
+    Node** arr = calloc(HA_DIM_X * HA_DIM_Y, sizeof(Node*));
+    Node** arr2 = calloc(HA_DIM_X * HA_DIM_Y, sizeof(Node*));
 
     int i, k;
-    for(i=0; i<HA_DIM_X; i++){
-        for(k=0; k<HA_DIM_Y; k++){
+    for(i=0; i<HA_DIM_Y; i++){
+        for(k=0; k<HA_DIM_X; k++){
             arr[i * HA_DIM_X + k] = NULL;
             arr2[i * HA_DIM_X + k] = NULL;
         }
@@ -791,26 +871,28 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
 
-    int nullpos[2] = {0,0};
+    int nullpos[2] = {0, 0};
 
     debug("[swap_on_diff_lvls] Creating arr");
     create_subtree_from_node(ht, node, arr, nullpos);
     debug("[swap_on_diff_lvls] End arr creation");
-    printNodeArray(arr);
+    //printNodeArray(arr);
 
     debug("[swap_on_diff_lvls] Creating arr2");
     create_subtree_from_node(ht, node2, arr2, nullpos);
     debug("[swap_on_diff_lvls] End arr2 creation");
-    printNodeArray(arr2);
+    //printNodeArray(arr2);
 
 
-    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
-    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, 0);
+    rebuilding_from_array(ht, pos2[0] * HA_DIM_Y + pos2[1], arr, 0, 0);
+    rebuilding_from_array(ht, pos[0] * HA_DIM_Y + pos[1], arr2, 0, 0);
 
     free(pos);
     free(pos2);
     free(arr);
     free(arr2);
+
+    //exit(2); // TODO: REMOVE!
 }
 
 
@@ -841,8 +923,8 @@ void* siblings(HuffmanTree* ht, int level, int* size){
     int i;
 
     for(i=0; i<HA_DIM_Y; i++){
-        if(ht->tree[level * HA_DIM_X + i] != NULL)
-        siblings[i] = ht->tree[level * HA_DIM_X + i];
+        if(ht->tree[level * HA_DIM_Y + i] != NULL)
+        siblings[i] = ht->tree[level * HA_DIM_Y + i];
     }
 
     return siblings;

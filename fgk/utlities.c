@@ -31,7 +31,7 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
 }
 
 void printHuffmanTree(HuffmanTree *ht){
-    if(!DEBUG) {
+    if(!DEBUG && !TEST) {
         return;
     }
     if(ht == NULL){
@@ -68,32 +68,26 @@ void printNodeArray(Node** array){
     if(!DEBUG){
         return;
     }
+
+    int seen = 0;
     int i, k;
-    int stop=0;
-    for(i=0; i< HA_DIM_X; i++){ // We use HUFFMAN_NODES here to truncate the output
-        for(k = 0; k<HA_DIM_Y; k++){
-
-            // Truncate (DEBUG!)
-            if(i*HA_DIM_X + k >= 50){
-                printf("(truncating the output.)");
-                stop=1;
-                break;
-            }
-
-            if(k >= (int) pow(2, i)){
-                break;
-            }
+    for(i=0; i< HA_DIM_Y; i++){ // We use HUFFMAN_NODES here to truncate the output
+        for(k = 0; k<HA_DIM_X; k++){
             if(array[i*HA_DIM_X + k] != NULL){
                 printElement(array[i * HA_DIM_X + k]);
-            }
-            if(i<HUFFMAN_TOTAL_NODES-1) {
                 printf(",");
+                seen++;
+            } else {
+                printf(".,");
             }
         }
 
-        if(stop == 1){
+        if(seen == 0){
             break;
+        } else {
+            seen = 0;
         }
+        printf("\n-\n");
     }
     printf("\n");
 }
@@ -387,15 +381,25 @@ void printPartialArray(Node** arr){
     }
     warn("Printing partial array!");
     int i, k;
-    for(i=0; i<HA_DIM_X; i++){
-        for(k=0; k<HA_DIM_Y; k++){
+    int elements = 0;
+    for(i=0; i<HA_DIM_Y; i++){
+        for(k=0; k<HA_DIM_X; k++){
             if(arr[i*HA_DIM_X + k] != NULL){
                 char* string = getElement(arr[i * HA_DIM_X + k]);
                 printf("%s,", string);
                 free(string);
+                elements++;
+            } else {
+                printf(".,");
             }
         }
-        //printf("\n");
+
+        if(elements==0){
+            break;
+        } else {
+            elements = 0;
+        }
+        printf("\n");
     }
     printf("\n");
 }
@@ -468,8 +472,9 @@ char* file_read(char* path, int* error){
         fclose(fh);
 
         if(file_size != 0){
-            char* output = malloc(file_size);
+            char* output = malloc(file_size+1);
             memcpy(output, buffer, file_size);
+            output[file_size] = '\0';
             free(buffer);
             return output;
         }

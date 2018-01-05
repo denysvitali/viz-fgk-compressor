@@ -7,7 +7,7 @@
 #define HUFFMAN_TOTAL_NODES ((2*HUFFMAN_SYMBOLS)-1)
 #define HUFFMAN_ARRAY_SIZE 512
 
-#define HA_DIM_X (HUFFMAN_SYMBOLS + 1)
+#define HA_DIM_X HUFFMAN_SYMBOLS
 #define HA_DIM_Y HUFFMAN_ARRAY_SIZE
 
 typedef struct Node {
@@ -22,7 +22,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HA_DIM_X * HA_DIM_Y];
+    Node* tree[HA_DIM_X * HA_DIM_Y]; // 257 * 512 = 131584
     Node* nyt;
     char* output;
     char* partial_output;
