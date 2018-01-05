@@ -38,3 +38,7 @@ char* byte2bit(char b);
 
 // File functions
 char* get_filename(char* string);
+int file_touch(char* path);
+int file_write(char* path, char* content);
+char* file_read(char* path, int* error);
+int file_delete(char* path);

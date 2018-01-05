@@ -62,4 +62,4 @@ massif_prod: main
 	massif-visualizer viz.massif
 
 clean:
-	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp
+	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out

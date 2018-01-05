@@ -868,6 +868,38 @@ static char * test_filename(){
     return 0;
 }
 
+char* test_create_file(){
+    mu_tag("Create file (aka touch)");
+    int result = file_touch("./out-test.viz");
+    mu_assert("Can't create out.viz", result==1);
+    return 0;
+}
+
+char * test_write_to_file(){
+    mu_tag("Write to file");
+    int result = file_write("./out-test.viz", "Test\n");
+    mu_assert("Error while writing 'Test' to ./out-test.viz", result==1);
+    return 0;
+}
+
+char * test_read_file(){
+    mu_tag("Read file");
+    char* buffer[200];
+    int* error = malloc(sizeof(int));
+    char* result = file_read("./out-test.viz", error);
+    mu_assert("Error while reading from ./out-test.viz", result != NULL);
+    printf("Result is : %s\n", result);
+    mu_assert("File content isn't 'Test\\n'", strncmp(result, "Test\n", 5) == 0);
+    free(result);
+    return 0;
+}
+
+char * test_file_delete(){
+    mu_tag("Delete file");
+    int result = file_delete("./out-test.viz");
+    mu_assert("File cannot be deleted", result == 0);
+}
+
 static char * all_tests(){
     mu_run_test(test_debug);
     mu_run_test(test_get_level);
@@ -887,6 +919,13 @@ static char * all_tests(){
     mu_run_test(test_bin2byte2);
     mu_run_test(test_byte2bin);
     mu_run_test(test_filename);
+
+    // File ops. Run in sequence!
+    mu_run_test(test_create_file);
+    mu_run_test(test_write_to_file);
+    mu_run_test(test_read_file);
+    mu_run_test(test_file_delete);
+
 
     //mu_run_test(test_utility_get_node_position);
 	//mu_run_test(test_add_weight_to_element);

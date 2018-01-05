@@ -427,3 +427,59 @@ char* get_filename(char* string){
     }
     return output;
 }
+
+// Creates a file if it doesn't exist.
+int file_touch(char* path){
+    FILE* fh = fopen(path, "w+");
+    if(!ferror(fh)){
+        fclose(fh);
+        return 1;
+    }
+
+    return 0;
+}
+
+int file_write(char* path, char* content){
+    FILE* fh = fopen(path, "wb");
+    if(!ferror(fh)){
+        fwrite(content, strlen(content), sizeof(char), fh);
+        fclose(fh);
+        return 1;
+    }
+
+    return 0;
+}
+
+char* file_read(char* path, int* error){
+    FILE* fh = fopen(path, "rb");
+
+    char* buffer = calloc(1024*1024, sizeof(char));
+    size_t file_size = 0;
+
+    *error = ferror(fh);
+
+    if(!(*error)){
+        while(!feof(fh)){
+            size_t read_size = fread(buffer, sizeof(char), 1024, fh);
+            file_size += read_size;
+        }
+
+        printf("File size is: %d\n", (int) file_size);
+        fclose(fh);
+
+        if(file_size != 0){
+            char* output = malloc(file_size);
+            memcpy(output, buffer, file_size);
+            free(buffer);
+            return output;
+        }
+
+        return buffer;
+    }
+
+    return NULL;
+}
+
+int file_delete(char* path){
+    return remove(path);
+}
