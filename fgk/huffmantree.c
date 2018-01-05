@@ -838,12 +838,16 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
 
 void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int i, int lvl){
     debug("[rebuilding_from_array] Starting rebuild");
+    char debug_b[200];
+    sprintf(debug_b, "[rebuilding_from_array] Arguments: HT: %p, pos: %d, arr: %p, i: %d, lvl: %d", ht, pos, arr, i, lvl);
+    debug(debug_b);
 
     printPartialArray(arr);
     //printHuffmanArray(ht);
 
     ht->tree[pos] = arr[i];
-    if((2 *pos) + 2 < HA_DIM_Y) {
+    printf("2*pos + 1 = %d\n", (2 *pos) + 1);
+    if((2 *pos) + 1 < HA_DIM_X * HA_DIM_Y) {
         rebuilding_from_array(ht, (2 * pos) + 1, arr, i + (int) pow(2, lvl), lvl + 1);
         rebuilding_from_array(ht,  (2 * pos) + 2, arr, i + (int) pow(2, lvl) + 1, lvl + 1);
     }
@@ -859,8 +863,8 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     Node** arr2 = calloc(HA_DIM_X * HA_DIM_Y, sizeof(Node*));
 
     int i, k;
-    for(i=0; i<HA_DIM_Y; i++){
-        for(k=0; k<HA_DIM_X; k++){
+    for(i=0; i<HA_DIM_X; i++){
+        for(k=0; k<HA_DIM_Y; k++){
             arr[i * HA_DIM_X + k] = NULL;
             arr2[i * HA_DIM_X + k] = NULL;
         }
@@ -876,16 +880,15 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("[swap_on_diff_lvls] Creating arr");
     create_subtree_from_node(ht, node, arr, nullpos);
     debug("[swap_on_diff_lvls] End arr creation");
-    //printNodeArray(arr);
+    printNodeArray(arr);
 
     debug("[swap_on_diff_lvls] Creating arr2");
     create_subtree_from_node(ht, node2, arr2, nullpos);
     debug("[swap_on_diff_lvls] End arr2 creation");
-    //printNodeArray(arr2);
+    printNodeArray(arr2);
 
-
-    rebuilding_from_array(ht, pos2[0] * HA_DIM_Y + pos2[1], arr, 0, 0);
-    rebuilding_from_array(ht, pos[0] * HA_DIM_Y + pos[1], arr2, 0, 0);
+    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
+    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, 0);
 
     free(pos);
     free(pos2);

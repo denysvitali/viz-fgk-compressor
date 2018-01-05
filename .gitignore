@@ -47,6 +47,7 @@
 
 # Callgrind output
 callgrind*
+*.callgrind
 
 # Memcheck Output
 *.memcheck

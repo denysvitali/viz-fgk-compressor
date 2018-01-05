@@ -1106,9 +1106,46 @@ char * test_file_delete(){
     mu_assert("File cannot be deleted", result == 0);
 }
 
+char * test_swap_ht_array(){
+    mu_tag("Swap behavior in HT Array");
+    //HuffmanTree* ht = createHuffmanTree();
+    //freeHuffman(ht);
+
+    HuffmanTree* ht = createHuffmanTree();
+    ht->tree[0] = createNode(511, 3, -1, NULL, NULL, NULL);
+    ht->root = ht->tree[0];
+
+    ht->tree[1* HA_DIM_X + 0] = createNode(509, 1, -1, NULL, NULL, ht->root);
+    ht->tree[1* HA_DIM_X + 1] = createNode(510, 2, -1, NULL, NULL, ht->root);
+
+    ht->root->left = ht->tree[1 * HA_DIM_X + 0];
+    ht->root->right = ht->tree[1 * HA_DIM_X + 1];
+
+    ht->tree[2 * HA_DIM_X + 0] = createNode(505, 0, NYT_ELEMENT, NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
+    ht->tree[2 * HA_DIM_X + 1] = createNode(506, 1, 'a', NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
+    ht->tree[2 * HA_DIM_X + 2] = createNode(507, 1, 'b', NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
+    ht->tree[2 * HA_DIM_X + 3] = createNode(508, 1, 'c', NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
+
+
+    ht->root->left->left   =   ht->tree[2 * HA_DIM_X + 0];
+    ht->root->left->right  =   ht->tree[2 * HA_DIM_X + 1];
+    ht->root->right->left  =   ht->tree[2 * HA_DIM_X + 2];
+    ht->root->right->right =   ht->tree[2 * HA_DIM_X + 3];
+
+    printHuffmanTree(ht);
+    printHuffmanArray(ht);
+
+    swap_nodes(ht, ht->root->left, ht->root->right);
+
+    printHuffmanTree(ht);
+    printHuffmanArray(ht);
+
+    return 0;
+}
+
 static char * all_tests(){
     mu_run_test(test_debug);
-    mu_run_test(test_get_level);
+    /*mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);
     mu_run_test(test_create_ht_array);
     mu_run_test(test_simple_swap);
@@ -1128,7 +1165,9 @@ static char * all_tests(){
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
     mu_run_test(test_byte2bin);
-    mu_run_test(test_filename);
+    mu_run_test(test_filename);*/
+
+    mu_run_test(test_swap_ht_array);
 
     // File ops. Run in sequence!
     mu_run_test(test_create_file);
