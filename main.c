@@ -1140,6 +1140,14 @@ char * test_swap_ht_array(){
     printHuffmanTree(ht);
     printHuffmanArray(ht);
 
+    mu_assert("ht[0 * X + 0] is not the root.", ht->tree[0 * HA_DIM_X + 0] == ht->root);
+    mu_assert("ht[1 * X + 0] is not root->left.", ht->tree[1 * HA_DIM_X + 0] == ht->root->left);
+    mu_assert("ht[1 * X + 1] is not root->right.", ht->tree[1 * HA_DIM_X + 1] == ht->root->right);
+    mu_assert("ht[2 * X + 0] is not root->left->left.", ht->tree[2 * HA_DIM_X + 0] == ht->root->left->left);
+    mu_assert("ht[2 * X + 1] is not root->left->right.", ht->tree[2 * HA_DIM_X + 1] == ht->root->left->right);
+    mu_assert("ht[2 * X + 2] is not root->right->left.", ht->tree[2 * HA_DIM_X + 2] == ht->root->right->left);
+    mu_assert("ht[2 * X + 3] is not root->right->right.", ht->tree[2 * HA_DIM_X + 3] == ht->root->right->right);
+
     return 0;
 }
 
