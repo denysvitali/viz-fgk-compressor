@@ -37,8 +37,10 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
         }
     }
 
+    printHuffmanTree(ht);
     warn("Printing Result from highest_numbered_node");
     printElement(result);
+
 
     return result;
 }
@@ -621,8 +623,8 @@ HuffmanTree* createHuffmanTree(){
     ht->partial_output_length = 0;
 
     int i, k;
-    for(i = 0; i<HA_DIM_X; i++){
-        for(k = 0; k<HA_DIM_Y; k++) {
+    for(i = 0; i<HA_DIM_Y; i++){
+        for(k = 0; k<HA_DIM_X; k++) {
             ht->tree[i * HA_DIM_X + k] = NULL;
             //printf("%p", ht->tree[i]);
         }
@@ -806,7 +808,7 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
     }
     if(node != NULL) {
         if(DEBUG) {
-            printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
+            //printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
         }
         result[pos[0] * HA_DIM_X + pos[1]] = node;
         //ht->tree[node->node_number] = NULL;
@@ -849,12 +851,14 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     //printPartialArray(arr);
     //printHuffmanArray(ht);
 
-    printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, getElement(ht->tree[pos]), getElement(arr[iter]));
+    if(DEBUG){
+        printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, getElement(ht->tree[pos]), getElement(arr[iter]));
+    }
     ht->tree[pos] = arr[iter];
-    //printf("2*pos + 1 = %d\n", (2 *pos) + 1);
+    printf("2*pos + 1 = %d\n", (2 *pos) + 1);
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X, lvl + 1);
-        rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X+ 1, lvl + 1);
+        rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl + 1);
+        rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl + 1);
     }
 
 
@@ -881,6 +885,9 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     pos2 = getNodePosition(ht, node2);
 
     int nullpos[2] = {0, 0};
+
+    printHuffmanTree(ht);
+    printHuffmanArray(ht);
 
     debug("[swap_on_diff_lvls] Creating arr");
     create_subtree_from_node(ht, node, arr, nullpos);
@@ -930,9 +937,9 @@ void* siblings(HuffmanTree* ht, int level, int* size){
     Node **siblings = malloc(sizeof(Node) * HA_DIM_Y);
     int i;
 
-    for(i=0; i<HA_DIM_Y; i++){
-        if(ht->tree[level * HA_DIM_Y + i] != NULL)
-        siblings[i] = ht->tree[level * HA_DIM_Y + i];
+    for(i=0; i<HA_DIM_X; i++){
+        if(ht->tree[level * HA_DIM_X + i] != NULL)
+        siblings[i] = ht->tree[level * HA_DIM_X + i];
     }
 
     return siblings;

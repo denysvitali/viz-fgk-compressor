@@ -776,31 +776,41 @@ static char* test_bin2byte2(){
     return 0;
 }
 
-static char* test_huffman_coding_bookkeeper(){
-    mu_tag("Huffman Coding (bookkeeper)");
+static char* test_huffman_coding_general(char* string){
+    char title[200];
+    sprintf(title, "Huffman Coding (%s)", string);
+    mu_tag(title);
+
     HuffmanTree* ht = createHuffmanTree();
 
-    char* string = "bookkeeper";
     int i;
+    char path[200];
     for(i=0; i<strlen(string); i++){
         char dbg[50];
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
+        sprintf(path, "%s_%d.dot", string, i);
+        saveHuffmanTree(ht, path);
     }
 
     char * buffer = "";
     long length;
     FILE * fh;
+
+    char filepath[200];
 #ifdef UTILITIES_PRINT_CHARS
     debug("UTILITIES PRINT CHARS IS ON");
-    fh = fopen ("./test/expected-results/bookkeeper.txt", "r");
+    sprintf(filepath, "./test/expected-results/%s.txt", string);
+    fh = fopen (filepath, "r");
 
 #else
     debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/bookkeeper.hex", "r");
+    fsprintf(filepath, "./test/expected-results/%s.hex", string);
+    fh = fopen (filepath, "r");
 #endif
 
+    printHuffmanTree(ht);
     if (fh)
     {
         fseek (fh, 0, SEEK_END);
@@ -814,8 +824,10 @@ static char* test_huffman_coding_bookkeeper(){
         fclose (fh);
     } else {
         error("Can't open the file.");
+        char error_string[200];
+        sprintf(error_string, "Can't open the %s file", string);
         printf("Error number: %d\n", ferror(fh));
-        mu_assert("Can't open the bookkeeper file", 0);
+        mu_assert(error_string, 0);
     }
     char* resulting_tree = getTree(ht->root, 0);
 
@@ -826,111 +838,16 @@ static char* test_huffman_coding_bookkeeper(){
     freeHuffman(ht);
 
     return 0;
+
 }
 
 
 static char* test_huffman_coding_mississippi(){
-    mu_tag("Huffman Coding (mississippi)");
-    HuffmanTree* ht = createHuffmanTree();
-
-    char* string = "mississippi";
-    int i;
-    for(i=0; i<strlen(string); i++){
-        char dbg[50];
-        sprintf(dbg, "Adding character %c", string[i]);
-        debug(dbg);
-        add_new_element(ht, string[i]);
-    }
-
-    char * buffer = "";
-    long length;
-    FILE * fh;
-#ifdef UTILITIES_PRINT_CHARS
-    debug("UTILITIES PRINT CHARS IS ON");
-    fh = fopen ("./test/expected-results/mississippi.txt", "r");
-
-#else
-    debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/mississippi.hex", "r");
-#endif
-
-    if (fh)
-    {
-        fseek (fh, 0, SEEK_END);
-        length = ftell (fh);
-        fseek (fh, 0, SEEK_SET);
-        buffer = malloc (length);
-        if (buffer)
-        {
-            fread (buffer, 1, length, fh);
-        }
-        fclose (fh);
-    } else {
-        error("Can't open the file.");
-        printf("Error number: %d\n", ferror(fh));
-        mu_assert("Can't open the mississippi file", 0);
-    }
-    char* resulting_tree = getTree(ht->root, 0);
-
-    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
-
-    free(resulting_tree);
-    free(buffer);
-    freeHuffman(ht);
-
-    return 0;
+    return test_huffman_coding_general("mississippi");
 }
 
 static char* test_huffman_coding_engineering(){
-    mu_tag("Huffman Coding (engineering)");
-    HuffmanTree* ht = createHuffmanTree();
-
-    char* string = "engineering";
-    int i;
-    for(i=0; i<strlen(string); i++){
-        char dbg[50];
-        sprintf(dbg, "Adding character %c", string[i]);
-        debug(dbg);
-        add_new_element(ht, string[i]);
-    }
-
-    char * buffer = "";
-    long length;
-    FILE * fh;
-#ifdef UTILITIES_PRINT_CHARS
-    debug("UTILITIES PRINT CHARS IS ON");
-    fh = fopen ("./test/expected-results/engineering.txt", "r");
-
-#else
-    debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/engineering.hex", "r");
-#endif
-
-    if (fh)
-    {
-        fseek (fh, 0, SEEK_END);
-        length = ftell (fh);
-        fseek (fh, 0, SEEK_SET);
-        buffer = malloc (length);
-        if (buffer)
-        {
-            fread (buffer, 1, length, fh);
-        }
-        fclose (fh);
-    } else {
-        error("Can't open the file.");
-        printf("Error number: %d\n", ferror(fh));
-        mu_assert("Can't open the engineering file", 0);
-    }
-    char* resulting_tree = getTree(ht->root, 0);
-
-    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
-
-    free(resulting_tree);
-    free(buffer);
-    freeHuffman(ht);
-
-    return 0;
+    return test_huffman_coding_general("engineering");
 }
 
 static char* test_huffman_coding_sleeplessness(){
@@ -1151,9 +1068,17 @@ char * test_swap_ht_array(){
     return 0;
 }
 
+static char * test_huffman_coding_bookkeeper(){
+    return test_huffman_coding_general("bookkeeper");
+}
+
 static char * all_tests(){
     mu_run_test(test_debug);
-    /*mu_run_test(test_get_level);
+    //mu_run_test(test_huffman_coding_bookkeeper);
+    //mu_run_test(test_huffman_coding_mississippi);
+    mu_run_test(test_huffman_coding_engineering);
+
+    mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);
     mu_run_test(test_create_ht_array);
     mu_run_test(test_simple_swap);
@@ -1161,11 +1086,10 @@ static char * all_tests(){
     mu_run_test(test_node_path);
     mu_run_test(test_huffman_coding);
     mu_run_test(test_create_huffman_tree);
-    mu_run_test(test_utility_siblings);
+    //mu_run_test(test_utility_siblings);
     mu_run_test(test_huffman_coding);
     mu_run_test(test_huffman_coding_abracadabra);
     mu_run_test(test_huffman_coding_abcbaaa);
-    mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
     mu_run_test(test_huffman_coding_sleeplessness);
@@ -1173,7 +1097,7 @@ static char * all_tests(){
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
     mu_run_test(test_byte2bin);
-    mu_run_test(test_filename);*/
+    mu_run_test(test_filename);
 
     mu_run_test(test_swap_ht_array);
 
