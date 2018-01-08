@@ -225,10 +225,10 @@ void huffman_partial_convert_clear(HuffmanTree* ht){
     }
 
     free(ht->output);
-    ht->output = calloc(20, sizeof(char));
+    ht->output = calloc(length, sizeof(char));
 
     char* d_bytes = calloc(10, sizeof(char));
-    for(i = 0; i<length; i++){
+    for(i = 0; i<length - 1; i++){
         ht->output[length - 1 - i] = output[i];
         if(DEBUG) {
             sprintf(d_bytes, "%s0x%02x ", d_bytes, output[length - 1 - i] & 0xff);
@@ -624,6 +624,7 @@ HuffmanTree* createHuffmanTree(){
     ht->partial_output = calloc(1, HUFFMAN_ARRAY_SIZE);
     ht->output_length = 0;
     ht->partial_output_length = 0;
+    ht->elements = 0;
 
     int i, k;
     for(i = 0; i<HA_DIM_Y; i++){
@@ -878,7 +879,11 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     //printHuffmanArray(ht);
 
     if(DEBUG){
-        printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, getElement(ht->tree[pos]), getElement(arr[iter]));
+        char* element1 = getElement(ht->tree[pos]);
+        char* element2 = getElement(arr[iter]);
+        printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, element1, element2);
+        free(element1);
+        free(element2);
     }
 
     ht->tree[pos] = arr[iter];
