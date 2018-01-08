@@ -806,7 +806,7 @@ static char* test_huffman_coding_general(char* string){
 
 #else
     debug("UTILITIES PRINT CHARS IS OFF");
-    fsprintf(filepath, "./test/expected-results/%s.hex", string);
+    sprintf(filepath, "./test/expected-results/%s.hex", string);
     fh = fopen (filepath, "r");
 #endif
 
