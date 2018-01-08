@@ -858,107 +858,11 @@ static char* test_huffman_coding_engineering(){
 }
 
 static char* test_huffman_coding_sleeplessness(){
-    mu_tag("Huffman Coding (sleeplessness)");
-    HuffmanTree* ht = createHuffmanTree();
-
-    char* string = "sleeplessness";
-    int i;
-    for(i=0; i<strlen(string); i++){
-        char dbg[50];
-        sprintf(dbg, "Adding character %c", string[i]);
-        debug(dbg);
-        add_new_element(ht, string[i]);
-    }
-
-    char * buffer = "";
-    long length;
-    FILE * fh;
-#ifdef UTILITIES_PRINT_CHARS
-    debug("UTILITIES PRINT CHARS IS ON");
-    fh = fopen ("./test/expected-results/sleeplessness.txt", "r");
-
-#else
-    debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/sleeplessness.hex", "r");
-#endif
-
-    if (fh)
-    {
-        fseek (fh, 0, SEEK_END);
-        length = ftell (fh);
-        fseek (fh, 0, SEEK_SET);
-        buffer = malloc (length);
-        if (buffer)
-        {
-            fread (buffer, 1, length, fh);
-        }
-        fclose (fh);
-    } else {
-        error("Can't open the file.");
-        printf("Error number: %d\n", ferror(fh));
-        mu_assert("Can't open the sleeplessness file", 0);
-    }
-    char* resulting_tree = getTree(ht->root, 0);
-
-    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
-
-    free(resulting_tree);
-    free(buffer);
-    freeHuffman(ht);
-
-    return 0;
+    return test_huffman_coding_general("sleeplessness");
 }
 
 static char* test_huffman_coding_aardvark(){
-    mu_tag("Huffman Coding (aardvark)");
-    HuffmanTree* ht = createHuffmanTree();
-
-    char* string = "aardvark";
-    int i;
-    for(i=0; i<strlen(string); i++){
-        char dbg[50];
-        sprintf(dbg, "Adding character %c", string[i]);
-        debug(dbg);
-        add_new_element(ht, string[i]);
-    }
-
-    char * buffer = "";
-    long length;
-    FILE * fh;
-#ifdef UTILITIES_PRINT_CHARS
-    debug("UTILITIES PRINT CHARS IS ON");
-    fh = fopen ("./test/expected-results/aardvark.txt", "r");
-
-#else
-    debug("UTILITIES PRINT CHARS IS OFF");
-    fh = fopen ("./test/expected-results/aardvark.hex", "r");
-#endif
-
-    if (fh)
-    {
-        fseek (fh, 0, SEEK_END);
-        length = ftell (fh);
-        fseek (fh, 0, SEEK_SET);
-        buffer = malloc (length);
-        if (buffer)
-        {
-            fread (buffer, 1, length, fh);
-        }
-        fclose (fh);
-    } else {
-        error("Can't open the file.");
-        printf("Error number: %d\n", ferror(fh));
-        mu_assert("Can't open the aardvark file", 0);
-    }
-    char* resulting_tree = getTree(ht->root, 0);
-
-    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
-
-    free(resulting_tree);
-    free(buffer);
-    freeHuffman(ht);
-
-    return 0;
+    return test_huffman_coding_general("aardvark");
 }
 
 static char * test_filename(){
@@ -1153,8 +1057,8 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_abcbaaa);
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
-    mu_run_test(test_huffman_coding_sleeplessness);
     mu_run_test(test_huffman_coding_aardvark);
+    mu_run_test(test_huffman_coding_sleeplessness);
     mu_run_test(test_bin2byte);
     mu_run_test(test_bin2byte2);
     mu_run_test(test_byte2bin);
