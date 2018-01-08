@@ -1030,31 +1030,80 @@ char * test_file_delete(){
     mu_assert("File cannot be deleted", result == 0);
 }
 
+char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
+    if(root == NULL){
+        return NULL;
+    }
+
+    printf("[test_check_recurse_ht] %d\n", i);
+    mu_assert("Invalid.", ht->tree[i] == root);
+
+    if(root->left != NULL){
+        char* result = calloc(200, sizeof(char));
+        test_check_recurse_ht(ht, root->left, i + 2*i%HA_DIM_X, result);
+    }
+
+    if(root->right != NULL){
+        char* result = calloc(200, sizeof(char));
+        test_check_recurse_ht(ht, root->right, i + 2*i%HA_DIM_X + 1, result);
+    }
+
+    return 0;
+}
+
+char * test_check_ht_array(HuffmanTree* ht){
+    // Checks that the ht tree is equal to the ht array
+    char* result = calloc(200, sizeof(char));
+    test_check_recurse_ht(ht, ht->root, 0, result);
+    debug(result);
+    free(result);
+
+}
+
 char * test_swap_ht_array(){
     mu_tag("Swap behavior in HT Array");
     //HuffmanTree* ht = createHuffmanTree();
     //freeHuffman(ht);
 
     HuffmanTree* ht = createHuffmanTree();
-    ht->tree[0] = createNode(511, 3, -1, NULL, NULL, NULL);
+    ht->tree[0] = createNode(511, 8, -1, NULL, NULL, NULL);
     ht->root = ht->tree[0];
 
-    ht->tree[1* HA_DIM_X + 0] = createNode(509, 1, -1, NULL, NULL, ht->root);
-    ht->tree[1* HA_DIM_X + 1] = createNode(510, 2, -1, NULL, NULL, ht->root);
+    ht->tree[1* HA_DIM_X + 0] = createNode(509, 4, -1, NULL, NULL, ht->root);
+    ht->tree[1* HA_DIM_X + 1] = createNode(510, 4, -1, NULL, NULL, ht->root);
 
     ht->root->left = ht->tree[1 * HA_DIM_X + 0];
     ht->root->right = ht->tree[1 * HA_DIM_X + 1];
 
-    ht->tree[2 * HA_DIM_X + 0] = createNode(505, 0, NYT_ELEMENT, NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
-    ht->tree[2 * HA_DIM_X + 1] = createNode(506, 1, 'a', NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
-    ht->tree[2 * HA_DIM_X + 2] = createNode(507, 1, 'b', NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
-    ht->tree[2 * HA_DIM_X + 3] = createNode(508, 1, 'c', NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
+    ht->tree[2 * HA_DIM_X + 0] = createNode(505, 2, -1, NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
+    ht->tree[2 * HA_DIM_X + 1] = createNode(506, 2, -1, NULL, NULL, ht->tree[1 * HA_DIM_X + 0]);
+    ht->tree[2 * HA_DIM_X + 2] = createNode(507, 2, -1, NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
+    ht->tree[2 * HA_DIM_X + 3] = createNode(508, 2, -1, NULL, NULL, ht->tree[1 * HA_DIM_X + 1]);
+
+    ht->tree[3 * HA_DIM_X + 0] = createNode(497, 1, 'd', NULL, NULL, ht->tree[2 * HA_DIM_X + 0]);
+    ht->tree[3 * HA_DIM_X + 1] = createNode(498, 1, 'e', NULL, NULL, ht->tree[2 * HA_DIM_X + 0]);
+    ht->tree[3 * HA_DIM_X + 2] = createNode(499, 1, 'f', NULL, NULL, ht->tree[2 * HA_DIM_X + 1]);
+    ht->tree[3 * HA_DIM_X + 3] = createNode(500, 1, 'g', NULL, NULL, ht->tree[2 * HA_DIM_X + 1]);
+    ht->tree[3 * HA_DIM_X + 4] = createNode(501, 1, 'h', NULL, NULL, ht->tree[2 * HA_DIM_X + 2]);
+    ht->tree[3 * HA_DIM_X + 5] = createNode(502, 1, 'i', NULL, NULL, ht->tree[2 * HA_DIM_X + 2]);
+    ht->tree[3 * HA_DIM_X + 6] = createNode(503, 1, 'j', NULL, NULL, ht->tree[2 * HA_DIM_X + 3]);
+    ht->tree[3 * HA_DIM_X + 7] = createNode(504, 1, 'k', NULL, NULL, ht->tree[2 * HA_DIM_X + 3]);
 
 
     ht->root->left->left   =   ht->tree[2 * HA_DIM_X + 0];
     ht->root->left->right  =   ht->tree[2 * HA_DIM_X + 1];
     ht->root->right->left  =   ht->tree[2 * HA_DIM_X + 2];
     ht->root->right->right =   ht->tree[2 * HA_DIM_X + 3];
+
+
+    ht->tree[2 * HA_DIM_X + 0]->left = ht->tree[3 * HA_DIM_X + 0];
+    ht->tree[2 * HA_DIM_X + 0]->right = ht->tree[3 * HA_DIM_X + 1];
+    ht->tree[2 * HA_DIM_X + 1]->left = ht->tree[3 * HA_DIM_X + 2];
+    ht->tree[2 * HA_DIM_X + 1]->right = ht->tree[3 * HA_DIM_X + 3];
+    ht->tree[2 * HA_DIM_X + 2]->left = ht->tree[3 * HA_DIM_X + 4];
+    ht->tree[2 * HA_DIM_X + 2]->right = ht->tree[3 * HA_DIM_X + 5];
+    ht->tree[2 * HA_DIM_X + 3]->left = ht->tree[3 * HA_DIM_X + 6];
+    ht->tree[2 * HA_DIM_X + 3]->right = ht->tree[3 * HA_DIM_X + 7];
 
     printHuffmanTree(ht);
     printHuffmanArray(ht);
@@ -1064,13 +1113,15 @@ char * test_swap_ht_array(){
     printHuffmanTree(ht);
     printHuffmanArray(ht);
 
+    test_check_ht_array(ht);
+/*
     mu_assert("ht[0 * X + 0] is not the root.", ht->tree[0 * HA_DIM_X + 0] == ht->root);
     mu_assert("ht[1 * X + 0] is not root->left.", ht->tree[1 * HA_DIM_X + 0] == ht->root->left);
     mu_assert("ht[1 * X + 1] is not root->right.", ht->tree[1 * HA_DIM_X + 1] == ht->root->right);
     mu_assert("ht[2 * X + 0] is not root->left->left.", ht->tree[2 * HA_DIM_X + 0] == ht->root->left->left);
     mu_assert("ht[2 * X + 1] is not root->left->right.", ht->tree[2 * HA_DIM_X + 1] == ht->root->left->right);
     mu_assert("ht[2 * X + 2] is not root->right->left.", ht->tree[2 * HA_DIM_X + 2] == ht->root->right->left);
-    mu_assert("ht[2 * X + 3] is not root->right->right.", ht->tree[2 * HA_DIM_X + 3] == ht->root->right->right);
+    mu_assert("ht[2 * X + 3] is not root->right->right.", ht->tree[2 * HA_DIM_X + 3] == ht->root->right->right);*/
 
     return 0;
 }

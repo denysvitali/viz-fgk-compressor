@@ -871,7 +871,7 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     debug(debug_b);
 
     int my_rel_pos = pos % HA_DIM_X;
-    sprintf(debug_b, "[rebuilding_from_array] my_rel_pos: %d");
+    sprintf(debug_b, "[rebuilding_from_array] my_rel_pos: %d, p2: %d", my_rel_pos, pos + HA_DIM_X + pos%HA_DIM_X);
     debug(debug_b);
 
     //printPartialArray(arr);
@@ -883,12 +883,11 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
 
     ht->tree[pos] = arr[iter];
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 0, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
-        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 1, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
+        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 0, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
+        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 1, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
     }
-
-
 }
+
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("Swapping on different levels");
     /*Node** arr = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
