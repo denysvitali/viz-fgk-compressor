@@ -522,10 +522,13 @@ static char* test_swap_nodes(){
     swap_nodes(ht, ht->root->left->left, ht->root->right);
     saveHuffmanTree(ht, "./test/results/t_sn_4.dot");
 
-    printf("Swapped HT Array:\n");
+    debug("[Swap Test] Printing Huffman Tree");
+    printHuffmanTree(ht);
+    printf("[Swap Test] Printing swapped HT Array:\n");
     printHuffmanArray(ht);
-
+    debug("[Swap Test] Printing generated array");
     generateHTArrayFromTree(ht);
+    printHuffmanArray(ht);
     printf("Calculated array:\n");
     printNodeArray(ht->tree);
     printf("\n");

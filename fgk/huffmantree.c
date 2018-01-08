@@ -661,36 +661,55 @@ void freeHuffman(HuffmanTree* ht){
     free(ht);
 }
 
-void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, int level, int i){
+void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, int level, int i, int index){
     if(levelRoot == NULL){
         return;
     }
 
+    index++;
     if(level == 0){
-        int index = (int) pow(2,originalLevel) - 1 + i;
-        char* element = getElement(levelRoot);
-        char buffer[100];
-        snprintf(buffer, 100, "[fillHTArrayFromTree] index: %d, i: %d, level: %d, originalLevel: %d, node: %s",
-                index,
-                 i,
-                level,
-                originalLevel,
-                element
-        );
-        debug(buffer);
-        free(element);
+        //int index = (int) pow(2,originalLevel) - 1 + i;
+        char *element;
+        if(DEBUG) {
+            element = getElement(levelRoot);
+            char buffer[100];
+            snprintf(buffer, 100, "[fillHTArrayFromTree] index: %d, i: %d, pow2/2: %d, level: %d, originalLevel: %d, node: %s",
+                     index,
+                     i,
+                     (int) pow(2, originalLevel)/2,
+                     level,
+                     originalLevel,
+                     element
+            );
+            debug(buffer);
+        }
 
-        ht->tree[originalLevel * HA_DIM_X + i] = levelRoot;
+        int firstElement = originalLevel * HA_DIM_X;
+
+        int arrpos = firstElement + (int) pow(2, originalLevel)/2 * i + index - 1;
+
+        ht->tree[arrpos] = levelRoot;
+        if(DEBUG){
+            char buffer[100];
+            sprintf(buffer, "[fillHTArrayFromTree] tree[%d] (index: %d) is now set to %s\n", arrpos, index, element);
+            debug(buffer);
+            free(element);
+        }
     } else {
-        fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level-1, 0);
-        fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level-1, 1);
+        if(levelRoot->parent == NULL || levelRoot->parent->left == levelRoot) {
+            fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level - 1, 0, 0);
+            fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level - 1, 0, 1);
+        } else {
+            fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level - 1, 1, 0);
+            fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level - 1, 1, 1);
+        }
     }
 }
 
 void generateHTArrayFromTree(HuffmanTree* ht){
     int i;
     for(i = 0; i < (int) (log(HUFFMAN_ARRAY_SIZE)/log(2)); i++){
-        fillHTArrayFromTree(ht, ht->root, i, i, 0);
+        fillHTArrayFromTree(ht, ht->root, i, i, 0, 0);
     }
 }
 
@@ -862,8 +881,8 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
         if(lvl == 0){
             debug("[rebuilding_from_array] LVL was 0");
-            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X, lvl);
-            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 1, lvl);
+            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
+            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl);
         }else {
             debug("[rebuilding_from_array] LVL was != 0");
             rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
