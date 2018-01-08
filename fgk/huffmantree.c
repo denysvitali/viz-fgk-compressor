@@ -64,8 +64,12 @@ void node_positioner(HuffmanTree* ht, Node* target){
             sprintf(buffer, "[node_positioner] TARGET: %s", element2);
             debug(buffer);
             free(element2);
+            char buffer[200];
+            sprintf(buffer,
+                    "[node_positioner] Found as highest %d and tried to swap it with %d",
+                    last->node_number, target->node_number);
+            debug(buffer);
         }
-        printf("Found as highest %d and tried to swap it with %d", last->node_number, target->node_number);
         swap_nodes(ht, target, last);
     }
 
@@ -758,7 +762,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         error(buffer);
         saveHuffmanTree(ht, "error-1.dot");
         exit(2);
-        return;
+        return; // TODO: Better error management.
     }
     //int distance = pos1-pos2;
 
@@ -857,9 +861,11 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     printf("2*pos + 1 = %d\n", (2 *pos) + 1);
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
         if(lvl == 0){
+            debug("[rebuilding_from_array] LVL was 0");
             rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X, lvl);
             rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 1, lvl);
         }else {
+            debug("[rebuilding_from_array] LVL was != 0");
             rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
             rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl);
         }
