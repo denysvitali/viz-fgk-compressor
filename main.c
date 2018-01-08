@@ -1076,7 +1076,7 @@ static char * all_tests(){
     mu_run_test(test_debug);
     //mu_run_test(test_huffman_coding_bookkeeper);
     //mu_run_test(test_huffman_coding_mississippi);
-    mu_run_test(test_huffman_coding_engineering);
+    //mu_run_test(test_huffman_coding_engineering);
 
     mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);

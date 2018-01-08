@@ -14,7 +14,6 @@
 Node* highest_numbered_node(HuffmanTree* ht, int weight){
     int i,k;
     int max_nn = 0;
-    int stop = 0;
     Node* result = NULL;
 
     //printHuffmanArray(ht);
@@ -25,7 +24,6 @@ Node* highest_numbered_node(HuffmanTree* ht, int weight){
             if(curr == NULL){
                 continue;
             }
-
             if(curr->weight == weight && curr->node_number > max_nn){
                 max_nn = curr->node_number;
                 result = curr;
@@ -67,6 +65,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
             debug(buffer);
             free(element2);
         }
+        printf("Found as highest %d and tried to swap it with %d", last->node_number, target->node_number);
         swap_nodes(ht, target, last);
     }
 
@@ -857,8 +856,13 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     ht->tree[pos] = arr[iter];
     printf("2*pos + 1 = %d\n", (2 *pos) + 1);
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl + 1);
-        rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl + 1);
+        if(lvl == 0){
+            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X, lvl);
+            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 1, lvl);
+        }else {
+            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
+            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl);
+        }
     }
 
 
@@ -883,6 +887,8 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     int* pos2;
     pos = getNodePosition(ht, node);
     pos2 = getNodePosition(ht, node2);
+    printf("pos: [%d][%d]\n", pos[0], pos[1]);
+    printf("pos2: [%d][%d]\n", pos2[0], pos2[1]);
 
     int nullpos[2] = {0, 0};
 
@@ -899,8 +905,8 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
     debug("[swap_on_diff_lvls] End arr2 creation");
     printNodeArray(arr2);
 
-    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, 0);
-    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, 0);
+    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, pos[0]-pos2[0]);
+    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, pos[0]-pos2[0]);
 
     free(pos);
     free(pos2);
