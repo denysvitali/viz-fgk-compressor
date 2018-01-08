@@ -27,7 +27,6 @@
 /* Compressor Magic Number */
 #define MAGIC_NUMBER "\x51\x7D\x3C\xDE"
 #define NYT_ELEMENT 256
-#define DEBUG 1
 #define UTILITIES_PRINT_CHARS 1
 
 /* DEBUG flags */
