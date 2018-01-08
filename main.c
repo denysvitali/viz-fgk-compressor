@@ -865,6 +865,18 @@ static char* test_huffman_coding_aardvark(){
     return test_huffman_coding_general("aardvark");
 }
 
+static char* test_huffman_coding_foobar(){
+    return test_huffman_coding_general("foobar");
+}
+
+static char* test_huffman_coding_foobar2000(){
+    return test_huffman_coding_general("foobar2000");
+}
+
+static char* test_huffman_coding_loremipsum(){
+    return test_huffman_coding_general("lorem ipsum dolor sit amet");
+}
+
 static char * test_filename(){
     mu_tag("File name");
 
@@ -1042,6 +1054,9 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
+    mu_run_test(test_huffman_coding_foobar);
+    mu_run_test(test_huffman_coding_foobar2000);
+    mu_run_test(test_huffman_coding_loremipsum);
 
     mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);
