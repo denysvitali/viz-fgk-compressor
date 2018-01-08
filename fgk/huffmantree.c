@@ -870,24 +870,21 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     sprintf(debug_b, "[rebuilding_from_array] Arguments: HT: %p, pos: %d, arr: %p, iter: %d, lvl: %d", ht, pos, arr, iter, lvl);
     debug(debug_b);
 
+    int my_rel_pos = pos % HA_DIM_X;
+    sprintf(debug_b, "[rebuilding_from_array] my_rel_pos: %d");
+    debug(debug_b);
+
     //printPartialArray(arr);
     //printHuffmanArray(ht);
 
     if(DEBUG){
         printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, getElement(ht->tree[pos]), getElement(arr[iter]));
     }
+
     ht->tree[pos] = arr[iter];
-    printf("2*pos + 1 = %d\n", (2 *pos) + 1);
     if(pos + HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y && iter * HA_DIM_X + pos < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        if(lvl == 0){
-            debug("[rebuilding_from_array] LVL was 0");
-            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
-            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl);
-        }else {
-            debug("[rebuilding_from_array] LVL was != 0");
-            rebuilding_from_array(ht, pos * 2, arr, iter + HA_DIM_X + 1, lvl);
-            rebuilding_from_array(ht, pos * 2 + 1, arr, iter + HA_DIM_X + 2, lvl);
-        }
+        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 0, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
+        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 1, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
     }
 
 

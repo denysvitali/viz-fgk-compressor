@@ -75,6 +75,10 @@ static char* test_simple_swap(){
     ht->root->left = original_left;
     ht->root->right = original_right;
 
+    ht->tree[0] = ht->root;
+    ht->tree[1* HA_DIM_X + 0] = ht->root->left;
+    ht->tree[1* HA_DIM_X + 1] = ht->root->right;
+
     mu_assert("Root isn't NN 511", ht->root->node_number == 511);
     mu_assert("Root left is null", ht->root->left != NULL);
     mu_assert("Root left isn't NN 509", ht->root->left->node_number == 509);
@@ -1077,9 +1081,12 @@ static char * test_huffman_coding_bookkeeper(){
 
 static char * all_tests(){
     mu_run_test(test_debug);
-    //mu_run_test(test_huffman_coding_bookkeeper);
-    //mu_run_test(test_huffman_coding_mississippi);
-    //mu_run_test(test_huffman_coding_engineering);
+
+    mu_run_test(test_swap_ht_array);
+
+    mu_run_test(test_huffman_coding_bookkeeper);
+    mu_run_test(test_huffman_coding_mississippi);
+    mu_run_test(test_huffman_coding_engineering);
 
     mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);
@@ -1102,7 +1109,6 @@ static char * all_tests(){
     mu_run_test(test_byte2bin);
     mu_run_test(test_filename);
 
-    mu_run_test(test_swap_ht_array);
 
     // File ops. Run in sequence!
     mu_run_test(test_create_file);
