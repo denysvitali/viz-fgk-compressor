@@ -793,6 +793,8 @@ char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
     free(element);
 
     if(ht->tree[i] != root){
+        printHuffmanTree(ht);
+        printHuffmanArray(ht);
         printf("[test_check_recurse_ht] Fail.\n");
         exit(1);
     }
