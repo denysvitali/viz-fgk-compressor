@@ -267,14 +267,16 @@ void huffman_append_partial_path(HuffmanTree* ht, char* path){
         debug("[huffman_append_partial_path]");
         huffman_partial_convert_clear(ht);
         ht->partial_output_length+= strlen(path);
-        sprintf(ht->partial_output, "%s%s", ht->partial_output, path);
+        strcat(ht->partial_output, path);
     }
 }
 void huffman_append_partial_new_element(HuffmanTree* ht, char* nyt_path, char element){
     if(ht != NULL) {
         huffman_partial_convert_clear(ht);
         ht->partial_output_length+= strlen(nyt_path) + 3; // path length + ( + char + )
-        sprintf(ht->partial_output, "%s%s(%c)", ht->partial_output, nyt_path, element);
+        char newelement[50];
+        sprintf(newelement, "%s(%c)", nyt_path, element);
+        strcat(ht->partial_output, newelement);
     }
 }
 
@@ -326,6 +328,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         //free(path);
         free(encoded_byte);
         free(length);
+        free(path);
 
     } else {
         char* path = node_path(ht->nyt);
