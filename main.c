@@ -830,16 +830,11 @@ static char* test_huffman_coding_general(char* string){
         }
         fclose (fh);
     } else {
-        error("Can't open the file.");
-        char error_string[200];
-        sprintf(error_string, "Can't open the %s file", string);
-        printf("Error number: %d\n", ferror(fh));
-        mu_assert(error_string, 0);
+        mu_assert("File not found", fh!=NULL);
     }
     char* resulting_tree = getTree(ht->root, 0);
 
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
-
     free(resulting_tree);
     free(buffer);
     freeHuffman(ht);
@@ -1055,7 +1050,7 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
     mu_run_test(test_huffman_coding_foobar);
-    //mu_run_test(test_huffman_coding_foobar2000);
+    mu_run_test(test_huffman_coding_foobar2000);
     //mu_run_test(test_huffman_coding_loremipsum);
 
     mu_run_test(test_get_level);
