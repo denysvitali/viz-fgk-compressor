@@ -322,16 +322,23 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         char* encoded_byte = bin2byte(path, length);
 
         int i;
-        char bytes[*length + 1];
-        for(i = 0; i<*length; i++){
-            bytes[i] = encoded_byte[i];
+
+        if(ht->elements == 0){
+            // First element!
+            ht->output[0] = c;
+            ht->output_length = 1;
+        } else {
+            char bytes[*length + 1];
+            for(i = 0; i<*length; i++){
+                bytes[i] = encoded_byte[i];
+            }
+
+            bytes[*length] = '\0';
+            sprintf(ht->output, "%s%c", bytes, c);
+            ht->output_length = *length;
+
+            huffman_append_partial_new_element(ht, path, c);
         }
-
-        bytes[*length] = '\0';
-        sprintf(ht->output, "%s%c", bytes, c);
-        ht->output_length = *length;
-
-        huffman_append_partial_new_element(ht, path, c);
 
         free(path);
         free(encoded_byte);
@@ -383,6 +390,12 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         node_positioner(ht, target);
     }
     return ht;
+}
+
+void decode_byte(HuffmanTree* ht, char byte){
+    char debug_buffer[50];
+    sprintf(debug_buffer, "Decoding %02x", byte & 0xff);
+    debug(debug_buffer);
 }
 
 Node* findNYT(Node* root){
@@ -491,7 +504,7 @@ HuffmanTree* createHuffmanTree(){
     ht->partial_output_length = 0;
     ht->elements = 0;
 
-    int i, k;
+    int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
         ht->tree[i] = NULL;
     }

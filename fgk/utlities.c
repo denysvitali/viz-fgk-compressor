@@ -88,7 +88,7 @@ void printHuffmanArray(HuffmanTree* ht){
 }
 
 char* getTree(Node* root, int level) {
-    char* string = calloc(sizeof(char), 4096);
+    char* string = calloc(sizeof(char), 4096*1024);
 
     /* Expected output
      *

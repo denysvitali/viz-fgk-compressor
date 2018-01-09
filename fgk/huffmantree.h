@@ -54,3 +54,6 @@ void generateHTArrayFromTree(HuffmanTree* ht);
 char* node_path(Node* node);
 
 void endHuffman(HuffmanTree* ht);
+
+// Decompressor
+void decode_byte(HuffmanTree* ht, char byte);

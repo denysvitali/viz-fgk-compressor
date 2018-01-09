@@ -964,75 +964,75 @@ static char * all_tests(){
 }
 #endif
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
 
-	#if TEST == 1
-		char *result = all_tests();
-		if (result != 0) {
-			//printf("%s\n", result);
-            printf("Test failed.\n");
-            return 1; // Fail on test failed
-		}
-		else {
-			test_successful("ALL TESTS PASSED");
-		}
-		printf("Tests run: %d\n", tests_run);
-		return 0;
-    #endif
+#if TEST == 1
+    char *result = all_tests();
+    if (result != 0) {
+        //printf("%s\n", result);
+        printf("Test failed.\n");
+        return 1; // Fail on test failed
+    }
+    else {
+        test_successful("ALL TESTS PASSED");
+    }
+    printf("Tests run: %d\n", tests_run);
+    return 0;
+#endif
 
     debug("VIZ is running in DEBUG mode.");
-	
-	char debug_buffer[500];
-	if(argc == 1){
-		usage();
-		return 0;
-	}
 
-    if(strcmp(argv[1],"-v") == 0){
+    char debug_buffer[500];
+    if (argc == 1) {
+        usage();
+        return 0;
+    }
+
+    if (strcmp(argv[1], "-v") == 0) {
         version();
         return 0;
     }
 
-	if(DEBUG){
-		int i;
-		for(i = 0; i< argc; i++){
-			char buffer[500];
-			sprintf(buffer, "Argument %d: %s", i, argv[i]);
-			debug(buffer);
-		}
-	}
+    if (DEBUG) {
+        int i;
+        for (i = 0; i < argc; i++) {
+            char buffer[500];
+            sprintf(buffer, "Argument %d: %s", i, argv[i]);
+            debug(buffer);
+        }
+    }
 
-	if(strcmp(argv[1], "-t") == 0){
-		// Tree test
-		
-		// First level
-		Node* root = createNode(11, 32, -1, NULL, NULL, NULL);
+    if (strcmp(argv[1], "-t") == 0) {
+        // Tree test
 
-		// Second Level
-		Node* n_9 = createNode(9,11, 'f', NULL, NULL, root);
-		Node* n_10 = createNode(10,21, -1, NULL, NULL, root);
+        // First level
+        Node *root = createNode(11, 32, -1, NULL, NULL, NULL);
 
-		// Third level
-		Node* n_7 = createNode(7, 10, -1, NULL, NULL, n_10);
-		Node* n_8 = createNode(8, 11, -1, NULL, NULL, n_10);
+        // Second Level
+        Node *n_9 = createNode(9, 11, 'f', NULL, NULL, root);
+        Node *n_10 = createNode(10, 21, -1, NULL, NULL, root);
 
-		// Fourth Level
-		Node* n_3 = createNode(3, 5, 'c', NULL, NULL, n_7);
-		Node* n_4 = createNode(4, 5, -1, NULL, NULL, n_7);
-		Node* n_5 = createNode(5, 5, 'd', NULL, NULL, n_8);
-		Node* n_6 = createNode(6, 6, 'e', NULL, NULL, n_8);
+        // Third level
+        Node *n_7 = createNode(7, 10, -1, NULL, NULL, n_10);
+        Node *n_8 = createNode(8, 11, -1, NULL, NULL, n_10);
 
-		// Fifth Level
-		Node* n_1 = createNode(1, 2, 'a', NULL, NULL, n_4);
-		Node* n_2 = createNode(2, 3, 'b', NULL, NULL, n_4);
+        // Fourth Level
+        Node *n_3 = createNode(3, 5, 'c', NULL, NULL, n_7);
+        Node *n_4 = createNode(4, 5, -1, NULL, NULL, n_7);
+        Node *n_5 = createNode(5, 5, 'd', NULL, NULL, n_8);
+        Node *n_6 = createNode(6, 6, 'e', NULL, NULL, n_8);
 
-		root->left = n_9;
-		root->right = n_10;
+        // Fifth Level
+        Node *n_1 = createNode(1, 2, 'a', NULL, NULL, n_4);
+        Node *n_2 = createNode(2, 3, 'b', NULL, NULL, n_4);
 
-		n_10->left = n_7;
-		n_10->right = n_8;
+        root->left = n_9;
+        root->right = n_10;
 
-		n_7->left = n_3;
+        n_10->left = n_7;
+        n_10->right = n_8;
+
+        n_7->left = n_3;
         n_7->right = n_4;
 
         n_4->left = n_1;
@@ -1041,82 +1041,80 @@ int main(int argc, char *argv[]){
         n_8->left = n_5;
         n_8->right = n_6;
 
-		printTree(root, 0);
+        printTree(root, 0);
 
 
-		return 0;
-	}
+        return 0;
+    }
 
-	if(strcmp(argv[1],"-c") == 0){
+    if (strcmp(argv[1], "-c") == 0) {
         int flag_overwrite = 0;
         int flag_shift = 0;
 
-        if(strncmp(argv[2], "-", 1) == 0){
+        if (strncmp(argv[2], "-", 1) == 0) {
             // Additional flag found
-            if(strcmp(argv[2], "-f") == 0){
+            if (strcmp(argv[2], "-f") == 0) {
                 flag_overwrite = 1;
                 flag_shift++;
             }
         }
-		if(argc != 4 && flag_shift == 0){
-			usage();
-			return 1;
-		}
+        if (argc != 4 && flag_shift == 0) {
+            usage();
+            return 1;
+        }
 
-		debug("Compression");
+        debug("Compression");
 
-		char* file_output = (char*) malloc(strlen(argv[2+flag_shift])+1);
-		char* file_input = (char*) malloc(strlen(argv[3+flag_shift])+1);
+        char *file_output = (char *) malloc(strlen(argv[2 + flag_shift]) + 1);
+        char *file_input = (char *) malloc(strlen(argv[3 + flag_shift]) + 1);
 
-        char file_output_tmp[strlen(argv[2+flag_shift])+1 + 4]; // output.ext.tmp
+        char file_output_tmp[strlen(argv[2 + flag_shift]) + 1 + 4]; // output.ext.tmp
 
-        strcpy(file_output, argv[2+flag_shift]);
-        strcpy(file_input, argv[3+flag_shift]);
+        strcpy(file_output, argv[2 + flag_shift]);
+        strcpy(file_input, argv[3 + flag_shift]);
         sprintf(file_output_tmp, "%s.tmp", file_output);
 
-		if(DEBUG){
-			sprintf(debug_buffer, "Input: %s", file_input);
-			debug(debug_buffer);
-			sprintf(debug_buffer, "Output: %s", file_output);
-			debug(debug_buffer);
-		}
-
-		// Check if file exists
-		struct stat stat_result;
-		int result = stat(file_input, &stat_result);
-
-		if(result != 0){
-			// File doesn't exist!
-			char buffer[500];
-			if(DEBUG){
-				sprintf(buffer,"%s does not exist (E: %d).", file_input, result);
-			} else {
-				sprintf(buffer,"%s does not exist.", file_input);
-			}
-			error(buffer);
-			return 1;
-		}
-
-		result = access(file_output, F_OK);
-        if(result == 0 && flag_overwrite){
-            char buffer[500];
-            sprintf(buffer, "%s will be overwritten", file_output);
-            info(buffer);
+        if (DEBUG) {
+            sprintf(debug_buffer, "Input: %s", file_input);
+            debug(debug_buffer);
+            sprintf(debug_buffer, "Output: %s", file_output);
+            debug(debug_buffer);
         }
-        else if(result == 0 && flag_overwrite == 0){
+
+        // Check if file exists
+        struct stat stat_result;
+        int result = stat(file_input, &stat_result);
+
+        if (result != 0) {
+            // File doesn't exist!
             char buffer[500];
-            sprintf(buffer, "%s already exists. If you really want to overwrite it, add '-f' to the flags.", file_output);
+            if (DEBUG) {
+                sprintf(buffer, "%s does not exist (E: %d).", file_input, result);
+            } else {
+                sprintf(buffer, "%s does not exist.", file_input);
+            }
             error(buffer);
             return 1;
         }
-        else if(result == -1) {
+
+        result = access(file_output, F_OK);
+        if (result == 0 && flag_overwrite) {
+            char buffer[500];
+            sprintf(buffer, "%s will be overwritten", file_output);
+            info(buffer);
+        } else if (result == 0 && flag_overwrite == 0) {
+            char buffer[500];
+            sprintf(buffer, "%s already exists. If you really want to overwrite it, add '-f' to the flags.",
+                    file_output);
+            error(buffer);
+            return 1;
+        } else if (result == -1) {
             if (DEBUG) {
                 char buffer[500];
                 sprintf(buffer, "File %s doesn't exist. This is normal. (E%d)", file_output, result);
                 warn(buffer);
             }
-        }
-        else {
+        } else {
             char buffer[500];
             sprintf(buffer, "Unable to write %s: permission denied (E: %d).", file_output, result);
             error(buffer);
@@ -1125,7 +1123,7 @@ int main(int argc, char *argv[]){
         result = access(file_output_tmp, W_OK);
         if (result != 0) {
 
-            if(result == -1){
+            if (result == -1) {
                 // File doesn't exists
 
             } else {
@@ -1142,19 +1140,19 @@ int main(int argc, char *argv[]){
             }
         }
 
-		// Input exists, Output can be written
+        // Input exists, Output can be written
 
-		FILE *fh = fopen(file_input, "rb");
+        FILE *fh = fopen(file_input, "rb");
         FILE *o_tmp_fh = fopen(file_output_tmp, "wb+");
         FILE *o_fh = fopen(file_output, "wb");
 
-		// We'll eventually switch to a buffer for better performances,
-		// for now, we stick to our fgetc function since we're working w/ small files
+        // We'll eventually switch to a buffer for better performances,
+        // for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        HuffmanTree* ht = createHuffmanTree();
+        HuffmanTree *ht = createHuffmanTree();
 
-        if(o_tmp_fh == NULL){
+        if (o_tmp_fh == NULL) {
             // The file doesn't exist, create it
             o_tmp_fh = fopen(file_output_tmp, "wb");
         }
@@ -1162,17 +1160,17 @@ int main(int argc, char *argv[]){
         int i;
 
         size_t buffer_size = 1024;
-        char* buffer = calloc(buffer_size, sizeof(char));
+        char *buffer = calloc(buffer_size, sizeof(char));
 
 
-        while(!feof(fh)){
-            if(ferror(fh)){
+        while (!feof(fh)) {
+            if (ferror(fh)) {
                 perror("Error was");
                 break;
             }
 
             size_t read = fread(buffer, 1, buffer_size, fh);
-            for(i = 0; i<read; i++){
+            for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
             }
@@ -1213,26 +1211,26 @@ int main(int argc, char *argv[]){
         rewind(fh);
         rewind(o_tmp_fh);
 
-        char* file_name = get_filename(file_input);
+        char *file_name = get_filename(file_input);
 
         fprintf(o_fh, "%s", MAGIC_NUMBER);
 
-        if(size<original_size){
-            compress=1;
+        if (size < original_size) {
+            compress = 1;
         }
 
-        if(compress == 0){
-            fprintf(o_fh,"%s", "\x01"); // NOT compressed!
+        if (compress == 0) {
+            fprintf(o_fh, "%s", "\x01"); // NOT compressed!
         } else {
-            fprintf(o_fh,"%s", "\x02"); // Compressed!
+            fprintf(o_fh, "%s", "\x02"); // Compressed!
         }
-        fprintf(o_fh,"%s", file_name); // Extracted file name
+        fprintf(o_fh, "%s", file_name); // Extracted file name
         fprintf(o_fh, "%s", "\x02"); // Start of compressed file
 
-        if(compress == 0) {
+        if (compress == 0) {
             info("The file won't be compressed because its size exceeds the original one");
             while (!feof(fh)) {
-                if(ferror(o_tmp_fh)){
+                if (ferror(o_tmp_fh)) {
                     perror("Unable to process the file");
                     break;
                 }
@@ -1242,7 +1240,7 @@ int main(int argc, char *argv[]){
         } else {
             info("The file was compressed successfully");
             while (!feof(o_tmp_fh)) {
-                if(ferror(o_tmp_fh)){
+                if (ferror(o_tmp_fh)) {
                     perror("Unable to process the file");
                     break;
                 }
@@ -1251,16 +1249,16 @@ int main(int argc, char *argv[]){
             }
         }
 
-        if(!DEBUG) {
+        if (!DEBUG) {
             // Debug mode keeps the .tmp file for future analysis
             file_delete(file_output_tmp);
         }
 
         free(file_name);
 
-		printf("\n");
+        printf("\n");
         freeHuffman(ht);
-		fclose(fh);
+        fclose(fh);
         fclose(o_fh);
         fclose(o_tmp_fh);
 
@@ -1268,59 +1266,61 @@ int main(int argc, char *argv[]){
         free(file_input);
         free(file_output);
 
-		return 0;
-	}
+        return 0;
+    }
 
-	if(strcmp(argv[1],"-d") == 0) {
+    if (strcmp(argv[1], "-d") == 0) {
         // Decompression
 
-        if(argc != 3){
+        if (argc != 3) {
             usage();
             return 1;
         }
 
         debug("Decompressing");
-        char* file_input = (char*) malloc(strlen(argv[2])+1);
+        char *file_input = (char *) malloc(strlen(argv[2]) + 1);
         strcpy(file_input, argv[2]);
 
 
         int result = access(file_input, F_OK);
-        if(result == -1){
-            if(DEBUG){
+        if (result == -1) {
+            if (DEBUG) {
                 char buffer[500];
-                sprintf(buffer,"File %s doesn't exist. (E%d)", file_input, result);
+                sprintf(buffer, "File %s doesn't exist. (E%d)", file_input, result);
             } else {
                 char buffer[500];
-                sprintf(buffer,"File %s doesn't exist.", file_input);
+                sprintf(buffer, "File %s doesn't exist.", file_input);
                 error(buffer);
             }
         }
 
         //info("Decompressing your file...");
 
-        FILE* fh = fopen(file_input, "rb");
+        FILE *fh = fopen(file_input, "rb");
         // Parse headers
         size_t buffer_size = 50;
-        char* buffer = calloc(buffer_size, sizeof(char));
+        char *buffer = calloc(buffer_size, sizeof(char));
 
         size_t read_bytes;
         read_bytes = fread(buffer, 1, 5, fh);
 
-        if(read_bytes != 5){
+        if (read_bytes != 5) {
             error("Invalid file.");
             return 1;
         }
 
-        if(strncmp(MAGIC_NUMBER, buffer, strlen(MAGIC_NUMBER)) != 0){
+        int header_size = 5;
+
+        if (strncmp(MAGIC_NUMBER, buffer, strlen(MAGIC_NUMBER)) != 0) {
             error("The provided file is not compatible because it wasn't generated with VIZ.");
             return 1;
         }
 
         int compressed = 0;
 
-        if(buffer[strlen(MAGIC_NUMBER)] == '\x01'){
+        if (buffer[strlen(MAGIC_NUMBER)] == '\x01') {
             compressed = 0;
-        } else if(buffer[strlen(MAGIC_NUMBER)] == '\x02') {
+        } else if (buffer[strlen(MAGIC_NUMBER)] == '\x02') {
             compressed = 1;
         } else {
             error("The file provided is invalid or corrupted.");
@@ -1328,10 +1328,77 @@ int main(int argc, char *argv[]){
         }
 
         char info_buffer[50];
-        sprintf(info_buffer, "The file was%scompressed", (!compressed?" not ":" "));
+        sprintf(info_buffer, "The file was%scompressed", (!compressed ? " not " : " "));
         info(info_buffer);
 
-        // TODO: Continue from here. Good night.
+        int c;
+
+        char filename[200];
+        int i = 0;
+
+        while(EOF != (c = fgetc(fh))){
+            if(c == '\x02'){
+                break;
+            }
+            filename[i] = (char) c;
+            i++;
+        }
+
+        header_size += i;
+
+        filename[i] = '\0';
+
+        printf("Filename is: %s\n", filename);
+
+        FILE *o_fh = fopen(filename, "wb+");
+        if(!o_fh){
+            // Unable to create filename
+            error("Unable to extract this file. Please check that you have write permissions in this folder.");
+            exit(1);
+        }
+
+        int end = 0;
+        char read_buffer[4096];
+        //fseek(fh, header_size, SEEK_SET);
+        size_t read_size = 0;
+
+        HuffmanTree* ht = createHuffmanTree();
+
+        while(!end){
+            if(ferror(fh)){
+                error("Input file error!");
+                exit(2);
+            }
+
+            read_size = fread(read_buffer,sizeof(char), 4096, fh);
+
+            debug("Read ok");
+            printf("Read size: %d\n", read_size);
+            printf("%s\n", read_buffer);
+
+            for(i=0; i<read_size; i++){
+                /*if(i%16 == 0){
+                    printf("\n");
+                } else if(i%8 == 0){
+                    printf(" ");
+                }
+                printf("%02X ",read_buffer[i] & 0xff);*/
+                decode_byte(ht, read_buffer[i]);
+
+            }
+            printf("\n");
+
+
+            if(read_size == 0){
+                info("END");
+                break;
+            }
+        }
+
+        fclose(fh);
+        fclose(o_fh);
+
+
 
         free(buffer);
 
