@@ -887,9 +887,9 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     }
 
     ht->tree[pos] = arr[iter];
-    if(pos + HA_DIM_X + my_rel_pos + 1 < HA_DIM_X * HA_DIM_Y && iter + HA_DIM_X + iter%HA_DIM_X + 0 < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 0, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
-        rebuilding_from_array(ht, pos + HA_DIM_X + my_rel_pos + 1, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
+    if(pos + HA_DIM_X + 0 + 1*pos%HA_DIM_X < HA_DIM_X * HA_DIM_Y && iter + HA_DIM_X + iter%HA_DIM_X + 0 < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
+        rebuilding_from_array(ht, pos + HA_DIM_X + 0 + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
+        rebuilding_from_array(ht, pos + HA_DIM_X + 1 + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
     }
 }
 

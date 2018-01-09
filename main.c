@@ -783,6 +783,44 @@ static char* test_bin2byte2(){
     return 0;
 }
 
+char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
+    if(root == NULL){
+        return NULL;
+    }
+
+    char* element = getElement(root);
+    printf("[test_check_recurse_ht] Arguments: i: %d \t Node: %-10s\n", i, element);
+    free(element);
+
+    if(ht->tree[i] != root){
+        printf("[test_check_recurse_ht] Fail.\n");
+        exit(1);
+    }
+
+    if(root->left != NULL){
+        char* result = calloc(200, sizeof(char));
+        test_check_recurse_ht(ht, root->left, i + HA_DIM_X + 0 + 1*i%HA_DIM_X, result);
+    }
+
+    if(root->right != NULL){
+        char* result = calloc(200, sizeof(char));
+        test_check_recurse_ht(ht, root->right, i + HA_DIM_X + 1 + 1*i%HA_DIM_X, result);
+    }
+
+    return 0;
+}
+
+char * test_check_ht_array(HuffmanTree* ht){
+    // Checks that the ht tree is equal to the ht array
+    char* result = calloc(200, sizeof(char));
+    test_check_recurse_ht(ht, ht->root, 0, result);
+    printf("[test_check_ht_array] OK.\n");
+    debug(result);
+    free(result);
+
+    return 0;
+}
+
 static char* test_huffman_coding_general(char* string){
     char title[200];
     sprintf(title, "Huffman Coding (%s)", string);
@@ -797,6 +835,7 @@ static char* test_huffman_coding_general(char* string){
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
+        test_check_ht_array(ht);
         sprintf(path, "%s_%d.dot", string, i);
         saveHuffmanTree(ht, path);
     }
@@ -941,36 +980,6 @@ char * test_file_delete(){
     mu_assert("File cannot be deleted", result == 0);
 }
 
-char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
-    if(root == NULL){
-        return NULL;
-    }
-
-    printf("[test_check_recurse_ht] %d\n", i);
-    mu_assert("Invalid.", ht->tree[i] == root);
-
-    if(root->left != NULL){
-        char* result = calloc(200, sizeof(char));
-        test_check_recurse_ht(ht, root->left, i + 2*i%HA_DIM_X, result);
-    }
-
-    if(root->right != NULL){
-        char* result = calloc(200, sizeof(char));
-        test_check_recurse_ht(ht, root->right, i + 2*i%HA_DIM_X + 1, result);
-    }
-
-    return 0;
-}
-
-char * test_check_ht_array(HuffmanTree* ht){
-    // Checks that the ht tree is equal to the ht array
-    char* result = calloc(200, sizeof(char));
-    test_check_recurse_ht(ht, ht->root, 0, result);
-    debug(result);
-    free(result);
-
-}
-
 char * test_swap_ht_array(){
     mu_tag("Swap behavior in HT Array");
     //HuffmanTree* ht = createHuffmanTree();
@@ -1016,6 +1025,8 @@ char * test_swap_ht_array(){
     ht->tree[2 * HA_DIM_X + 3]->left = ht->tree[3 * HA_DIM_X + 6];
     ht->tree[2 * HA_DIM_X + 3]->right = ht->tree[3 * HA_DIM_X + 7];
 
+    test_check_ht_array(ht);
+
     printHuffmanTree(ht);
     printHuffmanArray(ht);
 
@@ -1033,6 +1044,13 @@ char * test_swap_ht_array(){
     mu_assert("ht[2 * X + 1] is not root->left->right.", ht->tree[2 * HA_DIM_X + 1] == ht->root->left->right);
     mu_assert("ht[2 * X + 2] is not root->right->left.", ht->tree[2 * HA_DIM_X + 2] == ht->root->right->left);
     mu_assert("ht[2 * X + 3] is not root->right->right.", ht->tree[2 * HA_DIM_X + 3] == ht->root->right->right);*/
+
+    swap_nodes(ht, ht->root->right, ht->root->left);
+    test_check_ht_array(ht);
+
+    swap_nodes(ht, ht->root->left, ht->root->right->left);
+    printHuffmanTree(ht);
+    printHuffmanArray(ht);
 
     return 0;
 }
