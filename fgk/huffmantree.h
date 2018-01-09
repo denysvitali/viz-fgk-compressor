@@ -22,7 +22,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HA_DIM_X * HA_DIM_Y]; // 257 * 512 = 131584
+    Node* tree[HUFFMAN_TOTAL_NODES]; // 512
     Node* nyt;
     char* output;
     char* partial_output;

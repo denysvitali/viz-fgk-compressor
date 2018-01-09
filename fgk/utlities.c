@@ -71,23 +71,9 @@ void printNodeArray(Node** array){
 
     int seen = 0;
     int i, k;
-    for(i=0; i< HA_DIM_Y; i++){ // We use HUFFMAN_NODES here to truncate the output
-        for(k = 0; k<HA_DIM_X; k++){
-            if(array[i*HA_DIM_X + k] != NULL){
-                printElement(array[i * HA_DIM_X + k]);
-                printf(",");
-                seen++;
-            } else {
-                printf(".,");
-            }
-        }
-
-        if(seen == 0){
-            break;
-        } else {
-            seen = 0;
-        }
-        printf("\n-\n");
+    for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
+        printElement(array[i]);
+        printf(",");
     }
     printf("\n");
 }

@@ -11,40 +11,27 @@
 #endif
 
 
-Node* highest_numbered_node(HuffmanTree* ht, int weight){
+Node* highest_numbered_node(HuffmanTree* ht, Node* node){
     int i,k;
-    int max_nn = 0;
-    Node* result = NULL;
 
-    //printHuffmanArray(ht);
-
-    for(i=0; i<HA_DIM_Y; i++){
-        for(k=0; k<HA_DIM_X; k++){
-            Node* curr = ht->tree[i * HA_DIM_X + k];
-            if(curr == NULL){
-                continue;
+    Node* highest = node;
+    for(i=node->node_number+1; i<HUFFMAN_ARRAY_SIZE; i++){
+        if(ht->tree[i] != NULL){
+            if(ht->tree[i]->weight == node->weight){
+                highest = ht->tree[i];
             }
-            if(curr->weight == weight && curr->node_number > max_nn){
-                max_nn = curr->node_number;
-                result = curr;
-            }
-        }
-
-        if(max_nn != 0){
-            break;
         }
     }
 
-    printHuffmanTree(ht);
     warn("Printing Result from highest_numbered_node");
-    printElement(result);
+    printElement(highest);
 
 
-    return result;
+    return highest;
 }
 
 void node_positioner(HuffmanTree* ht, Node* target){
-    Node* last = highest_numbered_node(ht, target->weight);
+    Node* last = highest_numbered_node(ht, target);
     char buffer[250];
 
     if(DEBUG) {
@@ -301,11 +288,11 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     sprintf(debug_buffer, "[add_new_element] Character is %02x", c & 0xff);
     debug(debug_buffer);
 
-    if(DEBUG){
+    /*if(DEBUG){
         char filename[200];
         sprintf(filename, "d-%d.dot", ht->elements);
         saveHuffmanTree(ht, filename);
-    }
+    }*/
 
 
     if(target != NULL){
@@ -380,8 +367,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         new_nyt->parent = old_nyt;
         new_char->parent = old_nyt;
 
-        ht->tree[new_nyt_position[0] * HA_DIM_X + new_nyt_position[1]] = new_nyt;
-        ht->tree[new_char_position[0] * HA_DIM_X + new_char_position[1]] = new_char;
+        ht->tree[new_nyt->node_number] = new_nyt;
+        ht->tree[new_char->node_number] = new_char;
 
         target = old_nyt;
     }
@@ -396,128 +383,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         node_positioner(ht, target);
     }
     return ht;
-
-
-//    if(target != NULL) {
-//        // Yep, go to the node (target = node)
-//        char string[50];
-//        sprintf(string, "Target = %p", target);
-//        debug(string);
-//        Node* last;
-//        int t = 0;
-//        last = last_of_weight(ht->root, target->weight, &t);
-//        //target->weight++;
-//        if(last != target && last != NULL) {
-//            swap_nodes(ht, target, last);
-//        }
-//
-//    } else {
-//        debug("Character not found");
-//        Node *old_nyt = ht->nyt;
-//        Node *new_nyt = createNYT(old_nyt->node_number - 2);
-//        Node *new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
-//
-//
-//        // Fix HT Array
-//        /*
-//         *       (1)               OLD NYT              --- OLD NYT LEVEL
-//         *  (N)      (C)    NEW NYT     NEW CHAR        --- NEW NYT LEVEL = NEW CHAR LEVEL = OLD NYT LEVEL + 1
-//         */
-//        int old_nyt_position = getNodePosition(ht, ht->nyt);
-//        // int old_nyt_level = getNodeLevel(ht->nyt);
-//
-//        // int new_nyt_level = old_nyt_level+1;
-//        int new_nyt_position = 2 * (old_nyt_position + 1) - 1;
-//        int new_char_position = new_nyt_position + 1;
-//
-//
-//        //printf("NNPOS: %d\n", new_nyt_position);
-//
-//        // OLD NYT becomes our new parent for the new NYT and the new element
-//        old_nyt->left = new_nyt;
-//        old_nyt->right = new_char;
-//        old_nyt->element = -1;
-//        old_nyt->weight = 1;
-//        new_nyt->parent = old_nyt;
-//
-//        ht->tree[old_nyt_position] = old_nyt;
-//        ht->tree[new_nyt_position] = new_nyt;
-//        ht->tree[new_char_position] = new_char;
-//
-//
-//        // Set the new NYT pointer
-//        ht->nyt = new_nyt;
-//
-//        if (ht->nyt == ht->root) {
-//            ht->root = old_nyt;
-//        }
-//
-//        if (ht->root->left != ht->nyt) {
-//            //ht->root->weight++;
-//        }
-//
-//        int size;
-//        Node **level_siblings = siblings(ht, getNodeLevel(old_nyt), &size);
-//        if (size != 0) {
-//            // Last = level_siblings[size-1]
-//
-//            Node *last = level_siblings[size - 1];
-//
-//            if (last != NULL) {
-//                printf("Level Siblings Size: %d\n", size);
-//                printf("Last sibling: %p\n", last);
-//                printf("Last sibling Element: %x\n", last->element);
-//                printf("Last Sibling: %d\n", last->node_number);
-//
-//                if (last != old_nyt) {
-//                    printf("We need to swap %d w/ %d\n", old_nyt->node_number, last->node_number);
-//                    swap_nodes(ht, old_nyt, last);
-//                }
-//            } else {
-//                printf("Last is null.\n");
-//            }
-//        }
-//
-//        free(level_siblings);
-//        target = old_nyt; // p = parent of the new symbol node
-//
-//        if (target == ht->root) {
-//            return ht;
-//        }
-//        target = target->parent;
-//        weights_increment(node, target);
-//    }
-//    /*
-//    while(target != ht->root) {
-//        Node *highest = highest_numbered_node(ht, target->weight);
-//        if(highest != target){
-//            swap_nodes(ht, target, highest);
-//        }
-//        target->weight++;
-//        target = target->parent;
-//    }
-//    /*if(target->parent == ht->nyt->parent){
-//        Node* highest = highest_numbered_node(ht, target->weight);
-//        if(highest != NULL){
-//            swap_nodes(ht, target, highest);
-//        }
-//        free(highest);
-//        target->weight++;
-//        target = target->parent;
-//    }
-//
-//    while(target != ht->root){
-//        Node* swap_target = highest_numbered_node(ht, target->weight);
-//
-//        if(swap_target != NULL){
-//            swap_nodes(ht, target, swap_target);
-//        }
-//
-//        target->weight++;
-//        target = target->parent;
-//    }
-//    */
-//    return ht;
 }
 
 Node* findNYT(Node* root){
@@ -627,14 +492,11 @@ HuffmanTree* createHuffmanTree(){
     ht->elements = 0;
 
     int i, k;
-    for(i = 0; i<HA_DIM_Y; i++){
-        for(k = 0; k<HA_DIM_X; k++) {
-            ht->tree[i * HA_DIM_X + k] = NULL;
-            //printf("%p", ht->tree[i]);
-        }
+    for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
+        ht->tree[i] = NULL;
     }
 
-    ht->tree[0] = ht->root;
+    ht->tree[511] = ht->root;
     return ht;
 }
 
@@ -663,7 +525,7 @@ void freeHuffman(HuffmanTree* ht){
 }
 
 void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, int level, int i, int index){
-    if(levelRoot == NULL){
+    /*if(levelRoot == NULL){
         return;
     }
 
@@ -704,7 +566,7 @@ void fillHTArrayFromTree(HuffmanTree* ht, Node* levelRoot, int originalLevel, in
             fillHTArrayFromTree(ht, levelRoot->left, originalLevel, level - 1, 1, 0);
             fillHTArrayFromTree(ht, levelRoot->right, originalLevel, level - 1, 1, 1);
         }
-    }
+    }*/
 }
 
 void generateHTArrayFromTree(HuffmanTree* ht){
@@ -787,8 +649,6 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     //int distance = pos1-pos2;
 
 
-    swap_on_diff_lvls(ht, node, node2);
-
     // Swap nodes w/ pointers (easy!)
 
     Node* parent1 = node->parent;
@@ -813,6 +673,10 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         // node2 is on the right of its parent
         parent2->right = node;
     }
+
+    // Swap Array
+    ht->tree[node2->node_number] = node;
+    ht->tree[node->node_number] = node2;
 
     // Fix Node Numbers
     int nn = node->node_number;
@@ -863,16 +727,21 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
 
 void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int lvl){
     //debug("[rebuilding_from_array] Starting rebuild");
-    if(iter == 0 && DEBUG){
+    /*if(iter == 0 && DEBUG){
         printf("\n\n");
     }
 
-    char debug_b[200];
-    sprintf(debug_b, "[rebuilding_from_array] Arguments: HT: %p, pos: %d, arr: %p, iter: %d, lvl: %d", ht, pos, arr, iter, lvl);
-    debug(debug_b);
+    int rel_pos = pos % HA_DIM_X;
 
-    int my_rel_pos = pos % HA_DIM_X;
-    sprintf(debug_b, "[rebuilding_from_array] my_rel_pos: %d, p2: %d", my_rel_pos, pos + HA_DIM_X + pos%HA_DIM_X);
+    char debug_b[200];
+    sprintf(debug_b, "[rebuilding_from_array] Arguments: HT: %p, pos: %d, arr: %p, iter: %d, lvl: %d, rel_pos: %d",
+            ht,
+            pos,
+            arr,
+            iter,
+            lvl,
+            rel_pos
+    );
     debug(debug_b);
 
     //printPartialArray(arr);
@@ -887,59 +756,12 @@ void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int l
     }
 
     ht->tree[pos] = arr[iter];
-    if(pos + HA_DIM_X + 0 + 1*pos%HA_DIM_X < HA_DIM_X * HA_DIM_Y && iter + HA_DIM_X + iter%HA_DIM_X + 0 < HA_DIM_X * HA_DIM_Y && arr[iter] != NULL) {
-        rebuilding_from_array(ht, pos + HA_DIM_X + 0 + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
-        rebuilding_from_array(ht, pos + HA_DIM_X + 1 + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
-    }
-}
-
-void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2){
-    debug("Swapping on different levels");
-    /*Node** arr = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);
-    Node** arr2 = malloc(sizeof(Node*) * HA_DIM_X * HA_DIM_Y);*/
-
-    Node** arr = calloc(HA_DIM_X * HA_DIM_Y, sizeof(Node*));
-    Node** arr2 = calloc(HA_DIM_X * HA_DIM_Y, sizeof(Node*));
-
-    int i, k;
-    for(i=0; i<HA_DIM_X; i++){
-        for(k=0; k<HA_DIM_Y; k++){
-            arr[i * HA_DIM_X + k] = NULL;
-            arr2[i * HA_DIM_X + k] = NULL;
-        }
-    }
-
-    int* pos;
-    int* pos2;
-    pos = getNodePosition(ht, node);
-    pos2 = getNodePosition(ht, node2);
-    printf("pos: [%d][%d]\n", pos[0], pos[1]);
-    printf("pos2: [%d][%d]\n", pos2[0], pos2[1]);
-
-    int nullpos[2] = {0, 0};
-
-    printHuffmanTree(ht);
-    printHuffmanArray(ht);
-
-    debug("[swap_on_diff_lvls] Creating arr");
-    create_subtree_from_node(ht, node, arr, nullpos);
-    debug("[swap_on_diff_lvls] End arr creation");
-    printNodeArray(arr);
-
-    debug("[swap_on_diff_lvls] Creating arr2");
-    create_subtree_from_node(ht, node2, arr2, nullpos);
-    debug("[swap_on_diff_lvls] End arr2 creation");
-    printNodeArray(arr2);
-
-    rebuilding_from_array(ht, pos2[0] * HA_DIM_X + pos2[1], arr, 0, pos[0]-pos2[0]);
-    rebuilding_from_array(ht, pos[0] * HA_DIM_X + pos[1], arr2, 0, pos[0]-pos2[0]);
-
-    free(pos);
-    free(pos2);
-    free(arr);
-    free(arr2);
-
-    //exit(2); // TODO: REMOVE!
+    if(pos + HA_DIM_X + 0 + 1*pos%HA_DIM_X < HA_DIM_X * HA_DIM_Y && iter + HA_DIM_X + iter%HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y &&
+            arr[iter] != NULL
+            ) {
+        rebuilding_from_array(ht, pos + HA_DIM_X + pos%HA_DIM_X,  arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
+        rebuilding_from_array(ht, pos + HA_DIM_X + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
+    }*/
 }
 
 
@@ -959,23 +781,6 @@ int calculate_weight(Node* node){
     return res+res2;
 }
 */
-
-void* siblings(HuffmanTree* ht, int level, int* size){
-    // Slice of ht->array from 2^(level) - 1 to 2^(level+1)-2
-    // Size = 2^(level)
-    int array_size = (int) pow(2,level);
-    *size = array_size;
-
-    Node **siblings = malloc(sizeof(Node) * HA_DIM_Y);
-    int i;
-
-    for(i=0; i<HA_DIM_X; i++){
-        if(ht->tree[level * HA_DIM_X + i] != NULL)
-        siblings[i] = ht->tree[level * HA_DIM_X + i];
-    }
-
-    return siblings;
-}
 
 /*
 void update_numbers(HuffmanTree* ht){

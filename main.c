@@ -104,107 +104,6 @@ static char* test_simple_swap(){
     return 0;
 }
 
-static char * test_create_ht_array(){
-    mu_tag("Create Huffman Tree Array");
-    HuffmanTree* ht = createHuffmanTree();
-
-    // Step 1
-    mu_assert("HT.TREE[0][0] doesn't exist", ht->tree[0] != NULL);
-    mu_assert("HT.TREE[0][0] doesn't have NN 511", ht->tree[0]->node_number == 511);
-    mu_assert("HT.TREE[0][0] has a parent", ht->tree[0]->parent == NULL);
-    mu_assert("HT.TREE[0][0] isn't the NYT", isNYT(ht->tree[0]));
-
-    mu_assert("HT.TREE[0] is not NYT / Root", ht->tree[0] == ht->nyt && ht->tree[0] == ht->root);
-    add_new_element(ht, 'A');
-
-    // Step 2
-    mu_assert("HT.TREE[0][0] doesn't exist", ht->tree[0] != NULL);
-    mu_assert("HT.TREE[0][0] doesn't have weight 1", ht->tree[0]->weight == 1);
-    mu_assert("HT.TREE[0][0] doesn't have NN 511", ht->tree[0]->node_number == 511);
-    mu_assert("HT.TREE[0][0] has a parent", ht->tree[0]->parent == NULL);
-
-
-    mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1 * HA_DIM_X + 0] != NULL);
-    mu_assert("HT.TREE[1][0] is not the NYT", isNYT(ht->tree[1 * HA_DIM_X + 0]));
-    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1 * HA_DIM_X + 0]->node_number == 509);
-
-    mu_assert("HT.TREE[1][1] doesn't exist", ht->tree[1 * HA_DIM_X + 1] != NULL);
-    mu_assert("HT.TREE[1][1] is not 'A'", ht->tree[1 * HA_DIM_X + 1]->element == 'A');
-    mu_assert("HT.TREE[1][1] doesn't have weight 1", ht->tree[1 * HA_DIM_X + 1]->weight == 1);
-    mu_assert("HT.TREE[1][1] doesn't have NN 510", ht->tree[1 * HA_DIM_X + 1]->node_number == 510);
-
-    add_new_element(ht, 'B');
-    printHuffmanTree(ht);
-
-    // Step 3
-    mu_assert("HT.TREE[0][0] does not exist", ht->tree[0 * HA_DIM_X + 0] != NULL);
-    mu_assert("HT.TREE[0][0] element is not -1", ht->tree[0 * HA_DIM_X + 0]->element == -1);
-    mu_assert("HT.TREE[0][0] weight is not 2", ht->tree[0 * HA_DIM_X + 0]->weight == 2);
-    mu_assert("HT.TREE[0][0] NN is not 511", ht->tree[0 * HA_DIM_X + 0]->node_number == 511);
-
-    mu_assert("HT.TREE[1][0] doesn't exist", ht->tree[1 * HA_DIM_X + 0] != NULL);
-    mu_assert("HT.TREE[1][0] is the NYT", !isNYT(ht->tree[1 * HA_DIM_X + 0]));
-    mu_assert("HT.TREE[1][0] is not an internal node", isInternalNode(ht->tree[1 * HA_DIM_X + 0]));
-    mu_assert("HT.TREE[1][0] doesn't have NN 509", ht->tree[1 * HA_DIM_X + 0]->node_number == 509);
-
-    mu_assert("HT.TREE[1][1] doesn't exist", ht->tree[1 * HA_DIM_X + 1] != NULL);
-    mu_assert("HT.TREE[1][1] is the NYT", !isNYT(ht->tree[1 * HA_DIM_X + 1]));
-    mu_assert("HT.TREE[1][1] is an internal node", !isInternalNode(ht->tree[1 * HA_DIM_X + 1]));
-    mu_assert("HT.TREE[1][1] doesn't have weight == 1", ht->tree[1 * HA_DIM_X + 1]->weight == 1);
-    mu_assert("HT.TREE[1][1] isn't the letter 'A'", ht->tree[1 * HA_DIM_X + 1]->weight == 1);
-
-
-    mu_assert("HT.TREE[2][0] doesn't exist", ht->tree[2 * HA_DIM_X + 0] != NULL);
-    mu_assert("HT.TREE[2][0] is not the NYT", isNYT(ht->tree[2 * HA_DIM_X + 0]));
-
-    mu_assert("HT.TREE[2][1] doesn't exist", ht->tree[2 * HA_DIM_X + 1] != NULL);
-    mu_assert("HT.TREE[2][1] is the NYT", !isNYT(ht->tree[2 * HA_DIM_X + 1]));
-    mu_assert("HT.TREE[2][1] is not NN 508", ht->tree[2 * HA_DIM_X + 1]->node_number == 508);
-
-
-    //printf("%p, NN: %d", ht->tree[1], ht->tree[1]->node_number);
-
-
-    if(ht->tree[0]->left != ht->tree[1 * HA_DIM_X + 0]){
-        printf("HT.TREE[0] (%s) doesn't have HT.TREE[1] (%s) on its left\n", getElement(ht->tree[0]), getElement(ht->tree[1 * HA_DIM_X + 0]));
-    }
-
-    if(ht->tree[0]->right != ht->tree[1 * HA_DIM_X + 1]){
-        printf("HT.TREE[0][0] (%s) doesn't have HT.TREE[1][1] (%s) on its right\n", getElement(ht->tree[0]), getElement(ht->tree[1 * HA_DIM_X + 1]));
-    }
-
-
-
-
-
-    mu_assert("HT.TREE[0][0] doesn't have HT.TREE[1][0] on its left", ht->tree[0]->left == ht->tree[1 * HA_DIM_X + 0]);
-    mu_assert("HT.TREE[0][0] doesn't have HT.TREE[1][1] on its right", ht->tree[0]->right == ht->tree[1 * HA_DIM_X + 1]);
-
-    /*mu_assert("HT.TREE[1] doesn't exist", ht->tree[1] != NULL);
-    mu_assert("HT.TREE[1] doesn't have NN 509", ht->tree[1]->node_number == 509);
-    mu_assert("HT.TREE[1] doesn't have weight 1", ht->tree[1]->weight == 1);
-    mu_assert("HT.TREE[1] left is not null", ht->tree[1]->left == NULL);
-    mu_assert("HT.TREE[1] right is not null", ht->tree[1]->right == NULL);
-
-    mu_assert("HT.TREE[2] doesn't exist", ht->tree[2] != NULL);
-    mu_assert("HT.TREE[2] doesn't have NN 509", ht->tree[2]->node_number == 510);
-    mu_assert("HT.TREE[2] doesn't have weight 1", ht->tree[2]->weight == 1);
-    mu_assert("HT.TREE[2] left is not ht->tree[5]", ht->tree[2]->left == ht->tree[5]);
-    mu_assert("HT.TREE[2] right is not ht->tree[6]", ht->tree[2]->right == ht->tree[6]);
-
-
-    mu_assert("HT.TREE[2] left is NULL", ht->tree[2]->left != NULL);
-    mu_assert("HT.TREE[2] right is NULL", ht->tree[2]->right != NULL);
-    mu_assert("HT.TREE[2] left is not the NYT", isNYT(ht->tree[2]->left));
-    mu_assert("HT.TREE[2] left doesn't have NN 507", ht->tree[2]->left->node_number == 507);
-    mu_assert("HT.TREE[2] right doesn't have NN 508", ht->tree[2]->right->node_number == 508);
-    mu_assert("HT.TREE[2] right doesn't have weight 1", ht->tree[2]->right->weight == 1);
-     */
-
-
-    freeHuffman(ht);
-    return 0;
-}
 
 static char * test_huffman_coding(){
     mu_tag("Huffman Coding");
@@ -504,20 +403,12 @@ static char* test_swap_nodes(){
     mu_assert("Root -> Right -> Left is incorrect", ht->root->right->left == first.left);
     mu_assert("Root -> Right -> Right is incorrect", ht->root->right->right == first.right);
 
-    mu_assert("ht[1][0] (Root -> Left) does not exist", ht->tree[1 * HA_DIM_X + 0] != NULL);
-    mu_assert("ht[1][0] (Root -> Left) is incorrect", ht->tree[1 * HA_DIM_X + 0] == second_p);
-    mu_assert("ht[1][1] (Root -> Right) doesn't exist", ht->tree[1 * HA_DIM_X + 1] != NULL);
-    mu_assert("ht[1][1] (Root -> Right) is incorrect", ht->tree[1 * HA_DIM_X + 1] == first_p);
     saveHuffmanTree(ht, "./test/results/t_sn_2.dot");
 
     // Test swap back
 
     debug("Swap: 2/3");
     swap_nodes(ht, ht->root->left, ht->root->right);
-    mu_assert("ht[1][0] (Root -> Left) does not exist", ht->tree[1 * HA_DIM_X + 0] != NULL);
-    mu_assert("ht[1][0] (Root -> Left) is incorrect", ht->tree[1 * HA_DIM_X + 0] == first_p);
-    mu_assert("ht[1][1] (Root -> Right) doesn't exist", ht->tree[1 * HA_DIM_X + 1] != NULL);
-    mu_assert("ht[1][1] (Root -> Right) is incorrect", ht->tree[1 * HA_DIM_X + 1] == second_p);
     saveHuffmanTree(ht, "./test/results/t_sn_3.dot");
 
 
@@ -565,36 +456,6 @@ static char* test_utility_get_node_position(){
     node_position = getNodePosition(ht, ht->root->right);
     mu_assert("Root -> Right isn't at position 2 (0-based index)", node_position[0] == 1 && node_position[1] == 1);
     freeHuffman(ht);
-    return 0;
-}
-
-static char* test_utility_siblings(){
-    mu_tag("Utility Siblings");
-    HuffmanTree* ht = createHuffmanTree();
-    add_new_element(ht, 'A');
-
-    int sibling_size;
-    Node** node_siblings = siblings(ht, 1, &sibling_size);
-    /*
-    int i;
-    for(i=0; i<sibling_size; i++){
-        Node s_el = *node_siblings[i];
-        printf("Sibling Node: %d\n", s_el.node_number);
-    }*/
-    mu_assert("Sibling Size is not 2", sibling_size == 2);
-
-    mu_assert("Sibling 1 is NULL", node_siblings[0] != NULL);
-    mu_assert("Sibling 1 is not NN 509", node_siblings[0]->node_number == 509);
-    mu_assert("Sibling 1 is not the NYT", isNYT(node_siblings[0]));
-
-    mu_assert("Sibling 2 is NULL", node_siblings[1] != NULL);
-    mu_assert("Sibling 2 is not NN 510", node_siblings[1]->node_number == 510);
-    mu_assert("Sibling 2 is not 'A'", node_siblings[1]->element == 'A');
-
-    free(node_siblings);
-    freeHuffman(ht);
-
-    //mu_assert("", ht->)
     return 0;
 }
 
@@ -783,7 +644,7 @@ static char* test_bin2byte2(){
     return 0;
 }
 
-char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
+char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i){
     if(root == NULL){
         return NULL;
     }
@@ -792,7 +653,7 @@ char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
     printf("[test_check_recurse_ht] Arguments: i: %d \t Node: %-10s\n", i, element);
     free(element);
 
-    if(ht->tree[i] != root){
+    if(ht->tree[root->node_number] != root){
         printHuffmanTree(ht);
         printHuffmanArray(ht);
         printf("[test_check_recurse_ht] Fail.\n");
@@ -800,13 +661,11 @@ char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
     }
 
     if(root->left != NULL){
-        char* result = calloc(200, sizeof(char));
-        test_check_recurse_ht(ht, root->left, i + HA_DIM_X + 0 + 1*i%HA_DIM_X, result);
+        test_check_recurse_ht(ht, root->left, i + HA_DIM_X + 0 + 1*i%HA_DIM_X);
     }
 
     if(root->right != NULL){
-        char* result = calloc(200, sizeof(char));
-        test_check_recurse_ht(ht, root->right, i + HA_DIM_X + 1 + 1*i%HA_DIM_X, result);
+        test_check_recurse_ht(ht, root->right, i + HA_DIM_X + 1 + 1*i%HA_DIM_X);
     }
 
     return 0;
@@ -815,10 +674,8 @@ char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i, char* string){
 char * test_check_ht_array(HuffmanTree* ht){
     // Checks that the ht tree is equal to the ht array
     char* result = calloc(200, sizeof(char));
-    test_check_recurse_ht(ht, ht->root, 0, result);
+    test_check_recurse_ht(ht, ht->root, 0);
     printf("[test_check_ht_array] OK.\n");
-    debug(result);
-    free(result);
 
     return 0;
 }
@@ -1064,18 +921,17 @@ static char * test_huffman_coding_bookkeeper(){
 static char * all_tests(){
     mu_run_test(test_debug);
 
-    mu_run_test(test_swap_ht_array);
+    //mu_run_test(test_swap_ht_array);
 
     mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
     mu_run_test(test_huffman_coding_foobar);
-    mu_run_test(test_huffman_coding_foobar2000);
+    //mu_run_test(test_huffman_coding_foobar2000);
     //mu_run_test(test_huffman_coding_loremipsum);
 
     mu_run_test(test_get_level);
     mu_run_test(test_get_node_level);
-    mu_run_test(test_create_ht_array);
     mu_run_test(test_simple_swap);
     mu_run_test(test_swap_nodes);
     mu_run_test(test_node_path);
