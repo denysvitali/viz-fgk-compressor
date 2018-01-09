@@ -673,7 +673,6 @@ char * test_check_recurse_ht(HuffmanTree* ht, Node* root, int i){
 
 char * test_check_ht_array(HuffmanTree* ht){
     // Checks that the ht tree is equal to the ht array
-    char* result = calloc(200, sizeof(char));
     test_check_recurse_ht(ht, ht->root, 0);
     printf("[test_check_ht_array] OK.\n");
 
@@ -1172,7 +1171,16 @@ int main(int argc, char *argv[]) {
             size_t read = fread(buffer, 1, buffer_size, fh);
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
-                fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+                if(ht->output_length != 0) {
+                    debug("Output is not 0, adding bytes to file content");
+                    printf("Adding %d bytes:\n", ht->output_length);
+                    for(int k=0; k<ht->output_length; k++){
+                        printf("%02x ", ht->output[k] & 0xff);
+                    }
+                    printf("\n");
+                    fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+                    ht->output_length = 0;
+                }
             }
         }
 
@@ -1373,7 +1381,7 @@ int main(int argc, char *argv[]) {
             read_size = fread(read_buffer,sizeof(char), 4096, fh);
 
             debug("Read ok");
-            printf("Read size: %d\n", read_size);
+            printf("Read size: %ld\n", read_size);
             printf("%s\n", read_buffer);
 
             for(i=0; i<read_size; i++){

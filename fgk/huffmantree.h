@@ -10,6 +10,8 @@
 #define HA_DIM_X HUFFMAN_SYMBOLS
 #define HA_DIM_Y HUFFMAN_ARRAY_SIZE
 
+#define H_DECODER_FLAG_NEXT_IS_BYTE 1
+
 typedef struct Node {
     int node_number;
     int weight;
@@ -29,6 +31,7 @@ typedef struct{
     int output_length;
     int partial_output_length;
     int elements;
+    int decoder_flags;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);

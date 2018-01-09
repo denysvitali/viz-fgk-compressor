@@ -69,8 +69,7 @@ void printNodeArray(Node** array){
         return;
     }
 
-    int seen = 0;
-    int i, k;
+    int i;
     for(i=0; i<HUFFMAN_ARRAY_SIZE; i++){
         printElement(array[i]);
         printf(",");
@@ -88,7 +87,7 @@ void printHuffmanArray(HuffmanTree* ht){
 }
 
 char* getTree(Node* root, int level) {
-    char* string = calloc(sizeof(char), 4096*1024);
+    char* string = calloc(sizeof(char), 5*4096*1024);
 
     /* Expected output
      *
