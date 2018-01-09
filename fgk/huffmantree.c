@@ -437,6 +437,8 @@ void decode_byte(HuffmanTree* ht, char byte){
                 }
                 strcat(temp, bits);
 
+                printf("[decode_byte] Temp is %s\n", temp);
+
                 char* byte = calloc(8, sizeof(char));
                 strncpy(byte, temp, 8);
 
@@ -462,6 +464,8 @@ void decode_byte(HuffmanTree* ht, char byte){
             }
         }
 
+        i-=1;
+
         strncpy(ht->partial_output, result + i * sizeof(char), (size_t) 8 - i);
         ht->partial_output_length = 8-i;
         if(isNYT(node)){
@@ -469,6 +473,8 @@ void decode_byte(HuffmanTree* ht, char byte){
             // Next 8 bits are the character.
             ht->decoder_flags |= H_DECODER_FLAG_NEXT_IS_BYTE;
         }
+
+        printf("[decode_byte] Partial output is now: %s\n", ht->partial_output);
     }
     ht->elements++;
 }
