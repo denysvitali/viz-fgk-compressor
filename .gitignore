@@ -46,7 +46,7 @@
 *.massif
 
 # Callgrind output
-callgrind*
+/callgrind*
 *.callgrind
 
 # Memcheck Output
