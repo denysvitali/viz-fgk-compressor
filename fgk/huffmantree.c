@@ -281,6 +281,23 @@ void huffman_append_partial_new_element(HuffmanTree* ht, char* nyt_path, char el
     }
 }
 
+void partial_output_clear_byte(HuffmanTree* ht){
+    if(ht == NULL){
+        return;
+    }
+
+    if(ht->partial_output_length <8){
+        return;
+    }
+
+    char* new_partial_output = malloc(sizeof(ht->partial_output));
+    char* old_partial_output = ht->partial_output;
+    strcat(new_partial_output, ht->partial_output + 8 * sizeof(char));
+    ht->partial_output = new_partial_output;
+    ht->partial_output_length -= 8;
+    free(old_partial_output);
+}
+
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* node = ht->root;
     Node* target = find_node(node, c);
@@ -426,10 +443,12 @@ void decode_byte(HuffmanTree* ht, char byte){
             char* newbits = byte2bit(byte);
             char finalbyte[9];
             strcat(finalbyte, ht->partial_output);
-            strncat(finalbyte, newbits, remaining_bits);
+            strncat(finalbyte, newbits, (size_t) remaining_bits);
             int* length = malloc(sizeof(int));
             char* finalbyte_byte = bin2byte(finalbyte, length);
-            printf("[decode_byte] finalbyte: %s (%02x)\n", finalbyte, finalbyte_byte[0]);
+            printf("[decode_byte] finalbyte: %s (0x%02x)\n", finalbyte, finalbyte_byte[0]);
+            add_new_element(ht, finalbyte_byte[0]);
+            partial_output_clear_byte(ht);
         }
 
         char* result = byte2bit(byte);
