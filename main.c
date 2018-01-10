@@ -829,6 +829,7 @@ char * test_read_file(){
     //printf("Result is : %s\n", result);
     mu_assert("File content isn't 'Test\\n'", strncmp(result, "Test\n", 5) == 0);
     free(result);
+    free(error);
     return 0;
 }
 
@@ -1367,11 +1368,15 @@ int main(int argc, char *argv[]) {
 
         int end = 0;
         char read_buffer[4096];
+        char write_buffer[4096];
         //fseek(fh, header_size, SEEK_SET);
         size_t read_size = 0;
 
         HuffmanTree* ht = createHuffmanTree();
         ht->mode = H_MODE_DECOMPRESSOR;
+
+        int k;
+        int written_bytes = 0;
 
         while(!end){
             if(ferror(fh)){
@@ -1393,9 +1398,12 @@ int main(int argc, char *argv[]) {
                 }
                 printf("%02X ",read_buffer[i] & 0xff);*/
                 decode_byte(ht, read_buffer[i]);
-
+                for(k=0; k < ht->output_length; k++){
+                    write_buffer[written_bytes] = ht->output[k];
+                }
             }
             printf("\n");
+            fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
 
 
             if(read_size == 0){
