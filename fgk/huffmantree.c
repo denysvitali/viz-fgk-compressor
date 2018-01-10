@@ -23,8 +23,9 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
         }
     }
 
-    warn("Printing Result from highest_numbered_node");
-    printElement(highest);
+    if(DEBUG) {
+        printElement(highest);
+    }
 
 
     return highest;
@@ -409,7 +410,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
 void decode_byte(HuffmanTree* ht, char byte){
     char debug_buffer[50];
-    sprintf(debug_buffer, "Decoding %02x", byte & 0xff);
+    sprintf(debug_buffer, "[decode_byte] Decoding %02x", byte & 0xff);
     debug(debug_buffer);
 
     if(ht->elements == 0){
@@ -418,8 +419,17 @@ void decode_byte(HuffmanTree* ht, char byte){
     } else {
 
         if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0){
-            debug("Parsing the new character...");
+            debug("[decode_byte] Parsing the new character...");
             ht->decoder_flags ^= H_DECODER_FLAG_NEXT_IS_BYTE;
+            printf("[decode_byte] ht->partial_output: %s\n", ht->partial_output);
+            int remaining_bits = 8 - ht->partial_output_length;
+            char* newbits = byte2bit(byte);
+            char finalbyte[9];
+            strcat(finalbyte, ht->partial_output);
+            strncat(finalbyte, newbits, remaining_bits);
+            int* length = malloc(sizeof(int));
+            char* finalbyte_byte = bin2byte(finalbyte, length);
+            printf("[decode_byte] finalbyte: %s (%02x)\n", finalbyte, finalbyte_byte[0]);
         }
 
         char* result = byte2bit(byte);
@@ -464,7 +474,7 @@ void decode_byte(HuffmanTree* ht, char byte){
             }
         }
 
-        i-=1;
+        //i-=1;
 
         strncpy(ht->partial_output, result + i * sizeof(char), (size_t) 8 - i);
         ht->partial_output_length = 8-i;
