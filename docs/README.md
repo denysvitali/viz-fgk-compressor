@@ -1,6 +1,6 @@
-#2 - Struttura del codice sorgente
+# Struttura del codice sorgente
 
-##2.1 - Suddivisione dei file
+## Suddivisione dei file
   
 La scelta che è stata fatta per la suddivisione dei file è stata quella di avere:
 * 1 file per la definizione della licenza: LICENSE
@@ -9,37 +9,38 @@ La scelta che è stata fatta per la suddivisione dei file è stata quella di ave
 * 3 file per la gestione della stampa e lo stile di essa: colors.h e console.h/c
 * 5 file per codifica e decodifica di Huffman Adattivo: huffman.h/c, main.c, utilities.h/c
 
-##2.2 - Scopo di ognuno
-###2.2.1 - LICENSE
+## Scopo di ogni file
+### LICENSE
 
 *LICENSE* è un file di testo nel quale viene semplicemente definita la licenza del software.
 
-###2.2.2 - minunit.h
+### minunit.h
 
-*minunit.h* è un header file contenente le definizioni di 3 funzioni quali:
+*minunit.h* è un minimal unit testing framework basato su [MinUnit](http://www.jera.com/techinfo/jtns/jtn002.html). Si differenzia dall'originale semplicemente per l'integrazione di tags per i test.  
+Il file contiene le seguenti funzioni:
 * mu_assert
 * mu_run_test
 * mu_tag 
 
-che sono ripettivamente le funzioni di messaggio, esecuzione e etichetta dei test.
+che sono ripettivamente le funzioni di messaggio, esecuzione ed etichettamento dei test.
 
-###2.2.3 - Makefile
+### Makefile
 *Makefile* è un file necessario per semplificare la compilazione del codice.
 
-###2.2.4 - defines.h
-*defines.h* è un header file contenente vari flags necessari alla compilazione del codice.
+### defines.h
+*defines.h* è un header file contenente vari flags necessari alla compilazione del codice quali DEBUG / TEST / RELEASE mode, versione, fallback per commit versioning. Sono inoltre presenti scelte arbitrarie di progetto (come il NYT number ed il Magic Number).
 
-###2.2.5 - colors.h
+### colors.h
 *colors.h* è un header file che definisce stile e colori da utilizzare nella stampa.
 
-###2.2.6 - console.h/c
+### console.{c,h}
 *colors.h* e *colors.c* sono rispettivamente header file e file di codice contenenti definizioni delle funzioni di stampa a video presenti nel codice.
 
-###2.2.7 - huffman.h/c
+### huffman.{c,h}
 *huffman.h* e *huffman.c* sono rispettivamente header file e file di codice contenenti definizioni delle funzione atte alla gestione dell'albero presente nell'algoritmo.
 
-###2.2.7 - main.c
+### main.c
 *main.c* è il file principale dove sono definite e implementate le funzioni contenenti le operazioni quali lettura e scrittura su file.
 
-###2.2.8 - utilities.h/c
+### utilities.{c,h}
 *utilities.h* e *utilities.c* sono rispettivamente header file e file di codice contenenti funzioni di varia utilità utilizzate nel progetto.
