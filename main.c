@@ -1244,7 +1244,6 @@ int main(int argc, char *argv[]) {
 
             debug("Read ok");
             printf("Read size: %ld\n", read_size);
-            printf("%s\n", read_buffer);
 
             for(i=0; i<read_size; i++){
                 /*if(i%16 == 0){
@@ -1254,9 +1253,16 @@ int main(int argc, char *argv[]) {
                 }
                 printf("%02X ",read_buffer[i] & 0xff);*/
                 decode_byte(ht, read_buffer[i]);
+
+                int wb = 0;
                 for(k=0; k < ht->output_length; k++){
-                    write_buffer[written_bytes] = ht->output[k];
+                    write_buffer[written_bytes + k] = ht->output[k];
+                    wb++;
                 }
+                written_bytes += wb;
+                free(ht->output);
+                ht->output = calloc(256, sizeof(char));
+                ht->output_length = 0;
             }
             printf("\n");
             fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
