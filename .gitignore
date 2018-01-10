@@ -66,3 +66,5 @@ callgrind*
 
 # Temporary Files
 *.tmp
+
+/fitnessgram.txt
