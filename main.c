@@ -438,27 +438,6 @@ static char* test_swap_nodes(){
     return 0;
 }
 
-static char* test_utility_get_node_position(){
-    // Test getNodeLevel && getNodePosition on an empty HT
-    mu_tag("Get Node Position")
-    HuffmanTree* ht = createHuffmanTree();
-    mu_assert("NYT node level is not 0", getNodeLevel(ht->nyt) == 0);
-    mu_assert("NYT node is not at position 0", getNodePosition(ht, ht->nyt) == 0);
-
-    // Test getNodeLevel && getNodePosition on a 3 element HT
-    add_new_element(ht, 'A');
-    // getNodeLevel tests
-    mu_assert("A is not at Node Level 1", getNodeLevel(ht->root->right) == 1);
-    mu_assert("NYT is not at Node Level 1", getNodeLevel(ht->nyt) == 1);
-    // getNodePosition tests
-    int* node_position = getNodePosition(ht, ht->nyt);
-    mu_assert("NYT isn't at position 1 (Root->Left, 0-based index)", node_position[0] == 1 && node_position[1] == 0);
-    node_position = getNodePosition(ht, ht->root->right);
-    mu_assert("Root -> Right isn't at position 2 (0-based index)", node_position[0] == 1 && node_position[1] == 1);
-    freeHuffman(ht);
-    return 0;
-}
-
 static char* test_get_node_level(){
     HuffmanTree* ht = createHuffmanTree();
     freeHuffman(ht);
@@ -547,9 +526,9 @@ static char* test_bin2byte(){
         result = bin2byte(tests[i], length);
         sprintf(result_string, "%02X", result[0] & 0xff);
         mu_assert("Length is not 1", *length == 1);
-        char error_string[20];
+        char error_string[50];
 
-        int test_result = strncmp(result_string, expected_results[i], sizeof(expected_results[i]));
+        int test_result = strncmp(result_string, expected_results[i], strlen(expected_results[i]));
         if(test_result != 0){
             sprintf(error_string, "Result is not \"%s\" - was \"%s\"", expected_results[i], result_string);
             printf("%s\n", error_string);
@@ -628,9 +607,9 @@ static char* test_bin2byte2(){
         result = bin2byte(tests[i], length);
         sprintf(result_string, "%02X%02X", result[1] & 0xff, result[0] & 0xff);
         mu_assert("Length is not 2", *length == 2);
-        char error_string[20];
+        char error_string[50];
 
-        int test_result = strncmp(result_string, expected_results[i], sizeof(expected_results[i]));
+        int test_result = strncmp(result_string, expected_results[i], strlen(expected_results[i]));
         if(test_result != 0){
             sprintf(error_string, "Result is not \"%s\" - was \"%s\"", expected_results[i], result_string);
             printf("%s\n", error_string);
@@ -759,14 +738,6 @@ static char* test_huffman_coding_aardvark(){
 
 static char* test_huffman_coding_foobar(){
     return test_huffman_coding_general("foobar");
-}
-
-static char* test_huffman_coding_foobar2000(){
-    return test_huffman_coding_general("foobar2000");
-}
-
-static char* test_huffman_coding_loremipsum(){
-    return test_huffman_coding_general("lorem ipsum dolor sit amet");
 }
 
 static char * test_filename(){
@@ -957,9 +928,6 @@ static char * all_tests(){
     mu_run_test(test_read_file);
     mu_run_test(test_file_delete);
 
-
-    //mu_run_test(test_utility_get_node_position);
-	//mu_run_test(test_add_weight_to_element);
 	return 0;
 }
 #endif
@@ -1173,12 +1141,14 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 if(ht->output_length != 0) {
-                    debug("Output is not 0, adding bytes to file content");
-                    printf("Adding %d bytes:\n", ht->output_length);
-                    for(int k=0; k<ht->output_length; k++){
-                        printf("%02x ", ht->output[k] & 0xff);
+                    if(DEBUG) {
+                        debug("Output is not 0, adding bytes to file content");
+                        printf("Adding %d bytes:\n", ht->output_length);
+                        for (int k = 0; k < ht->output_length; k++) {
+                            printf("%02x ", ht->output[k] & 0xff);
+                        }
+                        printf("\n");
                     }
-                    printf("\n");
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
                 }
