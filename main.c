@@ -731,7 +731,7 @@ static char* test_huffman_coding_general(char* string){
     }
     char* resulting_tree = getTree(ht->root, 0);
 
-    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, length) == 0);
+    mu_assert("Invalid HT", strncmp(buffer, resulting_tree, strlen(resulting_tree)) == 0);
     free(resulting_tree);
     free(buffer);
     freeHuffman(ht);
