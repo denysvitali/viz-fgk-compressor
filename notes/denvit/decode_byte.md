@@ -17,7 +17,7 @@
 
 ### Bitstream
 <div style="width: 1em; height: 1em; background-color: #8e44ad; display:inline-block;"></div> <span style="color: #8e44ad">Node path</span>  
-<br>
+<br/>
 <div style="width: 1em; height: 1em; background-color: #27ae60; display:inline-block;"></div> <span style="color: #27ae60">Element</span>  
 <br>
 <br>
