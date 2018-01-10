@@ -15,6 +15,9 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
     int i;
 
     Node* highest = node;
+    if(node == NULL){
+        return NULL;
+    }
     for(i=node->node_number+1; i<HUFFMAN_ARRAY_SIZE; i++){
         if(ht->tree[i] != NULL){
             if(ht->tree[i]->weight == node->weight){
@@ -32,12 +35,15 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
 }
 
 void node_positioner(HuffmanTree* ht, Node* target){
+    if(target == NULL){
+        return;
+    }
     Node* last = highest_numbered_node(ht, target);
     char buffer[250];
 
     if(DEBUG) {
         char *element1 = getElement(last);
-        sprintf(buffer, "Highest numbered node (aka LAST): %s", element1);
+        sprintf(buffer, "Highest numbered node (aka LAST w/ weight %d): %s", last->weight,  element1);
         debug(buffer);
 
         if (element1 != NULL) {
@@ -421,6 +427,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         sprintf(dbg, "[add_new_element] TARGET: %s", element);
         free(element);
         debug(dbg);
+        if(target == NULL || target->parent == NULL){
+            return NULL;
+        }
         target = target->parent;
         node_positioner(ht, target);
     }

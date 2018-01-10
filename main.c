@@ -1376,7 +1376,7 @@ int main(int argc, char *argv[]) {
         while(!end){
             if(ferror(fh)){
                 error("Input file error!");
-                exit(2);
+                exit(3);
             }
 
             read_size = fread(read_buffer,sizeof(char), 4096, fh);
