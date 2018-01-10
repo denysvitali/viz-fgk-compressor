@@ -4,11 +4,7 @@
 #endif //ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
 
 #define HUFFMAN_SYMBOLS 257
-#define HUFFMAN_TOTAL_NODES ((2*HUFFMAN_SYMBOLS)-1)
-#define HUFFMAN_ARRAY_SIZE 512
-
-#define HA_DIM_X HUFFMAN_SYMBOLS
-#define HA_DIM_Y HUFFMAN_ARRAY_SIZE
+#define HUFFMAN_ARRAY_SIZE 514 + 1
 
 #define H_DECODER_FLAG_NEXT_IS_BYTE 1
 
@@ -27,7 +23,7 @@ typedef struct Node {
 
 typedef struct{
     Node* root;
-    Node* tree[HUFFMAN_TOTAL_NODES]; // 512
+    Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
     Node* nyt;
     char* output;
     char* partial_output;

@@ -360,35 +360,6 @@ char* byte2bit(char b){
     return result;
 }
 
-void printPartialArray(Node** arr){
-    if(!DEBUG){
-        return;
-    }
-    warn("Printing partial array!");
-    int i, k;
-    int elements = 0;
-    for(i=0; i<HA_DIM_Y; i++){
-        for(k=0; k<HA_DIM_X; k++){
-            if(arr[i*HA_DIM_X + k] != NULL){
-                char* string = getElement(arr[i * HA_DIM_X + k]);
-                printf("%s,", string);
-                free(string);
-                elements++;
-            } else {
-                printf(".,");
-            }
-        }
-
-        if(elements==0){
-            break;
-        } else {
-            elements = 0;
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
 char* get_filename(char* string){
     int i;
     long length = strlen(string);

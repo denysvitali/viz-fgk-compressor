@@ -390,6 +390,14 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         ht->elements++;
         debug("[add_new_element] NS");
         Node* old_nyt = ht->nyt;
+
+        if(old_nyt != NULL && old_nyt->node_number == 1){
+            saveHuffmanTree(ht, "wtf");
+            exit(50);
+        }
+
+        printf("OLD NYT: %s\n", getElement(old_nyt)); //TODO: Remove me
+
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
@@ -633,7 +641,7 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
 
 HuffmanTree* createHuffmanTree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(HUFFMAN_TOTAL_NODES-2);
+    Node* tmp_nyt = createNYT(HUFFMAN_ARRAY_SIZE - 1);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
@@ -647,10 +655,10 @@ HuffmanTree* createHuffmanTree(){
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
         ht->tree[i] = NULL;
-        ht->partial_output[i] = NULL;
+        ht->partial_output[i] = 0;
     }
 
-    ht->tree[511] = ht->root;
+    ht->tree[HUFFMAN_ARRAY_SIZE - 1] = ht->root;
     return ht;
 }
 
@@ -829,6 +837,7 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
 
     // Swap Array
+
     ht->tree[node2->node_number] = node;
     ht->tree[node->node_number] = node2;
 
@@ -842,145 +851,3 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
     debug("End swap");
 }
-
-void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos){
-    if(pos[0] * HA_DIM_X + pos[1] >= HA_DIM_X * HA_DIM_Y){
-        return;
-    }
-    if(node != NULL) {
-        if(DEBUG) {
-            //printf("[create_subtree_from_node] pos: [%d][%d]\n", pos[0], pos[1]);
-        }
-        result[pos[0] * HA_DIM_X + pos[1]] = node;
-        //ht->tree[node->node_number] = NULL;
-
-        int left[2] = {pos[0]+1, pos[1]*2};
-        Node* n_left = node->left;
-        int right[2] = {pos[0]+1, pos[1]*2 + 1};
-        Node* n_right = node->right;
-
-        if(DEBUG && DEBUG_SWAP_SHOW_ARRAYS) {
-            printf("Pos: [%d][%d]\n", pos[0], pos[1]);
-            char* string;
-            string = getElement(node);
-            printf("Node itself: %s\n", string);
-
-            printf("LEFT: \n");
-            printElement(n_left);
-            printf("\nRIGHT: \n");
-            printElement(n_right);
-            printf("\n");
-        }
-
-        create_subtree_from_node(ht, n_left, result, left);
-        create_subtree_from_node(ht, n_right, result, right);
-    } else {
-        //warn("[create_subtree_from_node] Node is null!");
-    }
-}
-
-void rebuilding_from_array(HuffmanTree *ht, int pos, Node** arr, int iter, int lvl){
-    //debug("[rebuilding_from_array] Starting rebuild");
-    /*if(iter == 0 && DEBUG){
-        printf("\n\n");
-    }
-
-    int rel_pos = pos % HA_DIM_X;
-
-    char debug_b[200];
-    sprintf(debug_b, "[rebuilding_from_array] Arguments: HT: %p, pos: %d, arr: %p, iter: %d, lvl: %d, rel_pos: %d",
-            ht,
-            pos,
-            arr,
-            iter,
-            lvl,
-            rel_pos
-    );
-    debug(debug_b);
-
-    //printPartialArray(arr);
-    //printHuffmanArray(ht);
-
-    if(DEBUG){
-        char* element1 = getElement(ht->tree[pos]);
-        char* element2 = getElement(arr[iter]);
-        printf("Setting ht->tree[%d] to arr[%d] (%s to %s)\n", pos, iter, element1, element2);
-        free(element1);
-        free(element2);
-    }
-
-    ht->tree[pos] = arr[iter];
-    if(pos + HA_DIM_X + 0 + 1*pos%HA_DIM_X < HA_DIM_X * HA_DIM_Y && iter + HA_DIM_X + iter%HA_DIM_X + 1 < HA_DIM_X * HA_DIM_Y &&
-            arr[iter] != NULL
-            ) {
-        rebuilding_from_array(ht, pos + HA_DIM_X + pos%HA_DIM_X,  arr, iter + HA_DIM_X + iter%HA_DIM_X + 0, lvl);
-        rebuilding_from_array(ht, pos + HA_DIM_X + pos%HA_DIM_X, arr, iter + HA_DIM_X + iter%HA_DIM_X + 1, lvl);
-    }*/
-}
-
-
-
-/*
-int calculate_weight(Node* node){
-    if(node->left == NULL && node->right == NULL)
-        return node->weight;
-
-    int res = 0, res2 = 0;
-    if(node->left != NULL){
-        res = calculate_weight(node->left);
-    }
-    if(node->right != NULL){
-        res2 = calculate_weight(node->right);
-    }
-    return res+res2;
-}
-*/
-
-/*
-void update_numbers(HuffmanTree* ht){
-
-}
-
-void node_to_array(HuffmanTree* ht, Node* node){
-    int i, f = 0, p;
-    for(i = 0; i < 511; i++)
-    {
-        if(ht->tree[i] == node) {
-            f = 1;
-            p = i,
-        }
-    }
-    if(f)
-        ht->tree[p]->weight++;
-    //else
-
-}
-
-int add_weight_to_element(Node* node, char c){
-
-	if(node->left == NULL && node->right == NULL){
-		// Leaf, our node is an element
-	    	if(node->element == c){
-			node->weight++;
-			return 1;
-		}
-		return 0;
-	}
-
-	int res;
-	if(node->left != NULL){
-		res = add_weight_to_element(node->left, c);
-		if(res == 1)
-			return 1;
-	}
-	else {
-		return 0;
-	}
-	if(node->right != NULL){
-		res = add_weight_to_element(node->right, c);
-		if(res == 1)
-			return 1;
-	}
-	return 0;
-}
- */
