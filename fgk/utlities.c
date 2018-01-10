@@ -330,7 +330,7 @@ char* bin2byte(char* bin, int* length) {
 
     // Size IS a multiple of 8 (e.g bin = '11111000')
     *length = size / 8;
-    result = malloc(*length);
+    result = calloc(*length, sizeof(char));
     //printf("Returning result for %s\nLength: %d\n", bin, *length);
     for(i = 0; i<*length; i++){
         int dec = 0;

@@ -337,6 +337,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         char* encoded_byte = bin2byte(path, length);
         int i;
         char bytes[*length + 1];
+        for(i = 0; i < sizeof(bytes); i++){
+            bytes[i] = 0;
+        }
         for(i = 0; i<*length; i++){
             bytes[i] = encoded_byte[i];
         }
