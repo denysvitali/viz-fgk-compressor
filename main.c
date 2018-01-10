@@ -1371,6 +1371,7 @@ int main(int argc, char *argv[]) {
         size_t read_size = 0;
 
         HuffmanTree* ht = createHuffmanTree();
+        ht->mode = H_MODE_DECOMPRESSOR;
 
         while(!end){
             if(ferror(fh)){

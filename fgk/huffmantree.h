@@ -12,6 +12,9 @@
 
 #define H_DECODER_FLAG_NEXT_IS_BYTE 1
 
+#define H_MODE_COMPRESSOR 0
+#define H_MODE_DECOMPRESSOR 1
+
 typedef struct Node {
     int node_number;
     int weight;
@@ -32,6 +35,7 @@ typedef struct{
     int partial_output_length;
     int elements;
     int decoder_flags;
+    int mode;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
