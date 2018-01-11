@@ -1264,7 +1264,7 @@ int main(int argc, char *argv[]) {
                 ht->output = calloc(256, sizeof(char));
                 ht->output_length = 0;
             }
-c            printf("\n");
+            printf("\n");
             fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
 
 
