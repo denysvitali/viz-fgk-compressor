@@ -384,7 +384,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             exit(50);
         }
 
-        printf("OLD NYT: %s\n", getElement(old_nyt)); //TODO: Remove me
+        //printf("OLD NYT: %s\n", getElement(old_nyt)); //TODO: Remove me
 
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
