@@ -34,7 +34,7 @@ void printPartialArray(Node** arr);
 
 // Byte / Bit manipulation
 char* bin2byte(char* bin, int* length);
-char* byte2bit(char b);
+unsigned short* byte2bit(char b);
 char* path_to_string(unsigned short* path, int length);
 
 // File functions
@@ -43,3 +43,6 @@ int file_touch(char* path);
 int file_write(char* path, char* content);
 char* file_read(char* path, int* error);
 int file_delete(char* path);
+
+// Comparison
+int compare_short_int(unsigned short* arr, unsigned short* arr2, int length);

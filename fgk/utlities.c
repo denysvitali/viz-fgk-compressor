@@ -18,7 +18,7 @@
 // Utilities Functions
 
 /* Prints some information about the Huffman Tree
- * like HT address, Tree address, Root Node Number, Root Element, isNYT(root)
+ * like HT address, Tree address, Root Node Number, Root Element, is_nyt(root)
  */
 void printHuffmanTreeInfo(HuffmanTree *ht){
     if(!DEBUG){
@@ -26,7 +26,8 @@ void printHuffmanTreeInfo(HuffmanTree *ht){
     }
     printf("HT:\t %p\n", ht);
     printf("Tree:\t %p\n", ht->tree);
-    printf("Root:\t %p (NN: %d, Element: %d, isNYT: %d), \n", ht->root, ht->root->node_number, ht->root->element, isNYT(ht->root));
+    printf("Root:\t %p (NN: %d, Element: %d, is_nyt: %d), \n", ht->root, ht->root->node_number, ht->root->element,
+           is_nyt(ht->root));
     printHuffmanTree(ht);
 }
 
@@ -172,7 +173,7 @@ char* getElement(Node* root){
     // Node:
     // character (weight, node number)
 
-    if(isNYT(root)){
+    if(is_nyt(root)){
         sprintf(string, "\"NYT (%d,%d)\"", root->weight, root->node_number);
     }
     else if(root->element == -1){
@@ -344,18 +345,17 @@ char* bin2byte(char* bin, int* length) {
     return result;
 }
 
-char* byte2bit(char b){
-    char* result = calloc(9, sizeof(char));
+unsigned short* byte2bit(char b){
+    unsigned short* result = calloc(8, sizeof(unsigned short));
+
     unsigned int dec = (unsigned int) b;
     int i;
 
     for(i=0; i<8; i++){
-        result[7-i] = (char) ((dec % 2) == 1 ? '1' : '0');
+        result[7-i] = (unsigned short) ((dec % 2) == 1 ? 1 : 0);
         dec -= dec%2;
         dec /= 2;
     }
-
-    result[8] = '\0';
 
     return result;
 }
@@ -449,9 +449,23 @@ char* path_to_string(unsigned short* path, int length){
     int i;
     char* path_string = malloc(sizeof(char) * (length+1));
     for(i=0; i<length; i++){
-        char c[2];
         strncat(path_string, (path[i] == 0?"0":"1"), 1);
     }
     path_string[length] = '\0';
     return path_string;
+}
+
+/*
+ * Compares arr w/ arr2, if they are different returns 0.
+ */
+
+int compare_short_int(unsigned short* arr, unsigned short* arr2, int length){
+    int i;
+    for(i=0; i<length; i++){
+        if(arr[i] != arr2[i]){
+            return 0;
+        }
+    }
+
+    return 1;
 }
