@@ -447,7 +447,7 @@ int file_delete(char* path){
 
 char* path_to_string(unsigned short* path, int length){
     int i;
-    char* path_string = malloc(sizeof(char) * (length+1));
+    char* path_string = calloc((length+1),sizeof(char));
     for(i=0; i<length; i++){
         strncat(path_string, (path[i] == 0?"0":"1"), 1);
     }

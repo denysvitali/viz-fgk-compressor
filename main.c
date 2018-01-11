@@ -278,6 +278,7 @@ int match_path_string(Node* node, char* string){
 
     int result = strcmp(string, path_string) == 0;
 
+    free(path);
     free(path_string);
     free(length);
 

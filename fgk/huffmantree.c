@@ -125,6 +125,7 @@ void huffman_append_partial_new_element(HuffmanTree* ht, unsigned short* nyt_pat
         debug("[huffman_append_partial_new_element]");
         char* string = path_to_string(nyt_path, path_size);
         printf("[huffman_append_partial_new_element] NYT is at path: %s\n", string);
+        free(string);
     }
 
 
@@ -144,6 +145,7 @@ void huffman_append_partial_new_element(HuffmanTree* ht, unsigned short* nyt_pat
         }
         huffman_coding_bitcheck(ht);
     }
+    free(binary);
     printf("\n");
 
 
@@ -233,6 +235,7 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
     free(path);
     free(path_length);
+    free(length);
 
     while(target != ht->root){
         char dbg[200];
