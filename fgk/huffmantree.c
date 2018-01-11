@@ -18,7 +18,7 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
     if(node == NULL){
         return NULL;
     }
-    for(i=node->node_number+1; i<HUFFMAN_ARRAY_SIZE; i++){
+    for(i=node->node_number+2; i<HUFFMAN_ARRAY_SIZE; i++){
         if(ht->tree[i] != NULL){
             if(ht->tree[i]->weight == node->weight){
                 highest = ht->tree[i];
@@ -789,7 +789,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
         char buffer[500];
         sprintf(buffer, "[Swapping] Pos1: [%d][%d] (NN %d), Pos2: [%d][%d] (NN %d)", pos1[0], pos1[1],
                 node->node_number, pos2[0], pos2[1], node2->node_number);
-        debug(buffer);
+        warn("Qua");
+        //printHuffmanTree(ht);
         free(pos1);
         free(pos2);
     }
