@@ -322,8 +322,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     if(target != NULL){
         debug("[add_new_element] AS");
         char* path = node_path(target);
+        /*if(path != NULL)
+            debug(path);
         node_positioner(ht, target);
-
         char* encoded_byte = bin2byte(path, length);
         int i;
         char bytes[*length + 1];
@@ -334,16 +335,16 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             bytes[i] = encoded_byte[i];
         }
 
-        sprintf(ht->output, "%s", bytes);
-        ht->output_length = *length;
-
+        sprintf(ht->output, "%s", bytes);*/
+        huffman_append_partial_path(ht, path);
+        /*
         if(length != 0 && is_compressor(ht)){
             huffman_append_partial_path(ht, bytes);
         }
 
 
-        //free(path);
-        free(encoded_byte);
+        free(path);
+        free(encoded_byte);*/
         free(length);
         free(path);
 
