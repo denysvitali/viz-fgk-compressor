@@ -445,6 +445,10 @@ void decode_byte(HuffmanTree* ht, char byte){
         debug("[decode_byte] Adding this element directly because it's the first one");
         ht->output[0] = byte;
         add_new_element(ht, byte);
+        char* new_partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
+        free(ht->partial_output);
+        ht->partial_output = new_partial_output;
+        ht->partial_output_length = 0;
     } else {
 
         if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0){
