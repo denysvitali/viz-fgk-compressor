@@ -158,7 +158,9 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     ht->partial_output = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
     char* byte_result = bin2byte(result,length);
     for(i = 0; i<*length; i++){
-        printf("0x%02X ", byte_result[*length - 1 -i] & 0xff);
+        if(DEBUG){
+            printf("0x%02X ", byte_result[*length - 1 -i] & 0xff);
+        }
         ht->partial_output[i] = byte_result[*length - 1 - i];
     }
     free(byte_result);
