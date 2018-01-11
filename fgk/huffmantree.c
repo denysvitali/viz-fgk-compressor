@@ -18,7 +18,7 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
     if(node == NULL){
         return NULL;
     }
-    for(i=node->node_number+2; i<HUFFMAN_ARRAY_SIZE; i++){
+    for(i=node->node_number+1; i<HUFFMAN_ARRAY_SIZE; i++){
         if(ht->tree[i] != NULL){
             if(ht->tree[i]->weight == node->weight){
                 highest = ht->tree[i];
@@ -51,7 +51,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
         }
     }
 
-    if(last != target) {
+    if(last != target && last != target->parent) {
         if(DEBUG) {
             debug("[node_positioner] LAST != TARGET, swapping!");
             char *element2 = getElement(target);
@@ -73,7 +73,8 @@ void node_positioner(HuffmanTree* ht, Node* target){
         free(element);
         debug(buffer);
     }
-    target->weight++;
+    if(last != target->parent || target->parent == ht->root)
+        target->weight++;
 }
 
 
