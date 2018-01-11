@@ -270,6 +270,16 @@ static char * test_huffman_coding(){
     return 0;
 }
 
+char* test_utility_match_path_string(Node* node, char* string){
+    int* length = malloc(sizeof(int));
+    unsigned short int* path = node_path(node, length);
+    char* path_string = path_to_string(path, *length);
+    printf("Node path: %s\n", path_string);
+    mu_assert("Invalid node path!", strcmp(string, path_string) == 0);
+    free(path_string);
+    free(length);
+}
+
 static char* test_node_path(){
     mu_tag("Node Path");
     Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
@@ -292,25 +302,10 @@ static char* test_node_path(){
     three_one->right = four_two;
 
 
-    char* path = node_path(three_one);
-    printf("Node path: %s\n", path);
-    mu_assert("31 is not 00", strcmp("00", path) == 0);
-    free(path);
-
-    path = node_path(three_two);
-    printf("Node path: %s\n", path);
-    mu_assert("32 is not 01", strcmp("01", path) == 0);
-    free(path);
-
-    path = node_path(four_one);
-    printf("Node path: %s\n", path);
-    mu_assert("41 is not 000", strcmp("000", path) == 0);
-    free(path);
-
-    path = node_path(four_two);
-    printf("Node path: %s\n", path);
-    mu_assert("42 is not 001", strcmp("001", path) == 0);
-    free(path);
+    test_utility_match_path_string(three_one, "00");
+    test_utility_match_path_string(three_two, "01");
+    test_utility_match_path_string(four_one, "000");
+    test_utility_match_path_string(four_two, "001");
 
     // Free nodes
     free(root);

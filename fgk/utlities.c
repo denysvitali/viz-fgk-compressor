@@ -444,3 +444,14 @@ char* file_read(char* path, int* error){
 int file_delete(char* path){
     return remove(path);
 }
+
+char* path_to_string(unsigned short* path, int length){
+    int i;
+    char* path_string = malloc(sizeof(char) * (length+1));
+    for(i=0; i<length; i++){
+        char c[2];
+        strncat(path_string, (path[i] == 0?"0":"1"), 1);
+    }
+    path_string[length] = '\0';
+    return path_string;
+}

@@ -4,7 +4,7 @@
 #endif //ALGORITMI_FGK_COMPRESSION_HUFFMANTREE_H
 
 #define HUFFMAN_SYMBOLS 257
-#define HUFFMAN_ARRAY_SIZE 514 + 1
+#define HUFFMAN_ARRAY_SIZE (514 + 1)
 
 #define H_DECODER_FLAG_NEXT_IS_BYTE 1
 
@@ -31,7 +31,8 @@ typedef struct{
     int partial_output_length;
     int elements;
     int decoder_flags;
-    int mode;
+    unsigned int mode;
+    unsigned char mask;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
@@ -54,7 +55,7 @@ void swapping_array_recursive(HuffmanTree* ht, int pos, int pos2);
 void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2);
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos);
 void generateHTArrayFromTree(HuffmanTree* ht);
-char* node_path(Node* node);
+unsigned short* node_path(Node* node, int* length);
 
 void endHuffman(HuffmanTree* ht);
 

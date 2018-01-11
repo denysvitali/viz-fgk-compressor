@@ -272,21 +272,23 @@ void endHuffman(HuffmanTree* ht){
     huffman_partial_final_conversion(ht);
 }
 
-void huffman_append_partial_path(HuffmanTree* ht, char* path){
+void huffman_append_partial_path(HuffmanTree* ht, unsigned short* path, int path_size){
     if(ht != NULL) {
         debug("[huffman_append_partial_path]");
-        huffman_partial_convert_clear(ht);
-        ht->partial_output_length+= strlen(path);
-        strcat(ht->partial_output, path);
+        if(ht->mask == 0x80){ //MSB
+            ht->mask = 1;
+            ht->output_length++;
+        } else {
+            ht->mask <<= 1;
+            printf("Mask is now 0x%02x\n", ht->mask);
+        }
+
     }
 }
-void huffman_append_partial_new_element(HuffmanTree* ht, char* nyt_path, char element){
+void huffman_append_partial_new_element(HuffmanTree* ht, unsigned short* nyt_path, int path_size, char element){
     if(ht != NULL) {
-        huffman_partial_convert_clear(ht);
-        ht->partial_output_length+= strlen(nyt_path) + 3; // path length + ( + char + )
-        char newelement[50];
-        sprintf(newelement, "%s(%c)", nyt_path, element);
-        strcat(ht->partial_output, newelement);
+        debug("[huffman_append_partial_new_element] ");
+
     }
 }
 
@@ -318,39 +320,16 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         saveHuffmanTree(ht, filename);
     }*/
 
+    int* path_length = malloc(sizeof(int));
+    unsigned short* path;
 
     if(target != NULL){
         debug("[add_new_element] AS");
-        char* path = node_path(target);
-        /*if(path != NULL)
-            debug(path);
+        path = node_path(target, path_length);
         node_positioner(ht, target);
-        char* encoded_byte = bin2byte(path, length);
-        int i;
-        char bytes[*length + 1];
-        for(i = 0; i < sizeof(bytes); i++){
-            bytes[i] = 0;
-        }
-        for(i = 0; i<*length; i++){
-            bytes[i] = encoded_byte[i];
-        }
-
-        sprintf(ht->output, "%s", bytes);*/
-        huffman_append_partial_path(ht, path);
-        /*
-        if(length != 0 && is_compressor(ht)){
-            huffman_append_partial_path(ht, bytes);
-        }
-
-
-        free(path);
-        free(encoded_byte);*/
-        free(length);
-        free(path);
-
+        huffman_append_partial_path(ht, path, *path_length);
     } else {
-        char* path = node_path(ht->nyt);
-        char* encoded_byte = bin2byte(path, length);
+        path = node_path(ht->nyt, path_length);
 
         if(ht->elements == 0){
             // First element!
@@ -366,45 +345,24 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             /*sprintf(ht->output, "%s%c", bytes, c);
             ht->output_length = *length;*/
 
-            if(DEBUG){
-                printf("[add_new_element] Path: %s (= 0x%02x)\n", path, encoded_byte[0] & 0xff);
-            }
-
             if(is_compressor(ht)) {
-                huffman_append_partial_new_element(ht, path, c);
+                huffman_append_partial_new_element(ht, path, *path_length, c);
             }
         }
 
-        free(path);
-        free(encoded_byte);
-        free(length);
         ht->elements++;
         debug("[add_new_element] NS");
         Node* old_nyt = ht->nyt;
 
-        if(old_nyt != NULL && old_nyt->node_number == 1){
-            saveHuffmanTree(ht, "wtf");
-            exit(50);
+        if(old_nyt == NULL){
+            exit(51);
         }
-
-        //printf("OLD NYT: %s\n", getElement(old_nyt)); //TODO: Remove me
 
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
-
-
-        //int* old_nyt_position = getNodePosition(ht, old_nyt);
-        //int new_nyt_position[2] = {old_nyt_position[0] + 1, old_nyt_position[1] * 2};
-        //int new_char_position[2] = {new_nyt_position[0], new_nyt_position[1] + 1};
-
         char* string = getElement(old_nyt);
         free(string);
-
-        //char buffer[500];
-        //sprintf(buffer,"[add_new_element] old_nyt_pos: [%d][%d], new_nyt_pos: [%d][%d]", old_nyt_position[0], old_nyt_position[1], new_nyt_position[0], new_nyt_position[1]);
-        //debug(buffer);
-        //free(old_nyt_position);
 
         old_nyt->weight++;
         old_nyt->left = new_nyt;
@@ -422,6 +380,9 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
         target = old_nyt;
     }
+
+    free(path);
+    free(path_length);
 
     while(target != ht->root){
         char dbg[200];
@@ -671,6 +632,7 @@ HuffmanTree* createHuffmanTree(){
     ht->elements = 0;
     ht->decoder_flags = 0;
     ht->mode = H_MODE_COMPRESSOR;
+    ht->mask = 0x80; // 1000 0000 (MSB)
 
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
@@ -759,24 +721,25 @@ void generateHTArrayFromTree(HuffmanTree* ht){
 }
 
 
-char* node_path(Node* node){
-    char* ret = calloc(1, HUFFMAN_ARRAY_SIZE);
-
+unsigned short* recurse_node_path(Node* node, int* length, unsigned short* node_path){
     if(node == NULL || node->parent == NULL){
-        return ret;
+        return node_path;
     }
-
-    char* path = node_path(node->parent);
 
     if(node->parent->left == node){
-        sprintf(ret, "%s0", path);
-        free(path);
-        return ret;
+        node_path[*length] = 0;
+    } else {
+        node_path[*length] = 1;
     }
+    (*length)++;
 
-    sprintf(ret, "%s1", path);
-    free(path);
-    return ret;
+    return node_path;
+}
+
+unsigned short* node_path(Node* node, int* length){
+    unsigned short* ret = malloc(HUFFMAN_ARRAY_SIZE * sizeof(unsigned short));
+    *length = 0;
+    return recurse_node_path(node, length, ret);
 }
 
 void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){

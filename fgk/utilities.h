@@ -35,6 +35,7 @@ void printPartialArray(Node** arr);
 // Byte / Bit manipulation
 char* bin2byte(char* bin, int* length);
 char* byte2bit(char b);
+char* path_to_string(unsigned short* path, int length);
 
 // File functions
 char* get_filename(char* string);
