@@ -44,3 +44,44 @@ che sono ripettivamente le funzioni di messaggio, esecuzione ed etichettamento d
 
 ### utilities.{c,h}
 *utilities.h* e *utilities.c* sono rispettivamente header file e file di codice contenenti funzioni di varia utilità utilizzate nel progetto.
+
+#Strutture dati utilizzate
+
+## Node
+
+*Node* è una `struct` definita come segue:
+```c
+typedef struct Node{    
+    int node_number;
+    int weight;
+    int element;
+    struct Node* left;
+    struct Node* right;
+    struct Node* parent;
+} Node;
+``` 
+La quale identifica ogni nodo dell'albero con i rispettivi attributi (*node_number*, *weight* e *element*).
+Sono inoltre presenti i puntatori ai vari nodi limitrofi quali il *parent* e i *child* 
+## HuffmanTree
+
+*HuffmanTree* è una `struct` definita come segue:
+```c
+typedef struct{
+    Node* root;
+    Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
+    Node* nyt;
+    char* output;
+    char* partial_output;
+    int output_length;
+    int partial_output_length;
+    int elements;
+    int decoder_flags;
+    unsigned int mode;
+    unsigned char mask;
+} HuffmanTree;
+``` 
+La quale identifica l'albero con i suoi attributi(*root* e *nyt*).
+Contiene inoltre un `array` utilizzato per avere un accesso più veloce ai nodi dell'albero ed il rispettivo numero (*tree* e *elements*).
+Le componenti: *output*, *partial_output* ,*output_length*, *partial_output_length* sono necessarie per le stampe su file e a video.
+Le componenti *decoder_flags* e *mode* sono necessarie per decidere le varie flags per le stampe utili al DEBUG e la modalità di utilizzo del software (compressione o decompressione).
+La componente *mask* è necessaria per effettuare un padding necessario agli ultimi bit per raggiungere il byte.

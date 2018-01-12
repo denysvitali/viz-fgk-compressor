@@ -311,6 +311,9 @@ int getLevel(int pos){
 
 char* bin2byte(char* bin, int* length) {
     // https://photos.app.goo.gl/njS3AUvGThpDMWqL2
+    if(bin == NULL){
+        return NULL;
+    }
     int size = (int) strlen(bin);
     char *result;
     int i, j;
