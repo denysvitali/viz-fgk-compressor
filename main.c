@@ -1252,7 +1252,8 @@ int main(int argc, char *argv[]) {
                 } else if(i%8 == 0){
                     printf(" ");
                 }
-                printf("%02X ",read_buffer[i] & 0xff);*/
+                 */
+                printf("[Decompressor] Read 0x%02X\n",read_buffer[i] & 0xff);
                 decode_byte(ht, read_buffer[i]);
 
                 int wb = 0;
