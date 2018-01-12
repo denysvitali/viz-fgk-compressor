@@ -44,3 +44,73 @@ che sono ripettivamente le funzioni di messaggio, esecuzione ed etichettamento d
 
 ### utilities.{c,h}
 *utilities.h* e *utilities.c* sono rispettivamente header file e file di codice contenenti funzioni di varia utilità utilizzate nel progetto.
+
+# Strutture dati utilizzate
+
+## Node
+
+*Node* è una `struct` definita come segue:
+```c
+typedef struct Node{    
+    int node_number;
+    int weight;
+    int element;
+    struct Node* left;
+    struct Node* right;
+    struct Node* parent;
+} Node;
+``` 
+La quale identifica ogni nodo dell'albero con i rispettivi attributi (*node_number*, *weight* e *element*).
+Sono inoltre presenti i puntatori ai vari nodi limitrofi quali il *parent* e i *child* 
+## HuffmanTree
+
+*HuffmanTree* è una `struct` definita come segue:
+```c
+typedef struct{
+    Node* root;
+    Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
+    Node* nyt;
+    char* output;
+    char* partial_output;
+    int output_length;
+    int partial_output_length;
+    int elements;
+    int decoder_flags;
+    unsigned int mode;
+    unsigned char mask;
+} HuffmanTree;
+``` 
+La quale identifica l'albero con i suoi attributi(*root* e *nyt*).
+Contiene inoltre un `array` utilizzato per avere un accesso più veloce ai nodi dell'albero ed il rispettivo numero (*tree* e *elements*).
+Le componenti: *output*, *partial_output* ,*output_length*, *partial_output_length* sono necessarie per le stampe su file e a video.
+Le componenti *decoder_flags* e *mode* sono necessarie per decidere le varie flags per le stampe utili al DEBUG e la modalità di utilizzo del software (compressione o decompressione).
+La componente *mask* è necessaria per effettuare un padding necessario agli ultimi bit per raggiungere il byte.
+
+# Istruzioni per l'utilizzo
+
+## Compilazione
+
+Per la compilazione del codice è necessario utilizzare la seguente riga di codice:
+`make release` 
+che genera un file binario dal nome `viz-release`.
+Una guida simile è presente nel file *README*
+
+## Esecuzione
+
+### Compressione
+Per l'esecuzione del software in compressione è necessario utilizzare la seguente riga di codice:
+`./viz-release -c input output.viz`
+dove l'argomento `-c` serve per eseguire il programma in compressione, `input` è un file di input con una qualsiasi estensione e `output.viz` è il nome del file che si vorrà avere in output.
+**Nota:** Il nome del file in uscita può variare ma non la sua estensione.
+
+### Decompressione
+Per l'esecuzione del software in decompressione è necessario utilizzare la seguente riga di codice:
+`./viz-release -d input.viz`
+dove l'argomento `-d` serve per eseguire il programma in decompressione e `input.viz` è un file di input qualsiasi con estensione `.viz`.
+<!--
+<div align="center">
+
+![Jenkins](./images/god.png)
+# Y'all mind if I praise the Lord?
+</div>
+-->
