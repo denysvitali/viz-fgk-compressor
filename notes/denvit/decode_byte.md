@@ -51,9 +51,9 @@ div.box.element{
 <br>
 <br>
 
-| <span class="element">0100 1001</span> | <span class="node">0</span><span class="element">001 0000</span> | <span class="node">0</span><span class="node">00</span><span class="element">0 1110</span> | <span class="element">011</span><span class="node">1 00</span><span class="element">01</span> | <span class="element">1001 01</span><span class="node">00</span> | <span class="node">0</span><span class="element">011 1100</span> |
+| <span class="element">0100 1001</span> | <span class="node">0</span><span class="element">001 0000</span> | <span class="element">0</span><span class="node">00</span><span class="element">0 1110</span> | <span class="element">011</span><span class="node">1 00</span><span class="element">01</span> | <span class="element">1001 01</span><span class="node">00</span> | <span class="node">0</span><span class="element">011 1100</span> |
 | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-| <span class="element">**I**</span>            |  0(<span class="element"> </span>) | 000(<span class="element">**s**</span>) | 011 100(<span class="element">**e**</span>) | 00 | 0(<span class="element">**x**</span>)
+| <span class="element">**I**</span>            |  0(<span class="element"> </span>) | 00(<span class="element">**s**</span>) | 011 100(<span class="element">**e**</span>) | 00 | 0(<span class="element">**x**</span>)
 
 | <span class="element">0</span><span class="node">110 0</span><span class="element">011</span> | <span class="element">1010 1</span><span class="node">100</span> | <span class="node">0</span><span class="element">011 0000</span> | <span class="element">1</span> .... | | |
 | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
