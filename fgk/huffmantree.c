@@ -278,6 +278,10 @@ void huffman_decoder_decode_character(HuffmanTree* ht){
         printf("0: 0x%02x, 1: 0x%02x\n", ht->partial_output[0] &0xff, ht->partial_output[1]&0xff);
         printf("[huffman_decoder_decode_character] bits :\n");
         for(i=0; i<8; i++){
+            if(byte >= ht->partial_output_length){
+                warn("Can't decode this byte because it doesn't exists yet!");
+                break;
+            }
             int bit = (ht->partial_output[byte] & ht->mask) != 0;
             if(bit){
                 new_byte |= new_byte_mask;
@@ -298,7 +302,7 @@ void huffman_decoder_decode_character(HuffmanTree* ht){
         huffman_shift_partial_output(ht, 1);
 
         printf("[huffman_decoder_decode_character] Byte is 0x%02x\n", new_byte & 0xff);
-        printf("[huffman_decoder_decode_character] Mask is 0x%02x\n", ht->mask & 0xff);
+        //printf("[huffman_decoder_decode_character] Mask is 0x%02x\n", ht->mask & 0xff);
         add_new_element(ht, new_byte);
         ht->output[ht->output_length] = new_byte;
         ht->output_length++;
@@ -332,7 +336,9 @@ void decode_byte(HuffmanTree* ht, char byte){
         Node* target = ht->root;
         int i,k;
 
-        for(i=0; i<ht->partial_output_length; i++){
+        int length = ht->partial_output_length;
+
+        for(i=0; i<length; i++){
             int bit = 0;
             int reason = 0;
 
@@ -387,7 +393,6 @@ void decode_byte(HuffmanTree* ht, char byte){
                     }
                 } else {
                     printElement(target);
-                    printf("[decode_byte] !!!!!!!!!!!!");
                     add_new_element(ht, target->element);
                     huffman_shift_partial_output(ht, 1);
                     ht->output[ht->output_length] = target->element;
