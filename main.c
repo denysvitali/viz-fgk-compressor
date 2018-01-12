@@ -1258,6 +1258,7 @@ int main(int argc, char *argv[]) {
                 int wb = 0;
                 for(k=0; k < ht->output_length; k++){
                     write_buffer[written_bytes + k] = ht->output[k];
+                    printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
                     wb++;
                 }
                 written_bytes += wb;
