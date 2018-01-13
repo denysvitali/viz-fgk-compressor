@@ -256,6 +256,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
         return;
     }
     debug("[huffman_shift_partial_output] Shifting!");
+    printf("[huffman_shift_partial_output] Args: byte=%d\n", byte);
     int i;
 
     char* new_ht_partial = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
@@ -271,7 +272,12 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
 
 void huffman_decoder_decode_character(HuffmanTree* ht){
     //if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0) {
-        debug("[decode_byte] Parsing the new character...");
+        debug("[huffman_decoder_decode_character] Parsing the new character...");
+        printf("[huffman_decoder_decode_character] ht->nb_pos: %d, ht->partial_output_length: %d, ht->mask: 0x%02x\n",
+               ht->nb_pos,
+               ht->partial_output_length,
+               ht->mask
+        );
 
         int i;
         char new_byte = 0;
@@ -304,6 +310,9 @@ void huffman_decoder_decode_character(HuffmanTree* ht){
         printf("[huffman_decoder_decode_character] Byte is 0x%02x\n", new_byte & 0xff);
         printf("[huffman_decoder_decode_character] Mask is 0x%02x\n", ht->mask & 0xff);
         add_new_element(ht, new_byte);
+
+        huffman_shift_partial_output(ht, ht->nb_pos + 1);
+        ht->nb_pos = 0;
         ht->output[ht->output_length] = new_byte;
         ht->output_length++;
     //}
@@ -386,7 +395,6 @@ void decode_byte(HuffmanTree* ht, char byte){
         }
 
         ht->nb_pos = (unsigned int) i;
-
         if(reason == 1){
             // Found a leaf
             if(is_nyt(target)){
@@ -394,8 +402,6 @@ void decode_byte(HuffmanTree* ht, char byte){
                 if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0 && (ht->mask == 0x80 || ht->partial_output_length - ht->nb_pos >= 2)) {
                     debug("Got a new character!");
                     huffman_decoder_decode_character(ht);
-                    huffman_shift_partial_output(ht, ht->nb_pos+1);
-                    ht->nb_pos = 0;
                     decoded_bytes++;
                     i++;
                 } else {
@@ -406,14 +412,20 @@ void decode_byte(HuffmanTree* ht, char byte){
                 add_new_element(ht, (char) target->element);
                 ht->output[ht->output_length] = (char) target->element;
                 ht->output_length++;
-                huffman_shift_partial_output(ht, ht->nb_pos+1);
                 ht->nb_pos = 0;
+                if(ht->mask == 0x01){
+                    decoded_bytes++;
+                }
             }
+            ht->nb_pos = 0;
         } else {
             if(i == ht->partial_output_length - 1){
                 ht->mask = reset_mask;
             }
         }
+
+        i-= decoded_bytes;
+        length = ht->partial_output_length;
         target = ht->root;
     }
 }
