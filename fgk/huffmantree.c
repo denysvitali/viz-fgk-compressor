@@ -366,8 +366,6 @@ void decode_byte(HuffmanTree* ht, char byte){
                 break;
             }
 
-
-            printf("[decode_byte] Mask is now 0x%02x\n", ht->mask & 0xff);
             bit = (ht->partial_output[i] & 0xff & ht->mask) != 0;
             printf("[decode_byte] Bit: %d\n", bit);
             if(ht->mask == 0x01){
@@ -417,6 +415,9 @@ void decode_byte(HuffmanTree* ht, char byte){
                     decoded_bytes++;
                     ht->mask = 0x80;
                 }
+                i++;
+                target = ht->root;
+                decoded_bytes++;
             }
             ht->nb_pos = 0;
         } else {

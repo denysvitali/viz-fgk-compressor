@@ -1035,6 +1035,9 @@ int main(int argc, char *argv[]) {
                             printf("%02x ", ht->output[k] & 0xff);
                         }
                         printf("\n");
+                        char append[20];
+                        sprintf(append, "debug_%d.dot", i);
+                        saveHuffmanTree(ht, append);
                     }
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
