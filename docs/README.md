@@ -114,3 +114,4 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 # Y'all mind if I praise the Lord?
 </div>
 -->
+# Procedure di test e problemi noti
