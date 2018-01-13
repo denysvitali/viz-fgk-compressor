@@ -366,7 +366,10 @@ void decode_byte(HuffmanTree* ht, char byte){
 
         unsigned char reset_mask = ht->mask;
 
+        k=0;
+
         while(!is_leaf(target)){
+            k++;
             bit = (ht->partial_output[i] & 0xff & ht->mask) != 0;
             printf("[decode_byte] Bit: %d\n", bit);
             if(ht->mask == 0x01){
@@ -394,8 +397,6 @@ void decode_byte(HuffmanTree* ht, char byte){
             }
         }
 
-        ht->nyt_path_length = k;
-
         ht->nb_pos = (unsigned int) i;
         if(is_leaf(target)){
             // Found a leaf
@@ -404,7 +405,7 @@ void decode_byte(HuffmanTree* ht, char byte){
                 if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0 && (ht->mask == 0x80 || ht->partial_output_length - ht->nb_pos >= 2)) {
                     debug("Got a new character!");
                     huffman_decoder_decode_character(ht);
-                    huffman_shift_partial_output(ht, ht->nyt_path_length/8);
+                    //huffman_shift_partial_output(ht, ht->nyt_path_length);
                     decoded_bytes++;
                     i++;
                 } else {
@@ -417,11 +418,10 @@ void decode_byte(HuffmanTree* ht, char byte){
                 ht->output[ht->output_length] = (char) target->element;
                 ht->output_length++;
                 huffman_shift_partial_output(ht, ht->nb_pos);
-
-                /*if(ht->mask == 0x00) {
+                if(ht->mask == 0x00) {
                     i++;
                     ht->mask = 0x80;
-                }*/
+                }
             }
             ht->nb_pos = 0;
         } else {
