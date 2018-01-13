@@ -272,7 +272,6 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
 void huffman_decoder_decode_character(HuffmanTree* ht){
     //if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0) {
         debug("[decode_byte] Parsing the new character...");
-        ht->decoder_flags ^= H_DECODER_FLAG_NEXT_IS_BYTE;
 
         int i;
         char new_byte = 0;
@@ -340,7 +339,8 @@ void decode_byte(HuffmanTree* ht, char byte){
 
     int length = ht->partial_output_length;
     int decoded_bytes = 0;
-    int nyt_split = 0;
+    int nyt_next = 0;
+
 
     for(i=0; i<length; i++){
         int bit = 0;
@@ -366,10 +366,6 @@ void decode_byte(HuffmanTree* ht, char byte){
             printf("[decode_byte] Bit: %d\n", bit);
             if(ht->mask == 0x01){
                 ht->mask = 0x80;
-                nyt_split = 1;
-                if(i < length - 2){
-                    break;
-                }
                 i++;
             } else {
                 ht->mask >>= 1;
@@ -396,14 +392,12 @@ void decode_byte(HuffmanTree* ht, char byte){
             // Found a leaf
             if(is_nyt(target)){
                 printf("[decode_byte] Partial Output Length: %d\n", ht->partial_output_length);
-                if(nyt_split) {
-                    ht->decoder_flags |= H_DECODER_FLAG_NEXT_IS_BYTE;
-
-                }
-                else if(ht->mask == 0x80 || (ht->partial_output_length-decoded_bytes) > 1) {
+                if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0 && ht->mask != 0x80) {
                     debug("Got a new character!");
                     huffman_decoder_decode_character(ht);
+                    huffman_shift_partial_output(ht, 1);
                     decoded_bytes++;
+                    i++;
                 } else {
                     ht->decoder_flags |= H_DECODER_FLAG_NEXT_IS_BYTE;
                     ht->mask = reset_mask;
@@ -416,12 +410,12 @@ void decode_byte(HuffmanTree* ht, char byte){
                 ht->output_length++;
             }
         } else {
-            ht->mask = reset_mask;
+            if(i == ht->partial_output_length - 1){
+                ht->mask = reset_mask;
+            }
         }
         target = ht->root;
     }
-
-    huffman_shift_partial_output(ht, decoded_bytes);
 }
 
 Node* findNYT(Node* root){
