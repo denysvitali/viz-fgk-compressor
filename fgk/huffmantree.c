@@ -415,6 +415,7 @@ void decode_byte(HuffmanTree* ht, char byte){
                 ht->nb_pos = 0;
                 if(ht->mask == 0x01){
                     decoded_bytes++;
+                    ht->mask = 0x80;
                 }
             }
             ht->nb_pos = 0;
