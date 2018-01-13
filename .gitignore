@@ -67,4 +67,5 @@
 # Temporary Files
 *.tmp
 
-/fitnessgram.txt
+# txt files
+/*.txt
