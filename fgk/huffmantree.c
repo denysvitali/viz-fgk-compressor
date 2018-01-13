@@ -307,9 +307,12 @@ void huffman_decoder_decode_character(HuffmanTree* ht){
 
         printf("New Byte = 0x%02x Byte = %d - mask: 0x%02x\n", new_byte & 0xff, byte, ht->mask);
 
-        printf("[huffman_decoder_decode_character] Byte is 0x%02x\n", new_byte & 0xff);
-        printf("[huffman_decoder_decode_character] Mask is 0x%02x\n", ht->mask & 0xff);
+        printf("[huffman_decoder_decode_character] Byte is 0x%02x Mask is 0x%02x\n", new_byte & 0xff, ht->mask & 0xff);
         add_new_element(ht, new_byte);
+
+        if(new_byte == 0x6f){
+            printf("o!\n");
+        }
 
         huffman_shift_partial_output(ht, ht->nb_pos + 1);
         ht->nb_pos = 0;
@@ -346,10 +349,16 @@ void decode_byte(HuffmanTree* ht, char byte){
     Node* target = ht->root;
     int i,k;
 
+    i=0;
+
     int length = ht->partial_output_length;
     int decoded_bytes = 0;
+    int stop = 0;
 
-    for(i=0; i<length; i++){
+    while(!stop){
+        if(i>=ht->partial_output_length){
+            break;
+        }
         int bit = 0;
         int reason = 0;
 
@@ -357,20 +366,14 @@ void decode_byte(HuffmanTree* ht, char byte){
 
         unsigned char reset_mask = ht->mask;
 
-        for(k=0; k<8; k++){
-
-            if(target->left == NULL && target->right == NULL){
-                // LEAF!
-                printf("[decode_byte] Found a leaf after %d\n", k);
-                reason = 1;
-                break;
-            }
-
+        while(!is_leaf(target) && ht->partial_output_length > i){
+            k++;
             bit = (ht->partial_output[i] & 0xff & ht->mask) != 0;
             printf("[decode_byte] Bit: %d\n", bit);
             if(ht->mask == 0x01){
                 ht->mask = 0x80;
                 i++;
+                byte++;
             } else {
                 ht->mask >>= 1;
             }
@@ -392,42 +395,47 @@ void decode_byte(HuffmanTree* ht, char byte){
             }
         }
 
+        ht->nyt_path_length = k;
+
         ht->nb_pos = (unsigned int) i;
-        if(reason == 1){
+        if(is_leaf(target)){
             // Found a leaf
             if(is_nyt(target)){
                 printf("[decode_byte] Partial Output Length: %d\n", ht->partial_output_length);
                 if((ht->decoder_flags & H_DECODER_FLAG_NEXT_IS_BYTE) > 0 && (ht->mask == 0x80 || ht->partial_output_length - ht->nb_pos >= 2)) {
                     debug("Got a new character!");
                     huffman_decoder_decode_character(ht);
+                    huffman_shift_partial_output(ht, ht->nyt_path_length/8);
                     decoded_bytes++;
                     i++;
                 } else {
                     ht->decoder_flags |= H_DECODER_FLAG_NEXT_IS_BYTE;
                     ht->mask = reset_mask;
+                    return;
                 }
             } else {
                 add_new_element(ht, (char) target->element);
                 ht->output[ht->output_length] = (char) target->element;
                 ht->output_length++;
-                ht->nb_pos = 0;
-                if(ht->mask == 0x01){
-                    decoded_bytes++;
+                huffman_shift_partial_output(ht, ht->nb_pos);
+                if(ht->mask == 0x00) {
+                    i++;
                     ht->mask = 0x80;
                 }
-                i++;
-                target = ht->root;
-                decoded_bytes++;
             }
             ht->nb_pos = 0;
         } else {
-            if(i == ht->partial_output_length - 1){
-                ht->mask = reset_mask;
-            }
+            ht->mask = reset_mask;
+            return;
         }
 
-        i-= decoded_bytes;
-        length = ht->partial_output_length;
+        /*if(i - decoded_bytes < 0){
+            ht->mask = reset_mask;
+            return;
+        } else {
+            i -= decoded_bytes;
+        }*/
+        printf("[decode_byte] i: %d, pol: %d, decb: %d\n", i, ht->partial_output_length, decoded_bytes);
         target = ht->root;
     }
 }
@@ -456,6 +464,18 @@ int is_nyt(Node *pNode) {
     if(pNode->weight == 0 && pNode->element == NYT_ELEMENT){
         return 1;
     }
+    return 0;
+}
+
+int is_leaf(Node *pNode){
+    if(pNode == NULL){
+        return 0;
+    }
+
+    if(pNode->left == NULL && pNode->right == NULL){
+        return 1;
+    }
+
     return 0;
 }
 
@@ -541,6 +561,7 @@ HuffmanTree* createHuffmanTree(){
     ht->mode = H_MODE_COMPRESSOR;
     ht->mask = 0x80; // 1000 0000 (MSB)
     ht->nb_pos = 0;
+    ht->nyt_path_length = 0;
 
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){

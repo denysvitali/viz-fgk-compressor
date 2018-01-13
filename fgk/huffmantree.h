@@ -34,6 +34,7 @@ typedef struct{
     unsigned int mode;
     unsigned char mask;
     unsigned int nb_pos;
+    unsigned int nyt_path_length;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
@@ -57,6 +58,7 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2);
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos);
 void generateHTArrayFromTree(HuffmanTree* ht);
 unsigned short* node_path(Node* node, int* length);
+int is_leaf(Node* pNode);
 
 void endHuffman(HuffmanTree* ht);
 
