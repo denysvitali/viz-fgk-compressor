@@ -366,8 +366,7 @@ void decode_byte(HuffmanTree* ht, char byte){
 
         unsigned char reset_mask = ht->mask;
 
-        while(!is_leaf(target) && ht->partial_output_length > i){
-            k++;
+        while(!is_leaf(target)){
             bit = (ht->partial_output[i] & 0xff & ht->mask) != 0;
             printf("[decode_byte] Bit: %d\n", bit);
             if(ht->mask == 0x01){
@@ -418,10 +417,11 @@ void decode_byte(HuffmanTree* ht, char byte){
                 ht->output[ht->output_length] = (char) target->element;
                 ht->output_length++;
                 huffman_shift_partial_output(ht, ht->nb_pos);
-                if(ht->mask == 0x00) {
+
+                /*if(ht->mask == 0x00) {
                     i++;
                     ht->mask = 0x80;
-                }
+                }*/
             }
             ht->nb_pos = 0;
         } else {
