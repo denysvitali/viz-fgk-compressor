@@ -411,13 +411,15 @@ void decode_byte(HuffmanTree* ht, char byte){
                 ht->output[ht->output_length] = (char) target->element;
                 ht->output_length++;
                 ht->nb_pos = 0;
-                if(ht->mask == 0x01){
+                if(ht->mask == 0x01) {
                     decoded_bytes++;
                     ht->mask = 0x80;
+                } else{
+                    i--;
                 }
-                i++;
-                target = ht->root;
-                decoded_bytes++;
+                printf("Partial output 0, 1 : %d, %d\n", (
+                unsigned int) ht->partial_output[0], (
+                unsigned int) ht->partial_output[1]);
             }
             ht->nb_pos = 0;
         } else {
