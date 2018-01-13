@@ -13,15 +13,52 @@
 | u | 0x75 | 0111 0101 |
 
 ## Bytestream
-0x49 0x10 0x0e 0x71
 
-### Bitstream
-<div style="width: 1em; height: 1em; background-color: #8e44ad; display:inline-block;"></div> <span style="color: #8e44ad">Node path</span>  
+#### Part 1
+0x49 0x10 0x0E 0x71 0x94 0x3c
+
+#### Part 2
+0x63 0xAC 0x30 0xA3
+
+<style>
+div.box{
+    display:inline-block;
+    width: 1em;
+    height: 1em;
+}
+
+div.box.node{
+    background-color: #8e44ad;
+}
+
+div.box.element{
+    background-color: #27ae60;
+}
+
+.node{
+    color: #8e44ad;
+}
+
+.element{
+    color: #27ae60;
+}
+</style>
+
+## Bitstream
+<div class="box node"></div> <span class="node">Node path</span>  
 <br/>
-<div style="width: 1em; height: 1em; background-color: #27ae60; display:inline-block;"></div> <span style="color: #27ae60">Element</span>  
+<div class="box element"></div> <span class="element">Element</span>  
 <br>
 <br>
 
-| <span style="color:#27ae60">01001001</span> |  <span style="color:#8e44ad">0</span><span style="color:#27ae60">0010000</span> | <span style="color: #27ae60">0</span><span style="color:#8e44ad">00</span><span style="color:#27ae60">01110</span> | <span style="color:#27ae60">011</span><span style="color:#8e44ad">100</span><span style="color:#27ae60">01</span> |
-| ------------ | ------------ | ------------ | ------------ |
-| <span style="color:#27ae60">**I**</span>            |  0(<span style="color:#27ae60"> </span>) | 000(<span style="color:#27ae60">**s**</span>) | 011 100(<span style="color:#27ae60">**e**</span>)
+#### Part 1
+| <span class="element">0100 1001</span> | <span class="node">0</span><span class="element">001 0000</span> | <span class="element">0</span><span class="node">00</span><span class="element">0 1110</span> | <span class="element">011</span><span class="node">1 00</span><span class="element">01</span> | <span class="element">1001 01</span><span class="node">00</span> | <span class="node">0</span><span class="element">011 1100</span> |
+| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
+| 0x49 | 0x10 | 0x0E | 0x71 | 0x94 | 0x3C |
+| <span class="element">**I**</span>            |  0(<span class="element"> </span>) | 00(<span class="element">**s**</span>) | 011 100(<span class="element">**e**</span>) | 00 | 0(<span class="element">**x**</span>)
+
+#### Part 2
+| <span class="element">0</span><span class="node">110 0</span><span class="element">011</span> | <span class="element">1010 1</span><span class="node">100</span> | <span class="node">0</span><span class="element">011 0000</span> | <span class="element">1</span> .... | | |
+| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
+| 0x63 | 0xAC | 0x30 | 0xA3 | | |
+| 0 1100(<span class="element">**u**</span>) | 100 | 0(a) | | | |

@@ -1035,6 +1035,9 @@ int main(int argc, char *argv[]) {
                             printf("%02x ", ht->output[k] & 0xff);
                         }
                         printf("\n");
+                        char append[20];
+                        sprintf(append, "debug_%d.dot", i);
+                        saveHuffmanTree(ht, append);
                     }
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
@@ -1252,12 +1255,14 @@ int main(int argc, char *argv[]) {
                 } else if(i%8 == 0){
                     printf(" ");
                 }
-                printf("%02X ",read_buffer[i] & 0xff);*/
+                 */
+                printf("[Decompressor] Read 0x%02X\n",read_buffer[i] & 0xff);
                 decode_byte(ht, read_buffer[i]);
 
                 int wb = 0;
                 for(k=0; k < ht->output_length; k++){
                     write_buffer[written_bytes + k] = ht->output[k];
+                    printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
                     wb++;
                 }
                 written_bytes += wb;
