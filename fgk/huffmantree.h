@@ -33,6 +33,7 @@ typedef struct{
     int decoder_flags;
     unsigned int mode;
     unsigned char mask;
+    unsigned int nb_pos;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
