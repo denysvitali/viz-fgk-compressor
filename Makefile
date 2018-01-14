@@ -62,12 +62,15 @@ test: clean
 test_profiler: clean
 	$(CC) $(CFLAGS) $(TEST_FLAGS) $(PRJ_FILES) -o viz-profiler-test
 
+############## MASSIF ###################
+
 massif: debug
 	$(PROFILER) --tool=massif --massif-out-file=viz.massif ./viz $(DEBUG_ARGS)
 	massif-visualizer viz.massif
 massif_test: test
 	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
 	massif-visualizer viz-test.massif
+
 massif_release: massif_release_c
 
 massif_release_c: release
@@ -77,12 +80,41 @@ massif_release_d: release
 	$(PROFILER) --tool=massif --massif-out-file=viz-release.massif ./viz-release $(DECOMPRESSION_ARGS)
 	massif-visualizer viz-release.massif
 
-valgrind: debug
+############# VALGRIND #################
+
+valgrind: valgrind_c
 	$(PROFILER) --leak-check=full -v ./viz $(DEBUG_ARGS)
 
-callgrind: debug
-	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-debug.callgrind ./viz $(DEBUG_ARGS)
+valgrind_c: debug
+	$(PROFILER) --leak-check=full -v ./viz $(COMPRESSION_ARGS)
+
+valgrind_d: debug
+	$(PROFILER) --leak-check=full -v ./viz $(DECOMPRESSION_ARGS)
+
+valgrind_test: test
+	$(PROFILER) --leak-check=full -v ./viz-test
+
+valgrind_release_c: release
+	$(PROFILER) --leak-check=full -v ./viz-release $(COMPRESSION_ARGS)
+
+valgrind_release_d: release
+	$(PROFILER) --leak-check=full -v ./viz-release $(DECOMPRESSION_ARGS)
+
+############ CALLGRIND #################
+
+callgrind: callgrind_c
+
+callgrind_c: debug
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-debug.callgrind ./viz $(COMPRESSION_ARGS)
 	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-debug.callgrind > viz-debug.callgrind.dot && xdot viz-debug.callgrind.dot
+
+callgrind_d: debug
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-debug.callgrind ./viz $(DECOMPRESSION_ARGS)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-debug.callgrind > viz-debug.callgrind.dot && xdot viz-debug.callgrind.dot
+
+callgrind_test: test
+	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-test.callgrind ./viz-test $(DEBUG_ARGS)
+	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-test.callgrind > viz-test.callgrind.dot && xdot viz-test.callgrind.dot
 
 callgrind_release: callgrind_release_c
 callgrind_release_c: release
