@@ -1243,35 +1243,50 @@ int main(int argc, char *argv[]) {
             exit(3);
         }
 
-        read_size = fread(read_buffer,sizeof(char), 4096, fh);
+        int stop = 0;
 
-        debug("Read ok");
-        //printf("Read size: %ld\n", read_size);
+        while(!stop){
+            read_size = fread(read_buffer,sizeof(char), 4096, fh);
+            debug("Read ok");
+            //printf("Read size: %ld\n", read_size);
+            printf("POL: %d\n", ht->partial_output_length);
 
-        for(i=0; i<read_size; i++){
-            ht->partial_output[ht->partial_output_length] = read_buffer[i];
-            ht->partial_output_length++;
-        }
+            for(i=0; i<read_size; i++){
+                ht->partial_output[ht->partial_output_length] = read_buffer[i];
+                ht->partial_output_length++;
+            }
 
-        while(decode_byte(ht) != 0){
-            i++;
-            int wb = 0;
-            for(k=0; k < ht->output_length; k++){
+            while(decode_byte(ht) != 0){
+                i++;
+                int wb = 0;
+                for(k=0; k < ht->output_length; k++){
 #if DEBUG
-                printf("wb + k: %d\n", written_bytes + k);
+                    printf("wb + k: %d\n", written_bytes + k);
                 printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
 #endif
-                write_buffer[written_bytes + k] = ht->output[k];
-                wb++;
+                    write_buffer[written_bytes + k] = ht->output[k];
+                    wb++;
+                }
+                written_bytes += wb;
+                free(ht->output);
+                ht->output = calloc(256, sizeof(char));
+                ht->output_length = 0;
             }
-            written_bytes += wb;
-            free(ht->output);
-            ht->output = calloc(256, sizeof(char));
-            ht->output_length = 0;
+
+            if(read_size == 0){
+                break;
+            }
+
+            fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
+            written_bytes = 0;
+
+            huffman_shift_partial_output(ht, ht->decoder_byte);
+            ht->decoder_byte = 0;
+
+            ht->partial_output = calloc(4096, sizeof(char));
         }
 
         freeHuffman(ht);
-        fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
         free(file_input);
 
         fclose(fh);

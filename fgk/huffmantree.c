@@ -243,6 +243,25 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     return ht;
 }
 
+void huffman_shift_partial_output(HuffmanTree* ht, int byte){
+    if(byte == 0){
+        return;
+    }
+    debug("[huffman_shift_partial_output] Shifting!");
+    printf("[huffman_shift_partial_output] Args: byte=%d\n", byte);
+    int i;
+
+    char* new_ht_partial = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
+
+    for(i=0; i<ht->partial_output_length-byte; i++){
+        new_ht_partial[i] = ht->partial_output[byte + i];
+    }
+
+    ht->partial_output_length -= byte;
+    free(ht->partial_output);
+    ht->partial_output = new_ht_partial;
+}
+
 unsigned int get_bit(HuffmanTree* ht){
 #if DEBUG
     printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte], ht->mask);

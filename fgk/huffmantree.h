@@ -69,3 +69,4 @@ void endHuffman(HuffmanTree* ht);
 
 // Decompressor
 int decode_byte(HuffmanTree* ht);
+void huffman_shift_partial_output(HuffmanTree* ht, int byte);
