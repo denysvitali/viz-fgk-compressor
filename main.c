@@ -1265,7 +1265,7 @@ int main(int argc, char *argv[]) {
                 wb++;
             }
             written_bytes += wb;
-            //free(ht->output);
+            free(ht->output);
             ht->output = calloc(256, sizeof(char));
             ht->output_length = 0;
         }
