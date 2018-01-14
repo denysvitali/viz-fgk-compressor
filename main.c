@@ -1228,7 +1228,7 @@ int main(int argc, char *argv[]) {
 
         int end = 0;
         char read_buffer[4096];
-        char write_buffer[4096];
+        char write_buffer[8192];
         //fseek(fh, header_size, SEEK_SET);
         size_t read_size = 0;
 
@@ -1238,47 +1238,37 @@ int main(int argc, char *argv[]) {
         int k;
         int written_bytes = 0;
 
-        while(!end){
-            if(ferror(fh)){
-                error("Input file error!");
-                exit(3);
-            }
-
-            read_size = fread(read_buffer,sizeof(char), 4096, fh);
-
-            debug("Read ok");
-            printf("Read size: %ld\n", read_size);
-
-            for(i=0; i<read_size; i++){
-                /*if(i%16 == 0){
-                    printf("\n");
-                } else if(i%8 == 0){
-                    printf(" ");
-                }
-                 */
-                printf("[Decompressor] Read 0x%02X\n",read_buffer[i] & 0xff);
-                decode_byte(ht, read_buffer[i]);
-
-                int wb = 0;
-                for(k=0; k < ht->output_length; k++){
-                    write_buffer[written_bytes + k] = ht->output[k];
-                    printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
-                    wb++;
-                }
-                written_bytes += wb;
-                free(ht->output);
-                ht->output = calloc(256, sizeof(char));
-                ht->output_length = 0;
-            }
-            printf("\n");
-            fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
-
-
-            if(read_size == 0){
-                info("END");
-                break;
-            }
+        if(ferror(fh)){
+            error("Input file error!");
+            exit(3);
         }
+
+        read_size = fread(read_buffer,sizeof(char), 4096, fh);
+
+        debug("Read ok");
+        printf("Read size: %ld\n", read_size);
+
+        for(i=0; i<read_size; i++){
+            ht->partial_output[ht->partial_output_length] = read_buffer[i];
+            ht->partial_output_length++;
+        }
+
+        while(decode_byte(ht) != 0){
+            i++;
+            int wb = 0;
+            for(k=0; k < ht->output_length; k++){
+                printf("wb + k: %d\n", written_bytes + k);
+                write_buffer[written_bytes + k] = ht->output[k];
+                printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
+                wb++;
+            }
+            written_bytes += wb;
+            free(ht->output);
+            ht->output = calloc(256, sizeof(char));
+            ht->output_length = 0;
+        }
+
+        fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
 
         fclose(fh);
         fclose(o_fh);
