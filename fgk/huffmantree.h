@@ -25,15 +25,21 @@ typedef struct{
     Node* root;
     Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
     Node* nyt;
+
     char* output;
-    char* partial_output;
     int output_length;
+
+    char* partial_output;
     int partial_output_length;
+
     int elements;
-    int decoder_flags;
     unsigned int mode;
     unsigned char mask;
-    unsigned int nb_pos;
+
+    int decoder_flags;
+    unsigned int decoder_bit;
+    unsigned int decoder_has_bit;
+    int decoder_byte;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
@@ -57,8 +63,9 @@ void swap_on_diff_lvls(HuffmanTree* ht, Node* node, Node* node2);
 void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* pos);
 void generateHTArrayFromTree(HuffmanTree* ht);
 unsigned short* node_path(Node* node, int* length);
+int is_leaf(Node* pNode);
 
 void endHuffman(HuffmanTree* ht);
 
 // Decompressor
-void decode_byte(HuffmanTree* ht, char byte);
+int decode_byte(HuffmanTree* ht);

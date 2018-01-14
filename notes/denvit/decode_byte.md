@@ -11,6 +11,10 @@
 | e | 0x65 | 0110 0101 |
 | x | 0x78 | 0111 1000 | 
 | u | 0x75 | 0111 0101 |
+| a | 0x61 |  |
+| l | 0x6c |  |
+| y | 0x79 |  |
+| i | 0x69 |  |
 
 ## Bytestream
 
@@ -58,7 +62,12 @@ div.box.element{
 | <span class="element">**I**</span>            |  0(<span class="element"> </span>) | 00(<span class="element">**s**</span>) | 011 100(<span class="element">**e**</span>) | 00 | 0(<span class="element">**x**</span>)
 
 #### Part 2
-| <span class="element">0</span><span class="node">110 0</span><span class="element">011</span> | <span class="element">1010 1</span><span class="node">100</span> | <span class="node">0</span><span class="element">011 0000</span> | <span class="element">1</span> .... | | |
-| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |
-| 0x63 | 0xAC | 0x30 | 0xA3 | | |
+| <span class="element">0</span><span class="node">110 0</span><span class="element">011</span> | <span class="element">1010 1</span><span class="node">100</span> | <span class="node">0</span><span class="element">011 0000</span> | <span class="element">1</span>0100011 | 01100000 | 10000011 |
+| ------------ | ------------ | ------------ | ------------ | ------------ | ------------|
+| 0x63 | 0xAC | 0x30 | 0xA3 | 0x60 | 0x83 |
 | 0 1100(<span class="element">**u**</span>) | 100 | 0(a) | | | |
+#### Part 3
+| 11001010 | 11000011 |
+| ------------ | ------------ |
+|  0xCA | 0xC3 |
+| (<span class="element">**u**</span>) |  |
