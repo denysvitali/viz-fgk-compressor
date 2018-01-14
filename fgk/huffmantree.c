@@ -551,11 +551,9 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 
     if(node2->parent == node || node->parent == node2){
-#if DEBUG
         error("[swap_nodes] I can't swap a child with its parent");
         char* node_el1 = getElement(node);
         char* node_el2 = getElement(node2);
-#endif
 
         char buffer[200];
         sprintf(buffer, "[swap_nodes] Tried to swap %s w/ %s", node_el1, node_el2);
