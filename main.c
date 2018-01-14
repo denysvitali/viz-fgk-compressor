@@ -635,8 +635,8 @@ static char* test_huffman_coding_general(char* string){
         sprintf(dbg, "Adding character %c", string[i]);
         debug(dbg);
         add_new_element(ht, string[i]);
-        sprintf(path, "%s_%d.dot", string, i);
-        saveHuffmanTree(ht, path);
+        //sprintf(path, "%s_%d.dot", string, i);
+        //saveHuffmanTree(ht, path);
     }
 
     char * buffer = "";
@@ -655,7 +655,7 @@ static char* test_huffman_coding_general(char* string){
     fh = fopen (filepath, "r");
 #endif
 
-    printHuffmanTree(ht);
+    //printHuffmanTree(ht);
     if (fh)
     {
         fseek (fh, 0, SEEK_END);
@@ -1272,6 +1272,7 @@ int main(int argc, char *argv[]) {
 
         freeHuffman(ht);
         fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
+        free(file_input);
 
         fclose(fh);
         fclose(o_fh);
