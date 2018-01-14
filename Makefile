@@ -68,12 +68,12 @@ massif: debug
 massif_test: test
 	$(PROFILER) --tool=massif --massif-out-file=viz-test.massif ./viz-test
 	massif-visualizer viz-test.massif
-massif_prod: massif_prod_c
+massif_release: massif_release_c
 
-massif_prod_c: release
+massif_release_c: release
 	$(PROFILER) --tool=massif --massif-out-file=viz-release.massif ./viz-release $(COMPRESSION_ARGS)
 	massif-visualizer viz-release.massif
-massif_prod_d: release
+massif_release_d: release
 	$(PROFILER) --tool=massif --massif-out-file=viz-release.massif ./viz-release $(DECOMPRESSION_ARGS)
 	massif-visualizer viz-release.massif
 
