@@ -1246,7 +1246,7 @@ int main(int argc, char *argv[]) {
         read_size = fread(read_buffer,sizeof(char), 4096, fh);
 
         debug("Read ok");
-        printf("Read size: %ld\n", read_size);
+        //printf("Read size: %ld\n", read_size);
 
         for(i=0; i<read_size; i++){
             ht->partial_output[ht->partial_output_length] = read_buffer[i];
@@ -1257,17 +1257,20 @@ int main(int argc, char *argv[]) {
             i++;
             int wb = 0;
             for(k=0; k < ht->output_length; k++){
+#if DEBUG
                 printf("wb + k: %d\n", written_bytes + k);
-                write_buffer[written_bytes + k] = ht->output[k];
                 printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
+#endif
+                write_buffer[written_bytes + k] = ht->output[k];
                 wb++;
             }
             written_bytes += wb;
-            free(ht->output);
+            //free(ht->output);
             ht->output = calloc(256, sizeof(char));
             ht->output_length = 0;
         }
 
+        freeHuffman(ht);
         fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
 
         fclose(fh);

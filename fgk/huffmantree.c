@@ -251,11 +251,12 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 }
 
 unsigned int get_bit(HuffmanTree* ht){
+#if DEBUG
     printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte], ht->mask);
-
+#endif
     unsigned int bit;
     bit = (unsigned int) (ht->partial_output[ht->decoder_byte] & ht->mask) != 0;
-    printf("b: %d\n", bit);
+
     if(ht->mask == 0x01){
         ht->mask = 0x80;
         ht->decoder_byte++;
@@ -304,9 +305,6 @@ int decode_byte(HuffmanTree* ht){
         return 0;
     }
 
-    printf("Target: \n");
-    printElement(target);
-
     char element;
 
     if(is_nyt(target)){
@@ -325,7 +323,9 @@ int decode_byte(HuffmanTree* ht){
         element = (char) target->element;
     }
 
+#if DEBUG
     printf("Element is: 0x%02x\n", element & 0xff);
+#endif
 
     add_new_element(ht, element);
     ht->output[ht->output_length] = element;
