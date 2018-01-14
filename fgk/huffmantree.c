@@ -26,7 +26,7 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
         }
     }
 
-#ifdef DEBUG
+#if DEBUG
         printElement(highest);
 #endif
 
@@ -41,7 +41,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
     Node* last = highest_numbered_node(ht, target);
     char buffer[250];
 
-#ifdef DEBUG
+#if DEBUG
         char *element1 = getElement(last);
         sprintf(buffer, "Highest numbered node (aka LAST w/ weight %d): %s", last->weight,  element1);
         debug(buffer);
@@ -52,7 +52,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
 #endif
 
     if(last != target && last != target->parent) {
-#ifdef DEBUG
+#if DEBUG
             debug("[node_positioner] LAST != TARGET, swapping!");
             char *element2 = getElement(target);
             sprintf(buffer, "[node_positioner] TARGET: %s", element2);
@@ -67,7 +67,7 @@ void node_positioner(HuffmanTree* ht, Node* target){
         swap_nodes(ht, target, last);
     }
 
-#ifdef DEBUG
+#if DEBUG
         char *element = getElement(target);
         sprintf(buffer, "Updating weight for %s", element);
         free(element);
@@ -211,9 +211,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         Node* new_nyt = createNYT(old_nyt->node_number - 2);
         Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
-        char* string = getElement(old_nyt);
-        free(string);
-
         old_nyt->weight++;
         old_nyt->left = new_nyt;
         old_nyt->right = new_char;
@@ -237,10 +234,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
 
     while(target != ht->root){
         char dbg[200];
-        char* element = getElement(target);
-        sprintf(dbg, "[add_new_element] TARGET: %s", element);
-        free(element);
-        debug(dbg);
         if(target == NULL || target->parent == NULL){
             return NULL;
         }
@@ -558,9 +551,11 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
 
 
     if(node2->parent == node || node->parent == node2){
+#if DEBUG
         error("[swap_nodes] I can't swap a child with its parent");
         char* node_el1 = getElement(node);
         char* node_el2 = getElement(node2);
+#endif
 
         char buffer[200];
         sprintf(buffer, "[swap_nodes] Tried to swap %s w/ %s", node_el1, node_el2);
