@@ -1227,8 +1227,9 @@ int main(int argc, char *argv[]) {
         }
 
         int end = 0;
-        char read_buffer[4096];
-        char write_buffer[8192];
+        int b_size = 1000;
+        char read_buffer[b_size];
+        char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
         size_t read_size = 0;
 
@@ -1246,7 +1247,7 @@ int main(int argc, char *argv[]) {
         int stop = 0;
 
         while(!stop){
-            read_size = fread(read_buffer,sizeof(char), 4096, fh);
+            read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
             debug("Read ok");
             //printf("Read size: %ld\n", read_size);
             printf("POL: %d\n", ht->partial_output_length);
@@ -1256,12 +1257,12 @@ int main(int argc, char *argv[]) {
                 ht->partial_output_length++;
             }
 
-            while(decode_byte(ht) != 0){
+            while(decode_byte(ht) != 0 && ht->decoder_byte != b_size){
                 i++;
                 int wb = 0;
                 for(k=0; k < ht->output_length; k++){
 #if DEBUG
-                    printf("wb + k: %d\n", written_bytes + k);
+                printf("wb + k: %d\n", written_bytes + k);
                 printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
 #endif
                     write_buffer[written_bytes + k] = ht->output[k];
@@ -1271,19 +1272,23 @@ int main(int argc, char *argv[]) {
                 free(ht->output);
                 ht->output = calloc(256, sizeof(char));
                 ht->output_length = 0;
+
             }
 
             if(read_size == 0){
                 break;
             }
 
+
             fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
-            written_bytes = 0;
 
             huffman_shift_partial_output(ht, ht->decoder_byte);
+            //ht->partial_output_length = ht->decoder_byte;
             ht->decoder_byte = 0;
 
-            ht->partial_output = calloc(4096, sizeof(char));
+            written_bytes = 0;
+
+            //ht->partial_output = calloc(4096, sizeof(char));
         }
 
         freeHuffman(ht);

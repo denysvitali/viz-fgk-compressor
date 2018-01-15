@@ -251,7 +251,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     printf("[huffman_shift_partial_output] Args: byte=%d\n", byte);
     int i;
 
-    char* new_ht_partial = calloc(HUFFMAN_ARRAY_SIZE, sizeof(char));
+    char* new_ht_partial = calloc(8192, sizeof(char));
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -272,6 +272,7 @@ unsigned int get_bit(HuffmanTree* ht){
     if(ht->mask == 0x01){
         ht->mask = 0x80;
         ht->decoder_byte++;
+        //huffman_shift_partial_output(ht, 1);
     } else {
         ht->mask >>= 1;
     }
@@ -304,7 +305,13 @@ int decode_byte(HuffmanTree* ht){
 
     unsigned int bit;
 
+    unsigned char old_mask = ht->mask;
+
     while(!is_leaf(target)){
+        if(ht->partial_output_length - ht->decoder_byte <= 0){
+            target = NULL;
+            break;
+        }
         bit = get_bit(ht);
         if(!bit){
             target = target->left;
@@ -314,6 +321,8 @@ int decode_byte(HuffmanTree* ht){
     }
 
     if(target == NULL){
+        ht->mask = old_mask;
+        printf("NULL!");
         return 0;
     }
 
@@ -323,7 +332,14 @@ int decode_byte(HuffmanTree* ht){
         int i;
         char new_byte = 0x00;
         int byte_mask = 0x80;
+
         for(i=0; i<8; i++){
+            if(ht->partial_output_length - ht->decoder_byte <= 0){
+                ht->decoder_byte --;
+                ht->mask = old_mask;
+                return ht->output_length;
+            }
+
             bit = get_bit(ht);
             if(bit){
                 new_byte |= byte_mask;
