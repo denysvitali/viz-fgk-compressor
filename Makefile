@@ -28,6 +28,8 @@ RELEASE_ARGS_ALICE = $(DEBUG_ARGS_ALICE)
 COMPRESSION_ARGS = -c -f out.viz test/files/provided/alice.txt
 DECOMPRESSION_ARGS = -d test/files/viz/alice.viz
 
+BENCHMARK_ARGS = -ao benchmark_results.txt -f "Took: %E"
+
 .PHONY: clean
 .PHONY:	debug
 
@@ -132,6 +134,13 @@ callgrind_alice: debug
 callgrind_alice_release: release
 	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-release.callgrind ./viz-release $(RELEASE_ARGS_ALICE)
 	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-release.callgrind > viz-release.callgrind.dot && xdot viz-release.callgrind.dot
+
+############ BENCHMARK ################
+benchmark: release
+	rm benchmark_results.txt
+	/bin/time $(BENCHMARK_ARGS) ./viz-release -c -f immagine.viz test/files/provided/immagine.tiff
+	/bin/time $(BENCHMARK_ARGS) ./viz-release -c -f alice.viz test/files/provided/alice.txt
+	for i in {01..10}; do /bin/time $(BENCHMARK_ARGS) ./viz-release -c -f 1M-$$i.viz test/files/random/1M/$$i.bin; done
 
 clean:
 	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot
