@@ -1216,9 +1216,7 @@ int main(int argc, char *argv[]) {
         header_size += i;
 
         filename[i] = '\0';
-
-        printf("Filename is: %s\n", filename);
-
+        
         FILE *o_fh = fopen(filename, "wb+");
         if(!o_fh){
             // Unable to create filename
@@ -1227,7 +1225,7 @@ int main(int argc, char *argv[]) {
         }
 
         int end = 0;
-        int b_size = 512;
+        int b_size = 4096;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
@@ -1248,9 +1246,6 @@ int main(int argc, char *argv[]) {
 
         while(!stop){
             read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
-            debug("Read ok");
-            //printf("Read size: %ld\n", read_size);
-            printf("POL: %d\n", ht->partial_output_length);
 
             for(i=0; i<read_size; i++){
                 ht->partial_output[ht->partial_output_length] = read_buffer[i];

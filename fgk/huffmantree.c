@@ -247,8 +247,6 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     if(byte == 0){
         return;
     }
-    debug("[huffman_shift_partial_output] Shifting!");
-    printf("[huffman_shift_partial_output] Args: byte=%d\n", byte);
     int i;
 
     char* new_ht_partial = calloc(8192, sizeof(char));
