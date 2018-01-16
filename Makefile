@@ -137,10 +137,15 @@ callgrind_alice_release: release
 
 ############ BENCHMARK ################
 benchmark: release
-	rm benchmark_results.txt
-	/bin/time $(BENCHMARK_ARGS) ./viz-release -c -f immagine.viz test/files/provided/immagine.tiff
-	/bin/time $(BENCHMARK_ARGS) ./viz-release -c -f alice.viz test/files/provided/alice.txt
-	for i in {01..10}; do /bin/time $(BENCHMARK_ARGS) ./viz-release -c -f 1M-$$i.viz test/files/random/1M/$$i.bin; done
+	rm -f benchmark/result.txt
+	#./scripts/benchmark.sh test/files/provided/immagine.tiff
+	IFS=$$'\n'; for i in $$(find test/files/compression/ -type f); do ./scripts/benchmark.sh "$${i}"; done
+	#./scripts/benchmark.sh test/files/provided/alice.txt
+	#./scripts/benchmark.sh test/files/text/bible.txt
+	#./scripts/benchmark.sh test/files/text/fitnessgram.txt
+	#./scripts/benchmark.sh test/files/text/adaptivehuffman.txt
+	#./scripts/benchmark.sh test/files/text/a.txt
+	#for i in {01..10}; do ./scripts/benchmark.sh test/files/random/1M/$$i.bin; done
 
 clean:
 	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot
