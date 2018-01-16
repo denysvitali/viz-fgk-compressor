@@ -69,3 +69,5 @@
 
 # txt files
 /*.txt
+
+/benchmark
