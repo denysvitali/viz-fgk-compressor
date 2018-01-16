@@ -20,13 +20,13 @@ RELEASE_FLAGS := $(RELEASE_FLAGS) -DRELEASE=1 -O3
 
 PROFILER_COMPILER_FLAGS = -pg
 
-DEBUG_ARGS = -c -f out.viz test/files/text/fitnessgram.txt
-DEBUG_ARGS_ALICE = -c -f out.viz test/files/provided/alice.txt
+DEBUG_ARGS = -c -f out.viz test/files/compression/text/fitnessgram.txt
+DEBUG_ARGS_ALICE = -c -f out.viz test/files/compression/provided/alice.txt
 RELEASE_ARGS = $(DEBUG_ARGS)
 RELEASE_ARGS_ALICE = $(DEBUG_ARGS_ALICE)
 
-COMPRESSION_ARGS = -c -f out.viz test/files/provided/alice.txt
-DECOMPRESSION_ARGS = -d test/files/viz/alice.viz
+COMPRESSION_ARGS = -c -f out.viz test/files/compression/provided/alice.txt
+DECOMPRESSION_ARGS = -d test/files/decompression/alice.viz
 
 BENCHMARK_ARGS = -ao benchmark_results.txt -f "Took: %E"
 
