@@ -755,6 +755,7 @@ char * test_write_to_file(){
 char * test_read_file(){
     mu_tag("Read file");
     char* buffer[200];
+    int* error = malloc(sizeof(int));
     char* result = file_read("./out-test.viz", error);
     mu_assert("Error while reading from ./out-test.viz", result != NULL);
     mu_assert("File content isn't 'Test\\n'", strncmp(result, "Test\n", 5) == 0);
