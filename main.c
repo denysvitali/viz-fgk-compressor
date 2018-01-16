@@ -629,7 +629,6 @@ static char* test_huffman_coding_general(char* string){
     HuffmanTree* ht = createHuffmanTree();
 
     int i;
-    char path[200];
     for(i=0; i<strlen(string); i++){
         char dbg[50];
         sprintf(dbg, "Adding character %c", string[i]);
@@ -756,10 +755,8 @@ char * test_write_to_file(){
 char * test_read_file(){
     mu_tag("Read file");
     char* buffer[200];
-    int* error = malloc(sizeof(int));
     char* result = file_read("./out-test.viz", error);
     mu_assert("Error while reading from ./out-test.viz", result != NULL);
-    //printf("Result is : %s\n", result);
     mu_assert("File content isn't 'Test\\n'", strncmp(result, "Test\n", 5) == 0);
     free(result);
     free(error);
@@ -770,6 +767,7 @@ char * test_file_delete(){
     mu_tag("Delete file");
     int result = file_delete("./out-test.viz");
     mu_assert("File cannot be deleted", result == 0);
+    return 0;
 }
 
 static char * test_huffman_coding_bookkeeper(){
@@ -1224,7 +1222,6 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        int end = 0;
         int b_size = 4096;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
@@ -1242,9 +1239,7 @@ int main(int argc, char *argv[]) {
             exit(3);
         }
 
-        int stop = 0;
-
-        while(!stop){
+        while(1){
             read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
 
             for(i=0; i<read_size; i++){

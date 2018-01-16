@@ -39,9 +39,9 @@ void node_positioner(HuffmanTree* ht, Node* target){
         return;
     }
     Node* last = highest_numbered_node(ht, target);
-    char buffer[250];
 
 #if DEBUG
+        char buffer[250];
         char *element1 = getElement(last);
         sprintf(buffer, "Highest numbered node (aka LAST w/ weight %d): %s", last->weight,  element1);
         debug(buffer);
@@ -233,7 +233,6 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     free(length);
 
     while(target != ht->root){
-        char dbg[200];
         if(target == NULL || target->parent == NULL){
             return NULL;
         }
