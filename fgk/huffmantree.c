@@ -307,6 +307,8 @@ int decode_byte(HuffmanTree* ht){
 
     unsigned char old_mask = ht->mask;
 
+    int previous_decoder_byte = ht->decoder_byte;
+
     while(!is_leaf(target)){
         if(ht->partial_output_length - ht->decoder_byte <= 0){
             target = NULL;
@@ -322,8 +324,8 @@ int decode_byte(HuffmanTree* ht){
 
     if(target == NULL){
         ht->mask = old_mask;
-        printf("NULL!");
-        return 0;
+        ht->decoder_byte = previous_decoder_byte;
+        return ht->output_length;
     }
 
     char element;

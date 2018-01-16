@@ -1227,7 +1227,7 @@ int main(int argc, char *argv[]) {
         }
 
         int end = 0;
-        int b_size = 1000;
+        int b_size = 512;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
@@ -1257,7 +1257,7 @@ int main(int argc, char *argv[]) {
                 ht->partial_output_length++;
             }
 
-            while(decode_byte(ht) != 0 && ht->decoder_byte != b_size){
+            while(decode_byte(ht) != 0 && ht->decoder_byte-1 != b_size){
                 i++;
                 int wb = 0;
                 for(k=0; k < ht->output_length; k++){
