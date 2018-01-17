@@ -860,25 +860,25 @@ int main(int argc, char *argv[]) {
         // Tree test
 
         // First level
-        Node *root = createNode(11, 32, -1, NULL, NULL, NULL);
+        Node *root = create_node(11, 32, -1, NULL, NULL, NULL);
 
         // Second Level
-        Node *n_9 = createNode(9, 11, 'f', NULL, NULL, root);
-        Node *n_10 = createNode(10, 21, -1, NULL, NULL, root);
+        Node *n_9 = create_node(9, 11, 'f', NULL, NULL, root);
+        Node *n_10 = create_node(10, 21, -1, NULL, NULL, root);
 
         // Third level
-        Node *n_7 = createNode(7, 10, -1, NULL, NULL, n_10);
-        Node *n_8 = createNode(8, 11, -1, NULL, NULL, n_10);
+        Node *n_7 = create_node(7, 10, -1, NULL, NULL, n_10);
+        Node *n_8 = create_node(8, 11, -1, NULL, NULL, n_10);
 
         // Fourth Level
-        Node *n_3 = createNode(3, 5, 'c', NULL, NULL, n_7);
-        Node *n_4 = createNode(4, 5, -1, NULL, NULL, n_7);
-        Node *n_5 = createNode(5, 5, 'd', NULL, NULL, n_8);
-        Node *n_6 = createNode(6, 6, 'e', NULL, NULL, n_8);
+        Node *n_3 = create_node(3, 5, 'c', NULL, NULL, n_7);
+        Node *n_4 = create_node(4, 5, -1, NULL, NULL, n_7);
+        Node *n_5 = create_node(5, 5, 'd', NULL, NULL, n_8);
+        Node *n_6 = create_node(6, 6, 'e', NULL, NULL, n_8);
 
         // Fifth Level
-        Node *n_1 = createNode(1, 2, 'a', NULL, NULL, n_4);
-        Node *n_2 = createNode(2, 3, 'b', NULL, NULL, n_4);
+        Node *n_1 = create_node(1, 2, 'a', NULL, NULL, n_4);
+        Node *n_2 = create_node(2, 3, 'b', NULL, NULL, n_4);
 
         root->left = n_9;
         root->right = n_10;
@@ -1004,11 +1004,18 @@ int main(int argc, char *argv[]) {
         // for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        HuffmanTree *ht = createHuffmanTree();
+        HuffmanTree *ht = create_huffman_tree();
 
         if (o_tmp_fh == NULL) {
             // The file doesn't exist, create it
             o_tmp_fh = fopen(file_output_tmp, "wb");
+        }
+
+        if(o_tmp_fh == NULL){
+            char error_msg[200];
+            sprintf(error_msg, "Unable to create %s", file_output_tmp);
+            error(error_msg);
+            exit(1);
         }
 
         int i;
@@ -1037,10 +1044,9 @@ int main(int argc, char *argv[]) {
                         char append[20];
                         sprintf(append, "debug_%d.dot", i);
                         saveHuffmanTree(ht, append);
-                    }
+                    }*/
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
-                     */
                 }
             }
         }
@@ -1131,7 +1137,7 @@ int main(int argc, char *argv[]) {
         free(file_name);
 
         printf("\n");
-        freeHuffman(ht);
+        free_huffman(ht);
         fclose(fh);
         fclose(o_fh);
         fclose(o_tmp_fh);
@@ -1243,7 +1249,7 @@ int main(int argc, char *argv[]) {
         //fseek(fh, header_size, SEEK_SET);
         size_t read_size = 0;
 
-        HuffmanTree* ht = createHuffmanTree();
+        HuffmanTree* ht = create_huffman_tree();
         ht->mode = H_MODE_DECOMPRESSOR;
 
         int k;
@@ -1303,7 +1309,7 @@ int main(int argc, char *argv[]) {
             read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
         }
 
-        freeHuffman(ht);
+        free_huffman(ht);
         free(file_input);
 
         fclose(fh);

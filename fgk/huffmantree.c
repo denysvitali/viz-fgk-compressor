@@ -166,8 +166,8 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     }
 
     printf("ht->output_length: %d, ht->partial_output_length: %d\n", ht->output_length, ht->partial_output_length);
-    ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
     ht->output_length++;
+    ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
 
     huffman_coding_reset_partial_output(ht);
     free(length);
@@ -228,8 +228,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             exit(51);
         }
 
-        Node* new_nyt = createNYT(old_nyt->node_number - 2);
-        Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
+        Node* new_nyt = create_nyt(old_nyt->node_number - 2);
+        Node* new_char = create_node(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
         old_nyt->weight++;
         old_nyt->left = new_nyt;
@@ -268,7 +268,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(8192, sizeof(char));
+    char* new_ht_partial = calloc(sizeof(ht->partial_output)/sizeof(char), sizeof(char));
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -336,6 +336,11 @@ int decode_byte(HuffmanTree* ht){
         }
         bit = get_bit(ht);
 
+        if(bit == 2){
+            break;
+        }
+
+
         if(!bit){
             target = target->left;
         } else {
@@ -377,7 +382,7 @@ int decode_byte(HuffmanTree* ht){
         if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
             printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
             printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
-            huffman_shift_partial_output(ht, 1);
+            //huffman_shift_partial_output(ht, 1);
             ht->output_length++;
             return ht->output_length;
         }
@@ -427,16 +432,16 @@ int decode_byte(HuffmanTree* ht){
     return ht->output_length;
 }
 
-Node* findNYT(Node* root){
+Node* find_nyt(Node *root){
     if(is_nyt(root)){
         return root;
     }
-    Node *left = findNYT(root->left);
+    Node *left = find_nyt(root->left);
     if(is_nyt(left)){
         return left;
     }
 
-    Node *right = findNYT(root->right);
+    Node *right = find_nyt(root->right);
     if(is_nyt(right)){
         return right;
     }
@@ -511,7 +516,7 @@ Node* find_node(Node *root, int c){
     return NULL;
 }
 
-Node* createNYT(int i) {
+Node* create_nyt(int i) {
     Node* root = malloc(sizeof(Node));
     root->weight = 0;
     root->element = NYT_ELEMENT;
@@ -523,7 +528,7 @@ Node* createNYT(int i) {
 }
 
 
-Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent){
+Node* create_node(int node_number, int weight, int element, Node *left, Node *right, Node *parent){
     Node* n = malloc(sizeof(Node));
     n->node_number = node_number;
     n->weight = weight;
@@ -534,9 +539,9 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
     return n;
 }
 
-HuffmanTree* createHuffmanTree(){
+HuffmanTree* create_huffman_tree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(HUFFMAN_ARRAY_SIZE - 1);
+    Node* tmp_nyt = create_nyt(HUFFMAN_ARRAY_SIZE - 1);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
@@ -559,25 +564,25 @@ HuffmanTree* createHuffmanTree(){
     return ht;
 }
 
-void freeNode(Node* node){
+void free_node(Node *node){
     if(node->left == NULL && node->right == NULL){
         free(node);
         return;
     }
 
     if(node->left != NULL){
-        freeNode(node->left);
+        free_node(node->left);
     }
 
     if(node->right != NULL){
-        freeNode(node->right);
+        free_node(node->right);
     }
 
     free(node);
 }
 
-void freeHuffman(HuffmanTree* ht){
-    freeNode(ht->root);
+void free_huffman(HuffmanTree *ht){
+    free_node(ht->root);
     free(ht->output);
     free(ht->partial_output);
     free(ht);
