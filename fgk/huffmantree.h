@@ -61,6 +61,9 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
 void generateHTArrayFromTree(HuffmanTree* ht);
 unsigned short* node_path(Node* node, int* length);
 int is_leaf(Node* pNode);
+unsigned int get_bit(HuffmanTree* ht);
+
+
 
 void endHuffman(HuffmanTree* ht);
 

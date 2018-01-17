@@ -1027,7 +1027,7 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 if(ht->output_length != 0) {
-                    if(DEBUG) {
+                    /*if(DEBUG) {
                         debug("[main] Output is not 0, adding bytes to file content");
                         printf("Adding %d bytes:\n", ht->output_length);
                         for (int k = 0; k < ht->output_length; k++) {
@@ -1040,12 +1040,16 @@ int main(int argc, char *argv[]) {
                     }
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
+                     */
                 }
             }
         }
 
         endHuffman(ht);
-        fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+
+        if(ht->output_length != 0){
+            fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+        }
 
         /*for(;;){
 			unsigned char c = (unsigned char) fgetc(fh);
@@ -1083,9 +1087,11 @@ int main(int argc, char *argv[]) {
 
         fprintf(o_fh, "%s", MAGIC_NUMBER);
 
-        if (size < original_size) {
+        // TODO: Add me when debugging is done!
+        compress = 1;
+        /*if (size < original_size) {
             compress = 1;
-        }
+        }*/
 
         if (compress == 0) {
             fprintf(o_fh, "%s", "\x01"); // NOT compressed!
