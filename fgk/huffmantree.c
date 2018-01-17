@@ -151,7 +151,22 @@ void huffman_append_partial_new_element(HuffmanTree* ht, unsigned short* nyt_pat
 
 void huffman_partial_final_conversion(HuffmanTree* ht){
     // Add some padding to fill the last byte.
-    ht->mask = 0x01;
+    int* length = malloc(sizeof(int));
+    unsigned short* path = node_path(ht->nyt, length);
+    int path_byte = 0;
+
+
+    while(ht->mask != 0x01){
+        if(path_byte == *length){
+            // Restart from 0
+            path_byte = 0;
+        }
+        if(path[path_byte]) {
+            ht->partial_output[ht->partial_output_length] |= ht->mask;
+        }
+        ht->mask >>= 0x01;
+        path_byte++;
+    }
     ht->output_length++;
     huffman_coding_reset_partial_output(ht);
 }
@@ -263,6 +278,10 @@ unsigned int get_bit(HuffmanTree* ht){
 #if DEBUG
     printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte], ht->mask);
 #endif
+    if(ht->decoder_byte == ht->partial_output_length){
+        return 2;
+    }
+
     unsigned int bit;
     bit = (unsigned int) (ht->partial_output[ht->decoder_byte] & ht->mask) != 0;
 
@@ -307,11 +326,17 @@ int decode_byte(HuffmanTree* ht){
     int previous_decoder_byte = ht->decoder_byte;
 
     while(!is_leaf(target)){
-        if(ht->partial_output_length - ht->decoder_byte <= 0){
+        if(ht->partial_output_length - ht->decoder_byte <= 1){
             target = NULL;
             break;
         }
         bit = get_bit(ht);
+
+        if(bit == 2){
+            ht->output_length++;
+            return ht->output_length;
+        }
+
         if(!bit){
             target = target->left;
         } else {
@@ -332,6 +357,14 @@ int decode_byte(HuffmanTree* ht){
         char new_byte = 0x00;
         int byte_mask = 0x80;
 
+        if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 2 && ht->mask != 0x80){
+            printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
+            printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
+            //huffman_shift_partial_output(ht, 1);
+            ht->output_length++;
+            return ht->output_length;
+        }
+
         for(i=0; i<8; i++){
             if(ht->partial_output_length - ht->decoder_byte <= 0){
                 ht->decoder_byte --;
@@ -340,6 +373,12 @@ int decode_byte(HuffmanTree* ht){
             }
 
             bit = get_bit(ht);
+
+            if(bit == 2){
+                //huffman_shift_partial_output(ht, 1);
+                return ht->output_length;
+            }
+
             if(bit){
                 new_byte |= byte_mask;
             }
@@ -478,12 +517,10 @@ HuffmanTree* createHuffmanTree(){
     ht->output_length = 0;
     ht->partial_output_length = 0;
     ht->elements = 0;
-    ht->decoder_flags = 0;
     ht->mode = H_MODE_COMPRESSOR;
     ht->mask = 0x80; // 1000 0000 (MSB)
-    ht->decoder_bit = 0;
-    ht->decoder_has_bit = 0;
     ht->decoder_byte = 0;
+    ht->decoder_last_chunk = 0;
 
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){

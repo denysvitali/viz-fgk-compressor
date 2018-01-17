@@ -1165,6 +1165,14 @@ int main(int argc, char *argv[]) {
         //info("Decompressing your file...");
 
         FILE *fh = fopen(file_input, "rb");
+
+        if(!fh){
+            char buffer[500];
+            sprintf(buffer, "File %s doesn't exist.", file_input);
+            error(buffer);
+            exit(1);
+        }
+
         // Parse headers
         size_t buffer_size = 50;
         char *buffer = calloc(buffer_size, sizeof(char));
@@ -1240,46 +1248,53 @@ int main(int argc, char *argv[]) {
             exit(3);
         }
 
-        while(1){
-            read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
+        read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
 
-            for(i=0; i<read_size; i++){
-                ht->partial_output[ht->partial_output_length] = read_buffer[i];
-                ht->partial_output_length++;
-            }
+        while(read_size != 0){
 
-            while(decode_byte(ht) != 0 && ht->decoder_byte-1 != b_size){
-                i++;
-                int wb = 0;
-                for(k=0; k < ht->output_length; k++){
-#if DEBUG
-                printf("wb + k: %d\n", written_bytes + k);
-                printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
-#endif
-                    write_buffer[written_bytes + k] = ht->output[k];
-                    wb++;
+            if(compressed) {
+
+
+                for (i = 0; i < read_size; i++) {
+                    ht->partial_output[ht->partial_output_length] = read_buffer[i];
+                    ht->partial_output_length++;
                 }
-                written_bytes += wb;
-                free(ht->output);
-                ht->output = calloc(256, sizeof(char));
-                ht->output_length = 0;
 
+                ht->decoder_last_chunk = (unsigned short) (read_size < b_size);
+                if (ht->decoder_last_chunk) {
+                    printf("%d Last chunk.\n", (int) read_size);
+                }
+
+
+                while (decode_byte(ht) != 0) {
+                    i++;
+                    int wb = 0;
+                    for (k = 0; k < ht->output_length; k++) {
+#if DEBUG
+                        printf("wb + k: %d\n", written_bytes + k);
+                        printf("[Decompressor] Character: 0x%02x\n", ht->output[k]&0xff);
+#endif
+                        write_buffer[written_bytes + k] = ht->output[k];
+                        wb++;
+                    }
+                    written_bytes += wb;
+                    free(ht->output);
+                    ht->output = calloc(256, sizeof(char));
+                    ht->output_length = 0;
+
+                }
+
+                fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
+                huffman_shift_partial_output(ht, ht->decoder_byte);
+                //ht->partial_output_length = ht->decoder_byte;
+                ht->decoder_byte = 0;
+
+                written_bytes = 0;
+            } else {
+                fwrite(read_buffer, sizeof(char), (size_t) read_bytes, o_fh);
             }
 
-            if(read_size == 0){
-                break;
-            }
-
-
-            fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
-
-            huffman_shift_partial_output(ht, ht->decoder_byte);
-            //ht->partial_output_length = ht->decoder_byte;
-            ht->decoder_byte = 0;
-
-            written_bytes = 0;
-
-            //ht->partial_output = calloc(4096, sizeof(char));
+            read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
         }
 
         freeHuffman(ht);

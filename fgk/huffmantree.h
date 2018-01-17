@@ -35,10 +35,7 @@ typedef struct{
     int elements;
     unsigned int mode;
     unsigned char mask;
-
-    int decoder_flags;
-    unsigned int decoder_bit;
-    unsigned int decoder_has_bit;
+    unsigned short decoder_last_chunk;
     int decoder_byte;
 } HuffmanTree;
 
