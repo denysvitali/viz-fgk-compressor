@@ -115,3 +115,57 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 </div>
 -->
 # Procedure di test e problemi noti
+## Test effettuati
+### Test_debug
+Testa se il sowftare è in modalità `DEBUG`.
+
+### Test_create_huffman_tree
+Testa se la funzione `create_huffman_tree` viene eseguita correttamente.
+
+### Test_swap_ht_array
+Testa la funzione `swap_nodes` e confronta il risultato con quello aspettato.
+
+### Test_huffman_coding_bookkeeper
+Testa la creazione e l'adattamento dell'albero sulla parola *bookkeeper* e confronta il risultato con quello aspettato.
+### Test_huffman_coding_mississippi
+Testa la creazione e l'adattamento dell'albero sulla parola *mississippi* e confronta il risultato con quello aspettato.
+### Test_huffman_coding_engineering
+Testa la creazione e l'adattamento dell'albero sulla parola *engineering* e confronta il risultato con quello aspettato.
+### Test_huffman_coding_foobar
+Testa la creazione e l'adattamento dell'albero sulla parola *foobar* e confronta il risultato con quello aspettato.
+### Test_huffman_coding_foobar2000
+Testa la creazione e l'adattamento dell'albero sulla parola *foobar2000* e confronta il risultato con quello aspettato.
+### Test_huffman_coding_loremipsum
+Testa la creazione e l'adattamento dell'albero sulla parola *loremipsum* e confronta il risultato con quello aspettato.
+
+### Test_get_node_level
+Testa la funzione `getNodeLevel` e confronta il risultato con quello aspettato.
+### Test_simple_swap
+Testa la funzione `swap_node` applicandola ad un esempio semplice e confronta il risultato con quello aspettato.
+### Test_swap_nodes
+Testa la funzione `swap_node` in tutte le sue funzioni e confronta il risultato con quello aspettato.
+### Test_node_path
+Testa la funzione `node_path` e confronta il risultato con quello aspettato.
+### Test_huffman_coding
+Testa l'intero sowftare e confronta il risultato con quello aspettato.
+### Test_utility_sibilings
+Testa la funzione `sibiling` su un esempio creato.
+    //mu_run_test(test_utility_siblings);
+    mu_run_test(test_huffman_coding);
+    mu_run_test(test_huffman_coding_abracadabra);
+    mu_run_test(test_huffman_coding_abcbaaa);
+    mu_run_test(test_huffman_coding_mississippi);
+    mu_run_test(test_huffman_coding_engineering);
+    mu_run_test(test_huffman_coding_aardvark);
+    mu_run_test(test_huffman_coding_sleeplessness);
+    mu_run_test(test_bin2byte);
+    mu_run_test(test_bin2byte2);
+    mu_run_test(test_byte2bin);
+    mu_run_test(test_filename);
+
+
+    // File ops. Run in sequence!
+    mu_run_test(test_create_file);
+    mu_run_test(test_write_to_file);
+    mu_run_test(test_read_file);
+    mu_run_test(test_file_delete);

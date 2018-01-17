@@ -361,8 +361,9 @@ int decode_byte(HuffmanTree* ht){
             printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
             printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
             //huffman_shift_partial_output(ht, 1);
-            ht->output_length++;
-            return ht->output_length;
+            return 0;
+            /*ht->output_length++;
+            return ht->output_length;*/
         }
 
         for(i=0; i<8; i++){
