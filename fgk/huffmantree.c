@@ -174,9 +174,6 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
 }
 
 void endHuffman(HuffmanTree* ht){
-    if(DEBUG) {
-
-    }
     huffman_partial_final_conversion(ht);
 }
 
