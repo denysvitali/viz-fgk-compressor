@@ -79,7 +79,7 @@ Extract:         viz -d input.viz
 ### October 4, 2017
 First commit
 
-### January 15, 2018
+### January 19, 2018
 Deadline
 
 ## Resources
