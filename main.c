@@ -1027,7 +1027,7 @@ int main(int argc, char *argv[]) {
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 if(ht->output_length != 0) {
-                    if(DEBUG) {
+                    /*if(DEBUG) {
                         debug("[main] Output is not 0, adding bytes to file content");
                         printf("Adding %d bytes:\n", ht->output_length);
                         for (int k = 0; k < ht->output_length; k++) {
@@ -1037,7 +1037,7 @@ int main(int argc, char *argv[]) {
                         char append[20];
                         sprintf(append, "debug_%d.dot", i);
                         saveHuffmanTree(ht, append);
-                    }
+                    }*/
                     fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
                     ht->output_length = 0;
                 }
