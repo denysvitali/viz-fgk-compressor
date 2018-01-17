@@ -166,8 +166,8 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     }
 
     printf("ht->output_length: %d, ht->partial_output_length: %d\n", ht->output_length, ht->partial_output_length);
-    ht->output_length++;
     ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
+    ht->output_length++;
 
     huffman_coding_reset_partial_output(ht);
     free(length);
