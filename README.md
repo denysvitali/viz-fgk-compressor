@@ -62,11 +62,12 @@ Does the same as `callgrind` but uses the `DEBUG_ARGS_ALICE` arguments instead (
 ### callgrind_alice_release
 Same as `callgrind_alice` but, uses the `viz-release` binary.
 
+### docs
+Builds the documentation. The generated artifacts are then written to docs/{readme,documentation}.pdf
+
 ### clean
 Performs a cleanup of the directory (warning: *.viz files are removed too!)
 
-### docs
-Builds the documentation.
 
 ## Compression
 Compression is performed with `viz -c output-file.viz input-file`, where `input-file` can be either a file or a directory.
