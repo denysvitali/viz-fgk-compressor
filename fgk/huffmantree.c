@@ -174,6 +174,8 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
     ht->output_length++;
 
+    free(path);
+
     huffman_coding_reset_partial_output(ht);
     free(length);
 }
