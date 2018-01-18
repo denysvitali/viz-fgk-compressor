@@ -384,7 +384,7 @@ int decode_byte(HuffmanTree* ht){
             printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
 #endif
             ht->output_length++;
-            return ht->output_length;
+            return 0;
         }
 
         for(i=0; i<8; i++){

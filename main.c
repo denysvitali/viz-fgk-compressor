@@ -1023,6 +1023,7 @@ int main(int argc, char *argv[]) {
         size_t buffer_size = 1024;
         char *buffer = calloc(buffer_size, sizeof(char));
 
+        int total_read = 0;
 
         while (!feof(fh)) {
             if (ferror(fh)) {
@@ -1031,6 +1032,7 @@ int main(int argc, char *argv[]) {
             }
 
             size_t read = fread(buffer, 1, buffer_size, fh);
+            total_read += read;
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 if(ht->output_length != 0) {
@@ -1051,7 +1053,9 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        endHuffman(ht);
+        if(total_read != 0) {
+            endHuffman(ht);
+        }
 
         if(ht->output_length != 0){
             fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
