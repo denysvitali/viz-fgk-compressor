@@ -31,6 +31,7 @@ DECOMPRESSION_ARGS = -d test/files/decompression/alice.viz
 BENCHMARK_ARGS = -ao benchmark_results.txt -f "Took: %E"
 
 .PHONY: clean
+.PHONY: docs
 .PHONY:	debug
 
 all: clean debug
@@ -135,7 +136,7 @@ callgrind_alice_release: release
 	$(PROFILER) --tool=callgrind --callgrind-out-file=viz-release.callgrind ./viz-release $(RELEASE_ARGS_ALICE)
 	python utilities/gprof2dot/gprof2dot.py -f callgrind viz-release.callgrind > viz-release.callgrind.dot && xdot viz-release.callgrind.dot
 
-############ BENCHMARK ################
+############### BENCHMARK ################
 benchmark: release
 	rm -f benchmark/result.txt
 	#./scripts/benchmark.sh test/files/provided/immagine.tiff
@@ -146,6 +147,11 @@ benchmark: release
 	#./scripts/benchmark.sh test/files/text/adaptivehuffman.txt
 	#./scripts/benchmark.sh test/files/text/a.txt
 	#for i in {01..10}; do ./scripts/benchmark.sh test/files/random/1M/$$i.bin; done
+
+############### DOCS ################
+docs:
+	pandoc --toc docs/README.md docs/metadata.yaml --resource-path=docs/ -s -o docs/documentation.pdf
+	pandoc README.md -s -o docs/readme.pdf
 
 clean:
 	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot
