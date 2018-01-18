@@ -148,15 +148,19 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     unsigned short* path = node_path(ht->nyt, length);
     int path_byte = 0;
 
+#if DEBUG
     char* path_string = path_to_string(path, *length);
     printf("Path string: %s, Mask: 0x%02x\n", path_string, ht->mask & 0xff);
+#endif
     while (ht->mask != 0x00) {
         if (path_byte == *length) {
             path_byte = 0;
             continue;
         }
 
+#if DEBUG
         printf("Path byte while loop (%d)\n",ht->partial_output_length);
+#endif
         if (path[path_byte]) {
             ht->partial_output[ht->partial_output_length] |= ht->mask;
         }
@@ -164,8 +168,9 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
         ht->mask >>= 0x01;
         path_byte++;
     }
-
+#if DEBUG
     printf("ht->output_length: %d, ht->partial_output_length: %d\n", ht->output_length, ht->partial_output_length);
+#endif
     ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
     ht->output_length++;
 
@@ -264,7 +269,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(8192, 1);
+    char* new_ht_partial = calloc(8192, 1); // TODO: Remove hardcoded value
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -297,10 +302,6 @@ unsigned int get_bit(HuffmanTree* ht){
 int decode_byte(HuffmanTree* ht){
     if(is_compressor(ht)){
         return 0;
-    }
-
-    if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte == 2){
-        printf("[decode_byte] Decoder Last Chunk!\n");
     }
 
     if(ht->decoder_byte >= ht->partial_output_length - 1){
@@ -343,6 +344,7 @@ int decode_byte(HuffmanTree* ht){
 
     if(target == NULL){
         if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
+#if DEBUG
             printf("TARGET is null - this is just padding\n");
             printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
             printf("Byte: 0x%02x, Mask: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff,
@@ -354,13 +356,9 @@ int decode_byte(HuffmanTree* ht){
             //saveHuffmanTree(ht, "out.dot");
 
             printf("NYT path: %s\n", path_to_string(nyt_path, *length));
-
-            //huffman_shift_partial_output(ht, 1);
-
             free(length);
             free(nyt_path);
-            //ht->output_length++;
-
+#endif
             ht->mask = old_mask;
             ht->decoder_byte = previous_decoder_byte;
             return 0;
@@ -378,12 +376,13 @@ int decode_byte(HuffmanTree* ht){
         char new_byte = 0x00;
         int byte_mask = 0x80;
 
-        printf("Nyt path received!\n");
+        debug("Nyt path received!\n");
 
         if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
+#if DEBUG
             printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
             printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
-            //huffman_shift_partial_output(ht, 1);
+#endif
             ht->output_length++;
             return ht->output_length;
         }
@@ -413,8 +412,10 @@ int decode_byte(HuffmanTree* ht){
         int* length = malloc(sizeof(int));
         unsigned short* target_path = node_path(target, length);
 
+#if DEBUG
         printf("Target path: %s\n", path_to_string(target_path, *length));
         printf("Target element: 0x%02x\n", target->element & 0xff);
+#endif
 
         free(length);
         free(target_path);

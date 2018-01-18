@@ -1094,10 +1094,9 @@ int main(int argc, char *argv[]) {
         fprintf(o_fh, "%s", MAGIC_NUMBER);
 
         // TODO: Add me when debugging is done!
-        compress = 1;
-        /*if (size < original_size) {
+        if (size < original_size) {
             compress = 1;
-        }*/
+        }
 
         if (compress == 0) {
             fprintf(o_fh, "%s", "\x01"); // NOT compressed!
@@ -1270,17 +1269,17 @@ int main(int argc, char *argv[]) {
                 }
 
                 ht->decoder_last_chunk = (unsigned short) (read_size < b_size);
+#if DEBUG
                 if (ht->decoder_last_chunk) {
                     printf("%d Last chunk.\n", (int) read_size);
                 }
-
-                i=0;
-
+#endif
                 while (decode_byte(ht) != 0) {
-                    i++;
 
+#if DEBUG
                     printf("Decoding byte %d/%d (0x%02x)\n", i, (int) read_size,
                            ht->partial_output[ht->decoder_byte] & 0xff);
+#endif
                     int wb = 0;
                     for (k = 0; k < ht->output_length; k++) {
 #if DEBUG
@@ -1303,7 +1302,7 @@ int main(int argc, char *argv[]) {
 
                 written_bytes = 0;
             } else {
-                fwrite(read_buffer, sizeof(char), (size_t) read_bytes, o_fh);
+                fwrite(read_buffer, sizeof(char), (size_t) read_size, o_fh);
             }
 
             read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
