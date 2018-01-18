@@ -1,0 +1,12 @@
+Nome file,Dimensione (kB),Compresso (kB),Rateo di compressione,Tempo compressione,Tempo decompressione,Compressione kB/s,Decompressione kB/s
+bible.txt,4347,2518,-72.67%,7.15,7.68,608.0,566.0
+adaptivehuffman.txt,8,5,-64.80%,0.02,0.02,377.5,377.5
+100000.txt,575,256,-124.91%,0.51,0.6,1127.6,958.5
+sinusoide.txt,6,4,-52.48%,0.02,0.02,304.7,304.7
+immagine.tiff,3274,3170,-3.29%,3.85,3.83,850.5,854.9
+alice.txt,164,96,-70.50%,0.3,0.32,545.3,511.2
+32k_random,32,32,0.05%,0.28,0.12,114.3,266.7
+32k_ff,32,4,-697.47%,0.01,0.02,3200.0,1600.0
+It Is Wednesday My Dudes Vine-du-TY1GUFGk.mp4,703,703,0.01%,1.2,0.72,585.8,976.3
+04.bin,1024,1024,0.00%,7.25,3.71,141.2,276.0
+denys.gif,25825,25646,-0.70%,29.63,31.1,871.6,830.4
