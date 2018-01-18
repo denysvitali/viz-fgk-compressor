@@ -154,4 +154,4 @@ docs:
 	pandoc README.md -s -o docs/readme.pdf
 
 clean:
-	rm -f {viz,viz-test,viz-release,viz-profiler*} *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot
+	rm -f {viz,viz-test,viz-release,viz-profiler*} *.callgrind vgcore.* *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot
