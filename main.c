@@ -52,11 +52,11 @@ static char * test_get_level(){
 
 static char * test_create_huffman_tree(){
     mu_tag("Huffman Tree Creation");
-	HuffmanTree* ht = createHuffmanTree();
+	HuffmanTree* ht = create_huffman_tree();
     mu_assert("HT has no NYT", ht->nyt != NULL);
     mu_assert("Tree is NULL!", ht->tree != NULL);
     mu_assert("HT doesn't have a root!", ht->root != NULL);
-    freeHuffman(ht);
+    free_huffman(ht);
 	return 0;
 }
 
@@ -64,13 +64,13 @@ static char* test_simple_swap(){
     // Test getNodeLevel && getNodePosition on an empty HT
     mu_tag("Simple Swap");
 
-    HuffmanTree* ht = createHuffmanTree();
+    HuffmanTree* ht = create_huffman_tree();
     free(ht->root);
-    ht->root = createNode(511, 1, -1, NULL, NULL, NULL);
+    ht->root = create_node(511, 1, -1, NULL, NULL, NULL);
     ht->tree[0] = ht->root;
 
-    Node* original_left = createNode(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
-    Node* original_right = createNode(510, 1, 'a', NULL, NULL, ht->root);
+    Node* original_left = create_node(509, 0, NYT_ELEMENT, NULL, NULL, ht->root);
+    Node* original_right = create_node(510, 1, 'a', NULL, NULL, ht->root);
 
     ht->root->left = original_left;
     ht->root->right = original_right;
@@ -96,14 +96,14 @@ static char* test_simple_swap(){
     mu_assert("Root right isn't NN 510", ht->root->right->node_number == 510);
     mu_assert("Root right isn't original_left", ht->root->left == original_right);
 
-    freeHuffman(ht);
+    free_huffman(ht);
     return 0;
 }
 
 
 static char * test_huffman_coding(){
     mu_tag("Huffman Coding");
-    HuffmanTree* ht = createHuffmanTree();
+    HuffmanTree* ht = create_huffman_tree();
 
     mu_assert("Root is not the NYT", ht->root == ht->nyt);
     mu_assert("Root is not the NYT", is_nyt(ht->root));
@@ -212,7 +212,7 @@ static char * test_huffman_coding(){
     mu_assert("Root -> Right -> Right -> Right doesn't have weight 1", ht->root->right->right->right->weight == 1);
 
     printHuffmanTree(ht);
-    freeHuffman(ht);
+    free_huffman(ht);
 
 //    printHuffmanTree(ht);
 //    printf("Step 1\n");
@@ -287,21 +287,21 @@ int match_path_string(Node* node, char* string){
 
 static char* test_node_path(){
     mu_tag("Node Path");
-    Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
-    Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
-    Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
+    Node* root = create_node(511, 4, -1, NULL, NULL, NULL);
+    Node* two_one = create_node(509, 2, -1, NULL, NULL, root);
+    Node* two_two = create_node(510, 2, 'B', NULL, NULL, root);
 
     root->left = two_one;
     root->right = two_two;
 
-    Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
-    Node* three_two = createNode(508, 1, 'A', NULL, NULL, two_one);
+    Node* three_one = create_node(507, 1, -1, NULL, NULL, two_one);
+    Node* three_two = create_node(508, 1, 'A', NULL, NULL, two_one);
 
     two_one->left = three_one;
     two_one->right = three_two;
 
-    Node* four_one = createNode(505, 1, 'C', NULL, NULL, three_one);
-    Node* four_two = createNode(506, 1, 'C', NULL, NULL, three_one);
+    Node* four_one = create_node(505, 1, 'C', NULL, NULL, three_one);
+    Node* four_two = create_node(506, 1, 'C', NULL, NULL, three_one);
 
     three_one->left = four_one;
     three_one->right = four_two;
@@ -328,22 +328,22 @@ static char* test_node_path(){
 static char* test_swap_nodes(){
     mu_tag("Swap Nodes");
 
-    HuffmanTree* ht = createHuffmanTree();
-    Node* root = createNode(511, 4, -1, NULL, NULL, NULL);
-    Node* two_one = createNode(509, 2, -1, NULL, NULL, root);
-    Node* two_two = createNode(510, 2, 'B', NULL, NULL, root);
+    HuffmanTree* ht = create_huffman_tree();
+    Node* root = create_node(511, 4, -1, NULL, NULL, NULL);
+    Node* two_one = create_node(509, 2, -1, NULL, NULL, root);
+    Node* two_two = create_node(510, 2, 'B', NULL, NULL, root);
 
     root->left = two_one;
     root->right = two_two;
 
-    Node* three_one = createNode(507, 1, -1, NULL, NULL, two_one);
-    Node* three_two = createNode(508, 1, 'A', NULL, NULL, two_one);
+    Node* three_one = create_node(507, 1, -1, NULL, NULL, two_one);
+    Node* three_two = create_node(508, 1, 'A', NULL, NULL, two_one);
 
     two_one->left = three_one;
     two_one->right = three_two;
 
-    Node* four_one = createNYT(505);
-    Node* four_two = createNode(506, 1, 'C', NULL, NULL, three_one);
+    Node* four_one = create_nyt(505);
+    Node* four_two = create_node(506, 1, 'C', NULL, NULL, three_one);
 
     three_one->left = four_one;
     three_one->right = four_two;
@@ -425,33 +425,33 @@ static char* test_swap_nodes(){
     }*/
     printf("\n");
 
-    freeHuffman(ht);
+    free_huffman(ht);
 
     return 0;
 }
 
 static char* test_get_node_level(){
-    HuffmanTree* ht = createHuffmanTree();
-    freeHuffman(ht);
+    HuffmanTree* ht = create_huffman_tree();
+    free_huffman(ht);
     return 0;
 }
 
 static char* test_huffman_coding_abracadabra(){
     mu_tag("Huffman Coding (ABRACADABRA)");
-    HuffmanTree* ht = createHuffmanTree();
+    HuffmanTree* ht = create_huffman_tree();
     add_new_element(ht, 'A');
     add_new_element(ht, 'B');
     add_new_element(ht, 'R');
     add_new_element(ht, 'A');
     add_new_element(ht, 'C');
     printHuffmanTree(ht);
-    freeHuffman(ht);
+    free_huffman(ht);
     return 0;
 }
 
 static char* test_huffman_coding_abcbaaa(){
     mu_tag("Huffman Coding (abcbaaa)");
-    HuffmanTree* ht = createHuffmanTree();
+    HuffmanTree* ht = create_huffman_tree();
     add_new_element(ht, 'a');
     printHuffmanTree(ht);
     add_new_element(ht, 'b');
@@ -466,7 +466,7 @@ static char* test_huffman_coding_abcbaaa(){
     printHuffmanTree(ht);
     add_new_element(ht, 'a');
     printHuffmanTree(ht);
-    freeHuffman(ht);
+    free_huffman(ht);
     return 0;
 }
 
@@ -626,7 +626,7 @@ static char* test_huffman_coding_general(char* string){
     sprintf(title, "Huffman Coding (%s)", string);
     mu_tag(title);
 
-    HuffmanTree* ht = createHuffmanTree();
+    HuffmanTree* ht = create_huffman_tree();
 
     int i;
     for(i=0; i<strlen(string); i++){
@@ -674,7 +674,7 @@ static char* test_huffman_coding_general(char* string){
     mu_assert("Invalid HT", strncmp(buffer, resulting_tree, strlen(resulting_tree)) == 0);
     free(resulting_tree);
     free(buffer);
-    freeHuffman(ht);
+    free_huffman(ht);
 
     return 0;
 
