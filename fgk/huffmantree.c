@@ -269,7 +269,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(8192, 1); // TODO: Remove hardcoded value
+    char* new_ht_partial = calloc(4096*8, 1); // TODO: Remove hardcoded value
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -304,7 +304,9 @@ int decode_byte(HuffmanTree* ht){
         return 0;
     }
 
-    if(ht->decoder_byte >= ht->partial_output_length - 1){
+    //printf("Decoding 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
+
+    if(ht->decoder_byte >= ht->partial_output_length){
         return 0;
     }
 
@@ -318,8 +320,6 @@ int decode_byte(HuffmanTree* ht){
         ht->mask = 0x80;
         return ht->output_length;
     }
-
-
 
     Node* target = ht->root;
     unsigned int bit;
@@ -376,7 +376,7 @@ int decode_byte(HuffmanTree* ht){
         char new_byte = 0x00;
         int byte_mask = 0x80;
 
-        debug("Nyt path received!\n");
+        //printf("Nyt path received!\n");
 
         if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
 #if DEBUG
@@ -409,6 +409,7 @@ int decode_byte(HuffmanTree* ht){
         element = new_byte;
     } else {
 
+        //printf("Element received!\n");
         int* length = malloc(sizeof(int));
         unsigned short* target_path = node_path(target, length);
 
