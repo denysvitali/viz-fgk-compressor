@@ -2,6 +2,103 @@
 
 ## Introduzione
 
+### Progetto  
+Il presente progetto è stato sviluppato presso la Scuola Universitaria della Svizzera Italiana ([SUPSI](http://supsi.ch/)) quale progetto semestrale del corso di *Algoritmi e Strutture Dati (C02008)*.  
+
+#### Specifiche
+Le specifiche da rispettare sono le seguenti:
+
+    I progetti sono svolti a gruppi di 2 studenti. Il contributo di ogni
+    studente deve essere chiaramente identificato sia nel codice che
+    nelle presentazioni (Studente A, Studente B).
+    Ogni progetto ha una fase di analisi e una realizzativa. La fase di
+    analisi comprende lo studio di documentazione, una fase esplorativa
+    dove diverse soluzioni vengono abbozzate e messe a confronto, e la
+    selezione delle soluzioni definitive.
+    Il programma deve essere scritto in C standard ISO/IEC 9899:1999.
+    Nessun estensione particolare del linguaggio è consentita.
+    L’implementazione deve essere verificabile. Il programma DEVE sia
+    comprimere che decomprimere in due operazioni ben distinte.
+##### Esecuzione del programma
+    Il programma deve essere invocabile da linea di commando con la
+    seguente sintassi:  
+    programma opzioni file-input file-output
+    dove opzioni deve essere:
+    -c
+    per comprimere
+    -d
+    per decomprimere.
+    Altre opzioni sono permesse,
+    ma non devono essere necessarie per l’esecuzione del programma.
+    Una volta lanciato, il programma non deve necessitare più nessuna
+    interazione con l’utente.  
+    Il programma verrà testato in Linux nel modo seguente:
+    programma –c file.input out.compresso
+    programma –d out.compresso file.decompresso
+    diff file.input file.decompresso
+### Autori
+Il codice e la documentazione, sono stati realizzati nel periodo 2017-2018 da Cristian Spozio e [Denys Vitali](https://denv.it/).
+
+
+### Algoritmo
+Il progetto si basa sull'algoritmo di Huffman Adattivo (FGK - Faller-Gallager-Knuth).  
+Questo algoritmo si distingue dal Huffman "statico" in quanto l'albero viene generato dinamicamente con l'arrivo di nuovi byte.  
+  
+Grazie alla dinamicità dell'algoritmo è possibile implementare una compressione di uno stream di dati, senza conoscerne a priori il suo totale contenuto (stream video, audio o dati).  
+  
+Lo scopo dell'algoritmo è (ovviamente) quello di ridurre la quantità di dati da trasmettere / salvare, sfruttando le ripetizioni di byte.  
+L'algoritmo risulta essere molto efficiente nella compressione di file con molte ripetizioni (come ad esempio testo), mentre risulta essere poco performante quando i dati hanno un alta entropia.  
+  
+L'algoritmo si basa sulla proprietà di fratellanza. L'albero generato dovrà sempre rispettare queste due condizioni:  
+  
+1. Tutti i nodi dell'albero, ad eccezione della radice, devono avere un fratello.
+2. I nodi possono essere elencati, da sinistra a destra e dal basso verso l'alto, in ordine di peso.  
+
+In questo esempio mostriamo un albero creato dalla codifica della parola "foobar". 
+  
+![Esempio di albero](images/graphs/foobar.jpg)
+
+L'albero viene creato a partire da un nodo chiamato NYT (Not-Yet-Translated, "non ancora tradotto") di peso nullo.  
+Questo nodo è estremamente utile in quanto nella fase di codifica e decodifica il suo percorso (nell'esempio 1000, ossia Radice -> Destra -> Sinistra -> Sinistra -> Sinistra) ci indicherà che i prossimi 8 bit saranno quelli di un nuovo carattere.  
+  
+#### Creazione di un albero
+L'algoritmo comincia con un albero iniziale contenente un solo nodo, il NYT.   
+![Empty Tree](images/graphs/empty-tree.jpg)  
+  
+All'arrivo di un nuovo carattere (per esempio "a"), il compressore verifica se questo è già presente nell'albero. In caso contrario fa nascere dal NYT un sottoalbero con a sinistra il nuovo NYT ed a destra il nuovo elemento, come in figura.
+
+![New Element](images/graphs/new-element.jpg)
+  
+Essendo la proprietà di fratellanza rispettata, possiamo procedere all'aggiunta di elementi successivi.  
+All'arrivo di un'altro carattere (per esempio "b"), il compressore riesegue il controllo di esistenza e fa nascere un nuovo sottoalbero dal NYT precedente.  
+
+![ab-tree](images/graphs/ab-tree.jpg)
+
+Anche in questo caso, prima dell'aggiornamento dei pesi non è necessario effettuare nessuno scambio in quanto la proprietà di fratellanza è rispettata.  
+  
+All'arrivo di un terzo carattere ("c"), la situazione cambia.  
+![abc-tree](images/graphs/abc-tree.jpg)  
+In questo caso il nodo interno che in precedenza aveva peso 1 deve essere scambiato con "a" in quanto questo incrementerà di valore ed andrà a rompere la proprietà di fratellanza.
+
+![abc-tree-fixed](images/graphs/abc-tree-fixed.jpg)  
+La proprietà di fratellanza è così rispettata, ed il compressore può quindi continuare a creare l'albero in modo dinamico.
+
+
+#### Codifica
+Durante l'aggiunta degli elementi nell'albero, il compressore prepara i dati da inviare. All'arrivo di un nuovo byte viene inviato il percorso del NYT (nell'ultimo albero 100), e gli 8 bit del byte. Nel caso in cui l'elemento è già stato visto, viene inviata la sua posizione nell'albero, facendo così risparmiare molti bit in caso di ripetizioni continue (ad esempio, per rappresentare "a" ci basterà inviare "0").  
+  
+Al termine della compressione, nel caso in cui il byte non è completato (lavorando con i bit potrebbe capitarci di non avere un bitstream che è divisibile per 8), la nostra implementazione invia il percorso del NYT, ma dato che gli 8 bit successivi non esistono (perché appunto lo stream termina), il decompressore capirà che il suo lavoro è terminato.
+
+#### Decodifica
+La decodifica funziona in modo pressoché identico: all'arrivo di un nuovo byte, questo viene analizzato ed i percorsi presenti sotto forma di bit vengono verificati con l'albero del decompressore. All'arrivo del percorso del NYT, il decompressore si occupa di interpretare i prossimi 8 bit come un byte, e procede quindi all'aggiunta nel suo albero dell'elemento ed all'output su file dello stesso.  
+Nel caso in cui il percorso verificato non è quello del NYT, il decompressore aggiunge l'elemento ottenuto dal percorso all'albero e manda in output il carattere associato.  
+  
+In questo modo, compressore e decompressore hanno sempre il medesimo albero, e possono quindi condividersi percorsi brevi per rappresentare byte frequenti.  
+
+#### Ulteriori informazioni
+Purtroppo l'algoritmo non è ben documentato, non esistono RFC o documenti che lo descrivono in modo ottimale ed in rete è presente molto poco a riguardo. Esiste però una visualizzazione grafica molto ben realizzata che vale la pena di consultare: [Visualizing Adaptive Huffman Coding, di Ben Tanen - COMP-150](http://ben-tanen.com/adaptive-huffman/).  
+Con l'ausilio di una visualizzazione grafica dell'algoritmo, questo diventa di facile comprensione e può dunque essere sviluppato in maniera più efficace.  
+  
 ### Licenza
 
 MIT License
@@ -13,14 +110,15 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 ## Suddivisione dei file  
   
-La scelta che è stata fatta per la suddivisione dei file è stata quella di avere:
-* 1 file per la definizione della licenza: LICENSE
-* 1 file per la gestione dei test: minunit.h
-* 2 file per la gestione della compilazione: Makefile e defines.h
-* 3 file per la gestione della stampa e lo stile di essa: colors.h e console.h/c
-* 5 file per codifica e decodifica di Huffman Adattivo: huffman.h/c, main.c, utilities.h/c
+La scelta che è stata fatta per la suddivisione dei file è stata quella di avere:  
+- 1 file per la definizione della licenza: LICENSE  
+- 1 file per la gestione dei test: minunit.h  
+- 2 file per la gestione della compilazione: Makefile e defines.h  
+- 3 file per la gestione della stampa e lo stile di essa: colors.h e console.h/c  
+- 5 file per codifica e decodifica di Huffman Adattivo: huffman.h/c, main.c, utilities.h/c  
 
 ## Scopo di ogni file  
 
