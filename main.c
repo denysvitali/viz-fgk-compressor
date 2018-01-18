@@ -860,25 +860,25 @@ int main(int argc, char *argv[]) {
         // Tree test
 
         // First level
-        Node *root = createNode(11, 32, -1, NULL, NULL, NULL);
+        Node *root = create_node(11, 32, -1, NULL, NULL, NULL);
 
         // Second Level
-        Node *n_9 = createNode(9, 11, 'f', NULL, NULL, root);
-        Node *n_10 = createNode(10, 21, -1, NULL, NULL, root);
+        Node *n_9 = create_node(9, 11, 'f', NULL, NULL, root);
+        Node *n_10 = create_node(10, 21, -1, NULL, NULL, root);
 
         // Third level
-        Node *n_7 = createNode(7, 10, -1, NULL, NULL, n_10);
-        Node *n_8 = createNode(8, 11, -1, NULL, NULL, n_10);
+        Node *n_7 = create_node(7, 10, -1, NULL, NULL, n_10);
+        Node *n_8 = create_node(8, 11, -1, NULL, NULL, n_10);
 
         // Fourth Level
-        Node *n_3 = createNode(3, 5, 'c', NULL, NULL, n_7);
-        Node *n_4 = createNode(4, 5, -1, NULL, NULL, n_7);
-        Node *n_5 = createNode(5, 5, 'd', NULL, NULL, n_8);
-        Node *n_6 = createNode(6, 6, 'e', NULL, NULL, n_8);
+        Node *n_3 = create_node(3, 5, 'c', NULL, NULL, n_7);
+        Node *n_4 = create_node(4, 5, -1, NULL, NULL, n_7);
+        Node *n_5 = create_node(5, 5, 'd', NULL, NULL, n_8);
+        Node *n_6 = create_node(6, 6, 'e', NULL, NULL, n_8);
 
         // Fifth Level
-        Node *n_1 = createNode(1, 2, 'a', NULL, NULL, n_4);
-        Node *n_2 = createNode(2, 3, 'b', NULL, NULL, n_4);
+        Node *n_1 = create_node(1, 2, 'a', NULL, NULL, n_4);
+        Node *n_2 = create_node(2, 3, 'b', NULL, NULL, n_4);
 
         root->left = n_9;
         root->right = n_10;
@@ -1004,18 +1004,28 @@ int main(int argc, char *argv[]) {
         // for now, we stick to our fgetc function since we're working w/ small files
 
         // Do the Huffman Coding Thing
-        HuffmanTree *ht = createHuffmanTree();
+        HuffmanTree *ht = create_huffman_tree();
 
         if (o_tmp_fh == NULL) {
             // The file doesn't exist, create it
             o_tmp_fh = fopen(file_output_tmp, "wb");
         }
 
+        if(o_tmp_fh == NULL){
+            char error_msg[200];
+            sprintf(error_msg, "Unable to create %s", file_output_tmp);
+            error(error_msg);
+            exit(1);
+        }
+
         int i;
 
-        size_t buffer_size = 1024;
+        size_t buffer_size = 4096;
         char *buffer = calloc(buffer_size, sizeof(char));
 
+        ht->buffer = (int) buffer_size;
+
+        int total_read = 0;
 
         while (!feof(fh)) {
             if (ferror(fh)) {
@@ -1024,6 +1034,7 @@ int main(int argc, char *argv[]) {
             }
 
             size_t read = fread(buffer, 1, buffer_size, fh);
+            total_read += read;
             for (i = 0; i < read; i++) {
                 add_new_element(ht, buffer[i]);
                 if(ht->output_length != 0) {
@@ -1044,28 +1055,13 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        endHuffman(ht);
-        fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+        if(total_read != 0) {
+            endHuffman(ht);
+        }
 
-        /*for(;;){
-			unsigned char c = (unsigned char) fgetc(fh);
-			if(feof(fh)) break;
-			if(ferror(fh)) break;
-
-            char buffer[200];
-            sprintf(buffer, "Parsing byte %02x", c & 0xff);
-            debug(buffer);
-            //char filename[200];
-            //sprintf(filename, "./prev-%d.dot", i);
-            //printf(filename);
-            //saveHuffmanTree(ht, filename);
-            add_new_element(ht, c);
-            //printf("%s\n", ht->output);
-            fputs(ht->output, o_tmp_fh);
-            i++;
-        }*/
-        //printHuffmanTreeInfo(ht);
-        //saveHuffmanTree(ht, "./out.dot");
+        if(ht->output_length != 0){
+            fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
+        }
 
         int compress = 0;
 
@@ -1125,7 +1121,7 @@ int main(int argc, char *argv[]) {
         free(file_name);
 
         printf("\n");
-        freeHuffman(ht);
+        free_huffman(ht);
         fclose(fh);
         fclose(o_fh);
         fclose(o_tmp_fh);
@@ -1223,7 +1219,7 @@ int main(int argc, char *argv[]) {
         header_size += i;
 
         filename[i] = '\0';
-        
+
         FILE *o_fh = fopen(filename, "wb+");
         if(!o_fh){
             // Unable to create filename
@@ -1231,14 +1227,15 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        int b_size = 4096;
+        int b_size = 8192;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
         size_t read_size = 0;
 
-        HuffmanTree* ht = createHuffmanTree();
+        HuffmanTree* ht = create_huffman_tree();
         ht->mode = H_MODE_DECOMPRESSOR;
+        ht->buffer = b_size;
 
         int k;
         int written_bytes = 0;
@@ -1251,23 +1248,24 @@ int main(int argc, char *argv[]) {
         read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
 
         while(read_size != 0){
-
             if(compressed) {
-
-
                 for (i = 0; i < read_size; i++) {
                     ht->partial_output[ht->partial_output_length] = read_buffer[i];
                     ht->partial_output_length++;
                 }
 
                 ht->decoder_last_chunk = (unsigned short) (read_size < b_size);
+#if DEBUG
                 if (ht->decoder_last_chunk) {
                     printf("%d Last chunk.\n", (int) read_size);
                 }
-
-
+#endif
                 while (decode_byte(ht) != 0) {
-                    i++;
+
+#if DEBUG
+                    printf("Decoding byte %d/%d (0x%02x)\n", i, (int) read_size,
+                           ht->partial_output[ht->decoder_byte] & 0xff);
+#endif
                     int wb = 0;
                     for (k = 0; k < ht->output_length; k++) {
 #if DEBUG
@@ -1286,18 +1284,17 @@ int main(int argc, char *argv[]) {
 
                 fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
                 huffman_shift_partial_output(ht, ht->decoder_byte);
-                //ht->partial_output_length = ht->decoder_byte;
                 ht->decoder_byte = 0;
 
                 written_bytes = 0;
             } else {
-                fwrite(read_buffer, sizeof(char), (size_t) read_bytes, o_fh);
+                fwrite(read_buffer, sizeof(char), (size_t) read_size, o_fh);
             }
 
             read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
         }
 
-        freeHuffman(ht);
+        free_huffman(ht);
         free(file_input);
 
         fclose(fh);

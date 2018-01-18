@@ -37,15 +37,16 @@ typedef struct{
     unsigned char mask;
     unsigned short decoder_last_chunk;
     int decoder_byte;
+    int buffer;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
-HuffmanTree* createHuffmanTree();
-void freeHuffman(HuffmanTree* ht);
+HuffmanTree* create_huffman_tree();
+void free_huffman(HuffmanTree *ht);
 Node* find_node(Node *root, int c);
-Node* createNYT(int i);
-Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent);
-Node* findNYT(Node* root);
+Node* create_nyt(int i);
+Node* create_node(int node_number, int weight, int element, Node *left, Node *right, Node *parent);
+Node* find_nyt(Node *root);
 int is_nyt(Node *pNode);
 int is_internal_node(Node *pNode);
 Node* check_move(Node* root, Node* node);
@@ -61,6 +62,9 @@ void create_subtree_from_node(HuffmanTree *ht, Node *node, Node** result, int* p
 void generateHTArrayFromTree(HuffmanTree* ht);
 unsigned short* node_path(Node* node, int* length);
 int is_leaf(Node* pNode);
+unsigned int get_bit(HuffmanTree* ht);
+
+
 
 void endHuffman(HuffmanTree* ht);
 

@@ -26,11 +26,6 @@ Node* highest_numbered_node(HuffmanTree* ht, Node* node){
         }
     }
 
-#if DEBUG
-        printElement(highest);
-#endif
-
-
     return highest;
 }
 
@@ -101,9 +96,6 @@ void huffman_coding_bitcheck(HuffmanTree* ht){
         huffman_coding_reset_partial_output(ht);
     } else {
         ht->mask >>= 1;
-#if DEBUG
-        printf("Mask is now 0x%02x\n", ht->mask);
-#endif
     }
 }
 
@@ -138,6 +130,7 @@ void huffman_append_partial_new_element(HuffmanTree* ht, unsigned short* nyt_pat
         }
         huffman_coding_bitcheck(ht);
     }
+
     debug("[huffman_append_partial_new_element] Printing element bin");
     unsigned short* binary = byte2bit(element);
     for(i = 0; i<8; i++){
@@ -155,26 +148,37 @@ void huffman_partial_final_conversion(HuffmanTree* ht){
     unsigned short* path = node_path(ht->nyt, length);
     int path_byte = 0;
 
-
-    while(ht->mask != 0x01){
-        if(path_byte == *length){
-            // Restart from 0
+#if DEBUG
+    char* path_string = path_to_string(path, *length);
+    printf("Path string: %s, Mask: 0x%02x\n", path_string, ht->mask & 0xff);
+#endif
+    while (ht->mask != 0x00) {
+        if (path_byte == *length) {
             path_byte = 0;
+            continue;
         }
-        if(path[path_byte]) {
+
+#if DEBUG
+        printf("Path byte while loop (%d)\n",ht->partial_output_length);
+#endif
+        if (path[path_byte]) {
             ht->partial_output[ht->partial_output_length] |= ht->mask;
         }
+
         ht->mask >>= 0x01;
         path_byte++;
     }
+#if DEBUG
+    printf("ht->output_length: %d, ht->partial_output_length: %d\n", ht->output_length, ht->partial_output_length);
+#endif
+    ht->output[ht->output_length] = ht->partial_output[ht->partial_output_length];
     ht->output_length++;
+
     huffman_coding_reset_partial_output(ht);
+    free(length);
 }
 
 void endHuffman(HuffmanTree* ht){
-    if(DEBUG) {
-
-    }
     huffman_partial_final_conversion(ht);
 }
 
@@ -189,9 +193,11 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     int* length = malloc(sizeof(int));
     *length = 0;
 
+#if DEBUG
     char debug_buffer[100];
     sprintf(debug_buffer, "[add_new_element] Character is %02x", c & 0xff);
     debug(debug_buffer);
+#endif
 
     int* path_length = malloc(sizeof(int));
     unsigned short* path;
@@ -223,8 +229,8 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
             exit(51);
         }
 
-        Node* new_nyt = createNYT(old_nyt->node_number - 2);
-        Node* new_char = createNode(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
+        Node* new_nyt = create_nyt(old_nyt->node_number - 2);
+        Node* new_char = create_node(old_nyt->node_number - 1, 1, c, NULL, NULL, old_nyt);
 
         old_nyt->weight++;
         old_nyt->left = new_nyt;
@@ -263,7 +269,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(8192, sizeof(char));
+    char* new_ht_partial = calloc((size_t) ht->buffer * 8, 1);
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -276,11 +282,8 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
 
 unsigned int get_bit(HuffmanTree* ht){
 #if DEBUG
-    printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte], ht->mask);
+    printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte] & 0xff, ht->mask & 0xff);
 #endif
-    if(ht->decoder_byte == ht->partial_output_length){
-        return 2;
-    }
 
     unsigned int bit;
     bit = (unsigned int) (ht->partial_output[ht->decoder_byte] & ht->mask) != 0;
@@ -288,7 +291,6 @@ unsigned int get_bit(HuffmanTree* ht){
     if(ht->mask == 0x01){
         ht->mask = 0x80;
         ht->decoder_byte++;
-        //huffman_shift_partial_output(ht, 1);
     } else {
         ht->mask >>= 1;
     }
@@ -302,7 +304,9 @@ int decode_byte(HuffmanTree* ht){
         return 0;
     }
 
-    if(ht->decoder_byte >= ht->partial_output_length - 1){
+    //printf("Decoding 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
+
+    if(ht->decoder_byte >= ht->partial_output_length){
         return 0;
     }
 
@@ -318,24 +322,18 @@ int decode_byte(HuffmanTree* ht){
     }
 
     Node* target = ht->root;
-
     unsigned int bit;
-
     unsigned char old_mask = ht->mask;
 
     int previous_decoder_byte = ht->decoder_byte;
 
     while(!is_leaf(target)){
-        if(ht->partial_output_length - ht->decoder_byte <= 1){
+        if(ht->partial_output_length - ht->decoder_byte <= 0){
             target = NULL;
             break;
         }
         bit = get_bit(ht);
 
-        if(bit == 2){
-            ht->output_length++;
-            return ht->output_length;
-        }
 
         if(!bit){
             target = target->left;
@@ -345,6 +343,27 @@ int decode_byte(HuffmanTree* ht){
     }
 
     if(target == NULL){
+        if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
+#if DEBUG
+            printf("TARGET is null - this is just padding\n");
+            printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
+            printf("Byte: 0x%02x, Mask: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff,
+            ht->mask & 0xff);
+
+            int* length = malloc(sizeof(int));
+            unsigned short* nyt_path = node_path(ht->nyt, length);
+
+            //saveHuffmanTree(ht, "out.dot");
+
+            printf("NYT path: %s\n", path_to_string(nyt_path, *length));
+            free(length);
+            free(nyt_path);
+#endif
+            ht->mask = old_mask;
+            ht->decoder_byte = previous_decoder_byte;
+            return 0;
+        }
+
         ht->mask = old_mask;
         ht->decoder_byte = previous_decoder_byte;
         return ht->output_length;
@@ -357,12 +376,15 @@ int decode_byte(HuffmanTree* ht){
         char new_byte = 0x00;
         int byte_mask = 0x80;
 
-        if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 2 && ht->mask != 0x80){
+        //printf("Nyt path received!\n");
+
+        if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte <= 1){
+#if DEBUG
             printf("This is the last byte. %d/%d\n", ht->decoder_byte, ht->partial_output_length);
             printf("Byte: 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
-            //huffman_shift_partial_output(ht, 1);
+#endif
             ht->output_length++;
-            return ht->output_length;
+            return 0;
         }
 
         for(i=0; i<8; i++){
@@ -386,6 +408,19 @@ int decode_byte(HuffmanTree* ht){
         }
         element = new_byte;
     } else {
+
+        //printf("Element received!\n");
+        int* length = malloc(sizeof(int));
+        unsigned short* target_path = node_path(target, length);
+
+#if DEBUG
+        printf("Target path: %s\n", path_to_string(target_path, *length));
+        printf("Target element: 0x%02x\n", target->element & 0xff);
+#endif
+
+        free(length);
+        free(target_path);
+
         element = (char) target->element;
     }
 
@@ -400,16 +435,16 @@ int decode_byte(HuffmanTree* ht){
     return ht->output_length;
 }
 
-Node* findNYT(Node* root){
+Node* find_nyt(Node *root){
     if(is_nyt(root)){
         return root;
     }
-    Node *left = findNYT(root->left);
+    Node *left = find_nyt(root->left);
     if(is_nyt(left)){
         return left;
     }
 
-    Node *right = findNYT(root->right);
+    Node *right = find_nyt(root->right);
     if(is_nyt(right)){
         return right;
     }
@@ -484,7 +519,7 @@ Node* find_node(Node *root, int c){
     return NULL;
 }
 
-Node* createNYT(int i) {
+Node* create_nyt(int i) {
     Node* root = malloc(sizeof(Node));
     root->weight = 0;
     root->element = NYT_ELEMENT;
@@ -496,7 +531,7 @@ Node* createNYT(int i) {
 }
 
 
-Node* createNode(int node_number, int weight, int element, Node* left, Node* right, Node* parent){
+Node* create_node(int node_number, int weight, int element, Node *left, Node *right, Node *parent){
     Node* n = malloc(sizeof(Node));
     n->node_number = node_number;
     n->weight = weight;
@@ -507,9 +542,9 @@ Node* createNode(int node_number, int weight, int element, Node* left, Node* rig
     return n;
 }
 
-HuffmanTree* createHuffmanTree(){
+HuffmanTree* create_huffman_tree(){
     HuffmanTree* ht = malloc(sizeof(HuffmanTree));
-    Node* tmp_nyt = createNYT(HUFFMAN_ARRAY_SIZE - 1);
+    Node* tmp_nyt = create_nyt(HUFFMAN_ARRAY_SIZE - 1);
     ht->root = tmp_nyt;
     ht->nyt = ht->root;
     ht->output = calloc(1, HUFFMAN_ARRAY_SIZE);
@@ -521,6 +556,7 @@ HuffmanTree* createHuffmanTree(){
     ht->mask = 0x80; // 1000 0000 (MSB)
     ht->decoder_byte = 0;
     ht->decoder_last_chunk = 0;
+    ht->buffer = 0;
 
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
@@ -532,25 +568,25 @@ HuffmanTree* createHuffmanTree(){
     return ht;
 }
 
-void freeNode(Node* node){
+void free_node(Node *node){
     if(node->left == NULL && node->right == NULL){
         free(node);
         return;
     }
 
     if(node->left != NULL){
-        freeNode(node->left);
+        free_node(node->left);
     }
 
     if(node->right != NULL){
-        freeNode(node->right);
+        free_node(node->right);
     }
 
     free(node);
 }
 
-void freeHuffman(HuffmanTree* ht){
-    freeNode(ht->root);
+void free_huffman(HuffmanTree *ht){
+    free_node(ht->root);
     free(ht->output);
     free(ht->partial_output);
     free(ht);
@@ -603,13 +639,8 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
 
     debug("[swap_nodes] Begin Swap");
-    //printHuffmanTree(ht);
 
-
-    //int lvl1 = getNodeLevel(node);
-    //int lvl2 = getNodeLevel(node2);
-
-#ifdef DEBUG
+#if DEBUG
         int* pos1 = getNodePosition(ht, node);
         int* pos2 = getNodePosition(ht, node2);
         char buffer[500];

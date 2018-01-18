@@ -179,7 +179,7 @@ char* getElement(Node* root){
     else if(root->element == -1){
         sprintf(string, "\"(%d,%d)\"", root->weight, root->node_number);
     } else {
-#ifdef UTILITIES_PRINT_CHARS
+#if UTILITIES_PRINT_CHARS
         sprintf(string, "\"%c (%d, %d)\"",root->element, root->weight, root->node_number);
 #else
         sprintf(string, "\"%x (%d, %d)\"",root->element&0xff, root->weight, root->node_number);
