@@ -269,7 +269,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(4096*8, 1); // TODO: Remove hardcoded value
+    char* new_ht_partial = calloc((size_t) ht->buffer * 8, 1);
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
@@ -556,6 +556,7 @@ HuffmanTree* create_huffman_tree(){
     ht->mask = 0x80; // 1000 0000 (MSB)
     ht->decoder_byte = 0;
     ht->decoder_last_chunk = 0;
+    ht->buffer = 0;
 
     int i;
     for(i = 0; i<HUFFMAN_ARRAY_SIZE; i++){
@@ -638,11 +639,6 @@ void swap_nodes(HuffmanTree* ht, Node* node, Node* node2){
     }
 
     debug("[swap_nodes] Begin Swap");
-    //printHuffmanTree(ht);
-
-
-    //int lvl1 = getNodeLevel(node);
-    //int lvl2 = getNodeLevel(node2);
 
 #if DEBUG
         int* pos1 = getNodePosition(ht, node);

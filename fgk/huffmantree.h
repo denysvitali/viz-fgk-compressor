@@ -37,6 +37,7 @@ typedef struct{
     unsigned char mask;
     unsigned short decoder_last_chunk;
     int decoder_byte;
+    int buffer;
 } HuffmanTree;
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);

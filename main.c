@@ -1020,8 +1020,10 @@ int main(int argc, char *argv[]) {
 
         int i;
 
-        size_t buffer_size = 1024;
+        size_t buffer_size = 4096;
         char *buffer = calloc(buffer_size, sizeof(char));
+
+        ht->buffer = (int) buffer_size;
 
         int total_read = 0;
 
@@ -1061,26 +1063,6 @@ int main(int argc, char *argv[]) {
             fwrite(ht->output, sizeof(char), (size_t) ht->output_length, o_tmp_fh);
         }
 
-        /*for(;;){
-			unsigned char c = (unsigned char) fgetc(fh);
-			if(feof(fh)) break;
-			if(ferror(fh)) break;
-
-            char buffer[200];
-            sprintf(buffer, "Parsing byte %02x", c & 0xff);
-            debug(buffer);
-            //char filename[200];
-            //sprintf(filename, "./prev-%d.dot", i);
-            //printf(filename);
-            //saveHuffmanTree(ht, filename);
-            add_new_element(ht, c);
-            //printf("%s\n", ht->output);
-            fputs(ht->output, o_tmp_fh);
-            i++;
-        }*/
-        //printHuffmanTreeInfo(ht);
-        //saveHuffmanTree(ht, "./out.dot");
-
         int compress = 0;
 
         fseek(o_tmp_fh, 0L, SEEK_END);
@@ -1097,7 +1079,6 @@ int main(int argc, char *argv[]) {
 
         fprintf(o_fh, "%s", MAGIC_NUMBER);
 
-        // TODO: Add me when debugging is done!
         if (size < original_size) {
             compress = 1;
         }
@@ -1246,7 +1227,7 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        int b_size = 4096;
+        int b_size = 8192;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
@@ -1254,6 +1235,7 @@ int main(int argc, char *argv[]) {
 
         HuffmanTree* ht = create_huffman_tree();
         ht->mode = H_MODE_DECOMPRESSOR;
+        ht->buffer = b_size;
 
         int k;
         int written_bytes = 0;
