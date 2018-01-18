@@ -188,21 +188,20 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     int* length = malloc(sizeof(int));
     *length = 0;
 
+#if DEBUG
     char debug_buffer[100];
     sprintf(debug_buffer, "[add_new_element] Character is %02x", c & 0xff);
     debug(debug_buffer);
+#endif
 
     int* path_length = malloc(sizeof(int));
     unsigned short* path;
-
-    printf("[add_new_element] Adding 0x%02x\n", c & 0xff);
 
     if(target != NULL){
         debug("[add_new_element] AS");
         path = node_path(target, path_length);
         node_positioner(ht, target);
         if(is_compressor(ht)){
-            printf("[add_new_element] AS - Partial Path, %s\n", path_to_string(path, *path_length));
             huffman_append_partial_path(ht, path, *path_length);
         }
     } else {
@@ -265,7 +264,7 @@ void huffman_shift_partial_output(HuffmanTree* ht, int byte){
     }
     int i;
 
-    char* new_ht_partial = calloc(sizeof(ht->partial_output)/sizeof(char), sizeof(char));
+    char* new_ht_partial = calloc(8192, 1);
 
     for(i=0; i<ht->partial_output_length-byte; i++){
         new_ht_partial[i] = ht->partial_output[byte + i];
