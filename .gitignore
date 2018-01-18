@@ -71,3 +71,6 @@
 /*.txt
 
 /benchmark
+
+# Generated docs
+docs/*.pdf
