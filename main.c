@@ -1225,7 +1225,7 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
-        int b_size = 8192;
+        int b_size = 4096;
         char read_buffer[b_size];
         char write_buffer[b_size*8];
         //fseek(fh, header_size, SEEK_SET);
