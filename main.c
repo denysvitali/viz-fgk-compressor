@@ -781,10 +781,6 @@ static char * all_tests(){
     mu_run_test(test_create_huffman_tree);
     //mu_run_test(test_swap_ht_array);
 
-    mu_run_test(test_huffman_coding_bookkeeper);
-    mu_run_test(test_huffman_coding_mississippi);
-    mu_run_test(test_huffman_coding_engineering);
-    mu_run_test(test_huffman_coding_foobar);
     //mu_run_test(test_huffman_coding_foobar2000);
     //mu_run_test(test_huffman_coding_loremipsum);
 
@@ -798,8 +794,10 @@ static char * all_tests(){
     mu_run_test(test_huffman_coding);
     mu_run_test(test_huffman_coding_abracadabra);
     mu_run_test(test_huffman_coding_abcbaaa);
+    mu_run_test(test_huffman_coding_bookkeeper);
     mu_run_test(test_huffman_coding_mississippi);
     mu_run_test(test_huffman_coding_engineering);
+    mu_run_test(test_huffman_coding_foobar);
     mu_run_test(test_huffman_coding_aardvark);
     mu_run_test(test_huffman_coding_sleeplessness);
     mu_run_test(test_bin2byte);
