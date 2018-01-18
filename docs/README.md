@@ -1,6 +1,6 @@
-# Struttura del codice sorgente
+# Struttura del codice sorgente  
 
-## Suddivisione dei file
+## Suddivisione dei file  
   
 La scelta che è stata fatta per la suddivisione dei file è stata quella di avere:
 * 1 file per la definizione della licenza: LICENSE
@@ -9,7 +9,8 @@ La scelta che è stata fatta per la suddivisione dei file è stata quella di ave
 * 3 file per la gestione della stampa e lo stile di essa: colors.h e console.h/c
 * 5 file per codifica e decodifica di Huffman Adattivo: huffman.h/c, main.c, utilities.h/c
 
-## Scopo di ogni file
+## Scopo di ogni file  
+
 ### LICENSE
 
 *LICENSE* è un file di testo nel quale viene semplicemente definita la licenza del software.
@@ -61,8 +62,9 @@ typedef struct Node{
 } Node;
 ``` 
 La quale identifica ogni nodo dell'albero con i rispettivi attributi (*node_number*, *weight* e *element*).
-Sono inoltre presenti i puntatori ai vari nodi limitrofi quali il *parent* e i *child* 
-## HuffmanTree
+Sono inoltre presenti i puntatori ai vari nodi limitrofi quali il *parent* e i *child*  
+
+## HuffmanTree  
 
 *HuffmanTree* è una `struct` definita come segue:
 ```c
@@ -70,43 +72,61 @@ typedef struct{
     Node* root;
     Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
     Node* nyt;
+
     char* output;
-    char* partial_output;
     int output_length;
+
+    char* partial_output;
     int partial_output_length;
+
     int elements;
-    int decoder_flags;
     unsigned int mode;
     unsigned char mask;
+    unsigned short decoder_last_chunk;
+    int decoder_byte;
+    int buffer;
 } HuffmanTree;
 ``` 
-La quale identifica l'albero con i suoi attributi(*root* e *nyt*).
-Contiene inoltre un `array` utilizzato per avere un accesso più veloce ai nodi dell'albero ed il rispettivo numero (*tree* e *elements*).
-Le componenti: *output*, *partial_output* ,*output_length*, *partial_output_length* sono necessarie per le stampe su file e a video.
-Le componenti *decoder_flags* e *mode* sono necessarie per decidere le varie flags per le stampe utili al DEBUG e la modalità di utilizzo del software (compressione o decompressione).
-La componente *mask* è necessaria per effettuare un padding necessario agli ultimi bit per raggiungere il byte.
+La quale identifica l'albero con i suoi attributi (*root* e *nyt*).
+Contiene inoltre un *array* utilizzato per avere un accesso più veloce ai nodi dell'albero ed il rispettivo numero (*tree* ed *elements*).
+Le componenti: *output*, *partial_output* ,*output_length*, *partial_output_length* sono necessarie per le stampe su file e a video.  
 
-# Istruzioni per l'utilizzo
+Il campo *mode* è necessario in quanto alcune delle funzioni ausiliarie (come per esempio `add_new_element`) hanno comportamenti differenti in caso di compressione o decompressione.  
+La componente *mask* è utilizzata per scrivere i byte bit per bit.
 
-## Compilazione
+# Istruzioni per l'utilizzo  
 
-Per la compilazione del codice è necessario utilizzare la seguente riga di codice:
-`make release` 
-che genera un file binario dal nome `viz-release`.
-Una guida simile è presente nel file *README*
+## Compilazione  
 
-## Esecuzione
+*Nota: Per maggiori opzioni di compilazione, consultare il file README.md presente nella root del progetto*  
 
-### Compressione
-Per l'esecuzione del software in compressione è necessario utilizzare la seguente riga di codice:
-`./viz-release -c input output.viz`
-dove l'argomento `-c` serve per eseguire il programma in compressione, `input` è un file di input con una qualsiasi estensione e `output.viz` è il nome del file che si vorrà avere in output.
-**Nota:** Il nome del file in uscita può variare ma non la sua estensione.
+Per compilare il progetto è sufficiente utilizzare il comando:
+```
+make release
+```
+Verrà così generata la versione di release (senza debugging symbols ed ottimizzata), dal nome `viz-release`.  
+Per altri target (come `debug` o `test` si consulti il README.md)  
 
-### Decompressione
-Per l'esecuzione del software in decompressione è necessario utilizzare la seguente riga di codice:
-`./viz-release -d input.viz`
-dove l'argomento `-d` serve per eseguire il programma in decompressione e `input.viz` è un file di input qualsiasi con estensione `.viz`.
+## Esecuzione  
+
+### Compressione  
+La sintassi di compressione è la seguente:  
+```
+./viz-release -c input output.viz
+```
+dove l'argomento `-c` serve per eseguire il programma in compressione, `input` è un file di input con una qualsiasi estensione e `output.viz` è il nome del file che si vorrà avere in output.  
+È inoltre possibile specificare il flag `-f` per forzare la sovrascrittura del file `output.viz` nel caso in cui questo sia già presente.  
+    
+**Nota:** È *consigliato* (ma non necessario) mantenere l'estensione `.viz` per riconoscere visualmente quali file sono stati compressi.  
+   
+**Nota 2:** La sintassi di compressione è stata **imposta** dai requisiti del progetto. Questa sintassi è opposta alla sintassi classica di *qualsiasi altro compressore* presente in UNIX. Per ripristinare il comportamento e mantenere la consistenza che UNIX necessita, si setti il flag `INVERTED_COMPRESSION_FLAG` in `defines.h` a `0`.
+
+### Decompressione  
+La sintessi per la decompressione è invece la seguente:  
+```
+./viz-release -d input.viz
+```  
+dove l'argomento `-d` serve per eseguire il programma in decompressione e `input.viz` è il file di input (generato precedentemente con il flag `-c`) da decomprimere.
 <!--
 <div align="center">
 
@@ -114,58 +134,83 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 # Y'all mind if I praise the Lord?
 </div>
 -->
-# Procedure di test e problemi noti
-## Test effettuati
-### Test_debug
-Testa se il sowftare è in modalità `DEBUG`.
+  
+# Procedure di test e problemi noti   
+## Test effettuati  
+### test_debug  
+Testa se il software è in modalità `DEBUG`.
 
-### Test_create_huffman_tree
+### test_create_huffman_tree  
 Testa se la funzione `create_huffman_tree` viene eseguita correttamente.
 
-### Test_swap_ht_array
+### test_swap_ht_array  
 Testa la funzione `swap_nodes` e confronta il risultato con quello aspettato.
 
-### Test_huffman_coding_bookkeeper
-Testa la creazione e l'adattamento dell'albero sulla parola *bookkeeper* e confronta il risultato con quello aspettato.
-### Test_huffman_coding_mississippi
-Testa la creazione e l'adattamento dell'albero sulla parola *mississippi* e confronta il risultato con quello aspettato.
-### Test_huffman_coding_engineering
-Testa la creazione e l'adattamento dell'albero sulla parola *engineering* e confronta il risultato con quello aspettato.
-### Test_huffman_coding_foobar
-Testa la creazione e l'adattamento dell'albero sulla parola *foobar* e confronta il risultato con quello aspettato.
-### Test_huffman_coding_foobar2000
-Testa la creazione e l'adattamento dell'albero sulla parola *foobar2000* e confronta il risultato con quello aspettato.
-### Test_huffman_coding_loremipsum
-Testa la creazione e l'adattamento dell'albero sulla parola *loremipsum* e confronta il risultato con quello aspettato.
+### test_get_node_level
+Testa la funzione `getNodeLevel` e confronta il risultato con quello aspettato.  
 
-### Test_get_node_level
-Testa la funzione `getNodeLevel` e confronta il risultato con quello aspettato.
-### Test_simple_swap
-Testa la funzione `swap_node` applicandola ad un esempio semplice e confronta il risultato con quello aspettato.
-### Test_swap_nodes
-Testa la funzione `swap_node` in tutte le sue funzioni e confronta il risultato con quello aspettato.
-### Test_node_path
+### test_simple_swap
+Testa la funzione `swap_node` applicandola ad un esempio semplice e confronta il risultato con quello aspettato.  
+
+### test_swap_nodes
+Testa la funzione `swap_node` in tutte le sue funzioni e confronta il risultato con quello aspettato.  
+
+### test_node_path
 Testa la funzione `node_path` e confronta il risultato con quello aspettato.
-### Test_huffman_coding
-Testa l'intero sowftare e confronta il risultato con quello aspettato.
-### Test_utility_sibilings
-Testa la funzione `sibiling` su un esempio creato.
-    //mu_run_test(test_utility_siblings);
-    mu_run_test(test_huffman_coding);
-    mu_run_test(test_huffman_coding_abracadabra);
-    mu_run_test(test_huffman_coding_abcbaaa);
-    mu_run_test(test_huffman_coding_mississippi);
-    mu_run_test(test_huffman_coding_engineering);
-    mu_run_test(test_huffman_coding_aardvark);
-    mu_run_test(test_huffman_coding_sleeplessness);
-    mu_run_test(test_bin2byte);
-    mu_run_test(test_bin2byte2);
-    mu_run_test(test_byte2bin);
-    mu_run_test(test_filename);
 
+### test_huffman_coding  
+Testa se la codifica di Huffman viene eseguita correttamente
 
-    // File ops. Run in sequence!
-    mu_run_test(test_create_file);
-    mu_run_test(test_write_to_file);
-    mu_run_test(test_read_file);
-    mu_run_test(test_file_delete);
+### test_huffman_coding_abracadabra
+Il test si assicura che l'albero generato dalla codifica di "abracadabra" corrisponda a quello aspettato.  
+
+### test_huffman_coding_abcbaaa
+Il test si assicura che l'albero generato dalla codifica di "abcbaaa" corrisponda a quello aspettato.  
+
+### test_huffman_coding_bookkeeper
+Il test si assicura che l'albero generato dalla codifica di "bookkeeper" corrisponda a quello aspettato.  
+![bookkeeper](./images/graphs/bookkeeper.jpg)
+
+### test_huffman_coding_mississippi
+Il test si assicura che l'albero generato dalla codifica di "mississippi" corrisponda a quello aspettato.  
+![mississippi](./images/graphs/mississippi.jpg)
+
+### test_huffman_coding_engineering
+Il test si assicura che l'albero generato dalla codifica di "engineering" corrisponda a quello aspettato.  
+![engineering](./images/graphs/engineering.jpg)
+
+### test_huffman_coding_foobar
+Il test si assicura che l'albero generato dalla codifica di "foobar" corrisponda a quello aspettato.  
+![foobar](./images/graphs/foobar.jpg)
+
+### test_huffman_coding_aardvark
+Il test si assicura che l'albero generato dalla codifica di "aardvark" corrisponda a quello aspettato.  
+![aardvark](./images/graphs/aardvark.jpg)
+
+### test_huffman_coding_sleeplessness
+Il test si assicura che l'albero generato dalla codifica di "sleeplessness" corrisponda a quello aspettato.  
+![sleeplessness](./images/graphs/sleeplessness.jpg)
+
+### test_bin2byte
+Testa la funzione bin2byte che converte una stringa di 0 ed 1 in un byte.
+
+### test_bin2byte2
+Estende il test di bin2byte per casi più complessi.
+
+### test_byte2bin
+Testa la funzione byte2bin che converte dei byte in una stringa di 0 ed 1.
+
+### test_filename
+Testa la funzione `get_filename(char* filepath)`.
+
+### test_create_file
+Testa la funzione di creazione di file
+
+### test_write_to_file
+Testa la funzionalità di scrittura su file
+
+### test_read_file
+Testa la lettura da file
+
+### test_file_delete
+Testa la funzionalità di eliminazione di file
