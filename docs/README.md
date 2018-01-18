@@ -56,31 +56,34 @@ L'algoritmo si basa sulla proprietà di fratellanza. L'albero generato dovrà se
 
 In questo esempio mostriamo un albero creato dalla codifica della parola "foobar". 
   
-![Esempio di albero](images/graphs/foobar.jpg)
+![Albero di "foobar"](images/graphs/foobar.jpg)
 
 L'albero viene creato a partire da un nodo chiamato NYT (Not-Yet-Translated, "non ancora tradotto") di peso nullo.  
 Questo nodo è estremamente utile in quanto nella fase di codifica e decodifica il suo percorso (nell'esempio 1000, ossia Radice -> Destra -> Sinistra -> Sinistra -> Sinistra) ci indicherà che i prossimi 8 bit saranno quelli di un nuovo carattere.  
   
 #### Creazione di un albero
 L'algoritmo comincia con un albero iniziale contenente un solo nodo, il NYT.   
-![Empty Tree](images/graphs/empty-tree.jpg)  
+![Albero vuoto](images/graphs/empty-tree.jpg){ width=100px } 
   
 All'arrivo di un nuovo carattere (per esempio "a"), il compressore verifica se questo è già presente nell'albero. In caso contrario fa nascere dal NYT un sottoalbero con a sinistra il nuovo NYT ed a destra il nuovo elemento, come in figura.
 
-![New Element](images/graphs/new-element.jpg)
+![Albero di "a"](images/graphs/new-element.jpg){ width=100px } 
   
 Essendo la proprietà di fratellanza rispettata, possiamo procedere all'aggiunta di elementi successivi.  
 All'arrivo di un'altro carattere (per esempio "b"), il compressore riesegue il controllo di esistenza e fa nascere un nuovo sottoalbero dal NYT precedente.  
 
-![ab-tree](images/graphs/ab-tree.jpg)
+![Albero di "ab"](images/graphs/ab-tree.jpg){ width=100px } 
 
 Anche in questo caso, prima dell'aggiornamento dei pesi non è necessario effettuare nessuno scambio in quanto la proprietà di fratellanza è rispettata.  
   
 All'arrivo di un terzo carattere ("c"), la situazione cambia.  
-![abc-tree](images/graphs/abc-tree.jpg)  
+  
+![Albero di "abc"](images/graphs/abc-tree.jpg){ width=200px }  
+  
 In questo caso il nodo interno che in precedenza aveva peso 1 deve essere scambiato con "a" in quanto questo incrementerà di valore ed andrà a rompere la proprietà di fratellanza.
-
-![abc-tree-fixed](images/graphs/abc-tree-fixed.jpg)  
+  
+![Albero corretto di "abc"](images/graphs/abc-tree-fixed.jpg){ width=150px }  
+  
 La proprietà di fratellanza è così rispettata, ed il compressore può quindi continuare a creare l'albero in modo dinamico.
 
 
@@ -245,8 +248,62 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 # Y'all mind if I praise the Lord?
 </div>
 -->
+
+
+# Performance
+
+## Velocità
+
+| Nome file                                     | Dim (kB) | Dim compr. (kB) | Comp. rate | C [s] | D [s] | C [kB/s] | D [kB/s] | 
+|-----------------------------------------------|-----------------|----------------|-----------------------|--------------------|----------------------|-------------------|---------------------| 
+| bible.txt                                     | 4347            | 2518           | -72.67%               | 7.15               | 7.68                 | 608.0             | 566.0               | 
+| adaptivehuffman.txt                           | 8               | 5              | -64.80%               | 0.02               | 0.02                 | 377.5             | 377.5               | 
+| 100000.txt                                    | 575             | 256            | -124.91%              | 0.51               | 0.6                  | 1127.6            | 958.5               | 
+| sinusoide.txt                                 | 6               | 4              | -52.48%               | 0.02               | 0.02                 | 304.7             | 304.7               | 
+| immagine.tiff                                 | 3274            | 3170           | -3.29%                | 3.85               | 3.83                 | 850.5             | 854.9               | 
+| alice.txt                                     | 164             | 96             | -70.50%               | 0.3                | 0.32                 | 545.3             | 511.2               | 
+| 32k_random                                    | 32              | 32             | 0.05%                 | 0.28               | 0.12                 | 114.3             | 266.7               | 
+| 32k_ff                                        | 32              | 4              | -697.47%              | 0.01               | 0.02                 | 3200.0            | 1600.0              | 
+| It Is Wednesday My Dudes.mp4 | 703             | 703            | 0.01%                 | 1.2                | 0.72                 | 585.8             | 976.3               | 
+| 04.bin                                        | 1024            | 1024           | 0.00%                 | 7.25               | 3.71                 | 141.2             | 276.0               | 
+| denys.gif                                     | 25825           | 25646          | -0.70%                | 29.63              | 31.1                 | 871.6             | 830.4               | 
+
+Table: Compressione e Decompressione a confronto  
   
+### Spiegazione
+L'algoritmo risulta essere molto efficiente nel caso di file lunghi e con molte ripetizioni. Questa condizione è spesso verificata in file testuali, file bitmap oppure in sequenze di numeri.  
+Sfortuanatamente il rateo di compressione non è proprio soddisfacente nel caso in cui il file ha un alta entropia (ossia le sue frequenze sono pressoché uniformi). 
+  
+![Compressione kB/s per file](./images/chart-1.png)
+  
+![Decompressione in kB/s per file](./images/chart-2.png)  
+
+
+## Consumo di memoria
+### Compressione
+Il compressore ha un consumo di memoria lineare di circa 47KiB, indipendente dalla dimensione del file.  
+Nell'esempio qui sotto è stata compressa un immagine da 2MB tramite il comando `make massif_release_intense_c`.  
+  
+![Risultato di `make massif_release_intense_c`](./images/massif-release-intense-c.jpg)
+
+### Decompressione
+Il decompressore ha un consumo di memoria lineare, intorno ai 100KiB per qualsiasi tipo di file.  
+Nell'esempio qui sotto è stata utilizzata un file compresso di 2MB. L'esempio è riproducibile su un qualisasi altro sistema con il comando `make massif_release_intense_d`.
+  
+![Risultato di `make massif_release_intense_d`](./images/massif-release-intense-d.jpg)  
+  
+
 # Procedure di test e problemi noti   
+
+## Problemi noti
+### Efficienza dell'algoritmo
+Come menzionato precedentemente, l'algoritmo non sembra essere molto efficiente nel comprimere qualsiasi tipo di file. È quindi sconsigliabile quale general-purpose compressor. Il compressore è però molto efficace in caso di documenti strutturati (come per esempio file SVG / HTML / JSON) oppure in documenti testuali (libri o estratti di pagine web).
+
+### Compressione "lenta"
+Nonostante il nostro algoritmo possa vantare di una velocità di compressione di circa 800 kB/s [^1], questo risultato non è ottimale. Con un maggiore lavoro di code optimization è sicuro possibile sfiorare la soglia di 1 MB/s.
+
+[^1]: Intel Core i7-6700HQ @ 8x 3.5GHz, 32GB RAM, x86_64 Linux 4.14.13-1, Spectre patch applied.
+
 ## Test effettuati  
 ### test_debug  
 Testa se il software è in modalità `DEBUG`.
@@ -280,27 +337,39 @@ Il test si assicura che l'albero generato dalla codifica di "abcbaaa" corrispond
 
 ### test_huffman_coding_bookkeeper
 Il test si assicura che l'albero generato dalla codifica di "bookkeeper" corrisponda a quello aspettato.  
-![bookkeeper](./images/graphs/bookkeeper.jpg)
+
+![Albero risultante per "bookkeeper"](./images/graphs/bookkeeper.jpg)  
+  
 
 ### test_huffman_coding_mississippi
 Il test si assicura che l'albero generato dalla codifica di "mississippi" corrisponda a quello aspettato.  
-![mississippi](./images/graphs/mississippi.jpg)
+  
+![Albero risultante per "mississippi"](./images/graphs/mississippi.jpg)  
+  
 
 ### test_huffman_coding_engineering
 Il test si assicura che l'albero generato dalla codifica di "engineering" corrisponda a quello aspettato.  
-![engineering](./images/graphs/engineering.jpg)
+  
+![Albero risultante per "engineering"](./images/graphs/engineering.jpg)  
+  
 
 ### test_huffman_coding_foobar
 Il test si assicura che l'albero generato dalla codifica di "foobar" corrisponda a quello aspettato.  
-![foobar](./images/graphs/foobar.jpg)
+  
+![Albero risultante per "foobar"](./images/graphs/foobar.jpg)  
+  
 
 ### test_huffman_coding_aardvark
 Il test si assicura che l'albero generato dalla codifica di "aardvark" corrisponda a quello aspettato.  
-![aardvark](./images/graphs/aardvark.jpg)
+  
+![Albero risultante per "aardvark"](./images/graphs/aardvark.jpg)  
+
 
 ### test_huffman_coding_sleeplessness
 Il test si assicura che l'albero generato dalla codifica di "sleeplessness" corrisponda a quello aspettato.  
-![sleeplessness](./images/graphs/sleeplessness.jpg)
+  
+![sleeplessness](./images/graphs/sleeplessness.jpg)  
+
 
 ### test_bin2byte
 Testa la funzione bin2byte che converte una stringa di 0 ed 1 in un byte.

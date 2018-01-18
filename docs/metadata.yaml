@@ -7,4 +7,5 @@ date: '2018-01-18'
 papersize: a4
 fontfamily: 'helvet'
 documentclass: 'report'
+geometry: 'margin=2cm'
 ...
