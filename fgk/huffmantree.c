@@ -280,9 +280,6 @@ unsigned int get_bit(HuffmanTree* ht){
 #if DEBUG
     printf("[get_bit] Byte: 0x%02x, Mask: 0x%02x\n",ht->partial_output[ht->decoder_byte] & 0xff, ht->mask & 0xff);
 #endif
-    if(ht->decoder_byte == ht->partial_output_length){
-        return 2;
-    }
 
     unsigned int bit;
     bit = (unsigned int) (ht->partial_output[ht->decoder_byte] & ht->mask) != 0;
@@ -301,6 +298,10 @@ unsigned int get_bit(HuffmanTree* ht){
 int decode_byte(HuffmanTree* ht){
     if(is_compressor(ht)){
         return 0;
+    }
+
+    if(ht->decoder_last_chunk && ht->partial_output_length - ht->decoder_byte == 2){
+        printf("[decode_byte] Decoder Last Chunk!\n");
     }
 
     if(ht->decoder_byte >= ht->partial_output_length - 1){
@@ -327,15 +328,11 @@ int decode_byte(HuffmanTree* ht){
     int previous_decoder_byte = ht->decoder_byte;
 
     while(!is_leaf(target)){
-        if(ht->partial_output_length - ht->decoder_byte <= 1){
+        if(ht->partial_output_length - ht->decoder_byte <= 0){
             target = NULL;
             break;
         }
         bit = get_bit(ht);
-
-        if(bit == 2){
-            break;
-        }
 
 
         if(!bit){
@@ -363,7 +360,7 @@ int decode_byte(HuffmanTree* ht){
 
             free(length);
             free(nyt_path);
-            ht->output_length++;
+            //ht->output_length++;
 
             ht->mask = old_mask;
             ht->decoder_byte = previous_decoder_byte;

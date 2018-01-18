@@ -1235,7 +1235,7 @@ int main(int argc, char *argv[]) {
         header_size += i;
 
         filename[i] = '\0';
-        
+
         FILE *o_fh = fopen(filename, "wb+");
         if(!o_fh){
             // Unable to create filename
@@ -1263,10 +1263,7 @@ int main(int argc, char *argv[]) {
         read_size = fread(read_buffer,sizeof(char), (size_t) b_size, fh);
 
         while(read_size != 0){
-
             if(compressed) {
-
-
                 for (i = 0; i < read_size; i++) {
                     ht->partial_output[ht->partial_output_length] = read_buffer[i];
                     ht->partial_output_length++;
