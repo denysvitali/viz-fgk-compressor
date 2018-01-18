@@ -1077,7 +1077,7 @@ int main(int argc, char *argv[]) {
 
         fprintf(o_fh, "%s", MAGIC_NUMBER);
 
-        if (size < original_size) {
+        if (size < original_size || FORCE_COMPRESSION) {
             compress = 1;
         }
 
