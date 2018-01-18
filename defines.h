@@ -18,7 +18,7 @@
 #ifndef TEST
     #define TEST 0
 #endif
-#define VERSION "1.0.1"
+#define VERSION "2.0.0"
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "NO GIT VERSION PROVIDED!"
