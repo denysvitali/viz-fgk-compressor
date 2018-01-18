@@ -3,11 +3,15 @@
 A C compressor, based on Adaptive Huffman Coding (FGK)
 
 ## Requirements
-The project itself doesn't require anything more than `gcc`, but some of the make targets (like massif, valgrind, callgrind) require the following debugging tools.
+The project itself doesn't require anything more than `gcc`, but some of the make targets (like massif, valgrind, callgrind) require the following debugging tools.  
+
 ### Debugging tools
 - Valgrind
 - Python
 - xdot
+
+### Documentation generator
+- Pandoc
 
 ## Compilation
 VIZ can be compiled with the following command:  
@@ -46,7 +50,7 @@ Performs a Valgrind check on the `debug` binary.
 
 ### callgrind
 Generates a `viz-debug.callgrind` file of `viz` (debug).  
-After the file is generated, it is converted with `python utilities/gprof2dot/gprof2dot.py` to a `.dot` file that is then automatically visualized with `xdot`.
+After the file is generated, it is converted with `python utilities/gprof2dot/gprof2dot.py` to a `.dot` file that is then automatically visualized with `xdot`.  
 ![Callgrind result](./docs/images/callgrind-1.png)
 
 ### callgrind_release
@@ -60,6 +64,9 @@ Same as `callgrind_alice` but, uses the `viz-release` binary.
 
 ### clean
 Performs a cleanup of the directory (warning: *.viz files are removed too!)
+
+### docs
+Builds the documentation.
 
 ## Compression
 Compression is performed with `viz -c output-file.viz input-file`, where `input-file` can be either a file or a directory.
