@@ -15,7 +15,8 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 
-make release
+#make release
+echo "Starting compression of $file"
 ./$binary -c -f "$filename.viz" "$file"
 ./$binary -d "$filename.viz"
 echo -e "\n"
