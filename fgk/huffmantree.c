@@ -355,17 +355,6 @@ int decode_byte(HuffmanTree* ht){
             int* length = malloc(sizeof(int));
             unsigned short* nyt_path = node_path(ht->nyt, length);
 
-            Node* d9_node = find_node(ht->root, 0xd9);
-            int* len = malloc(sizeof(int));
-            unsigned short* path = node_path(d9_node, len);
-
-            char* path_string = path_to_string(path, *len);
-            free(len);
-            free(path);
-
-            printf("d9,1: %s\n", path_string);
-            free(path_string);
-
             //saveHuffmanTree(ht, "out.dot");
 
             printf("NYT path: %s\n", path_to_string(nyt_path, *length));

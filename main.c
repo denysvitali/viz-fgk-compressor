@@ -1302,7 +1302,6 @@ int main(int argc, char *argv[]) {
 
                 fwrite(write_buffer, sizeof(char), (size_t) written_bytes, o_fh);
                 huffman_shift_partial_output(ht, ht->decoder_byte);
-                //ht->partial_output_length = ht->decoder_byte;
                 ht->decoder_byte = 0;
 
                 written_bytes = 0;
