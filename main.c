@@ -1282,7 +1282,7 @@ int main(int argc, char *argv[]) {
                 while (decode_byte(ht) != 0) {
                     i++;
 
-                    printf("Decoding byte %d/%d (0x%02x)\n", i, read_size,
+                    printf("Decoding byte %d/%d (0x%02x)\n", i, (int) read_size,
                            ht->partial_output[ht->decoder_byte] & 0xff);
                     int wb = 0;
                     for (k = 0; k < ht->output_length; k++) {
