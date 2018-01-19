@@ -187,6 +187,7 @@ Sono inoltre presenti i puntatori ai vari nodi limitrofi quali il *parent* e i *
 typedef struct{
     Node* root;
     Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
+    Node* element_array[HUFFMAN_SYMBOLS];
     Node* nyt;
 
     char* output;
@@ -208,7 +209,9 @@ Contiene inoltre un *array* utilizzato per avere un accesso più veloce ai nodi 
 Le componenti: *output*, *partial_output* ,*output_length*, *partial_output_length* sono necessarie per le stampe su file e a video.  
 
 Il campo *mode* è necessario in quanto alcune delle funzioni ausiliarie (come per esempio `add_new_element`) hanno comportamenti differenti in caso di compressione o decompressione.  
-La componente *mask* è utilizzata per scrivere i byte bit per bit.
+La componente *mask* è utilizzata per scrivere i byte bit per bit.  
+  
+L'array `element_array` contiene i puntatori ai nodi, ordinati per carattere. È così possibile ottenere il puntatore al nodo desiderato semplicemente utilizzando la sintassi `ht->element_array[carattere]`. Questo array rende molto veloce la funzione di ricerca dei nodi (`find_nodes`) che è chiamata ad ogni chiamata di `add_new_element`. L'elemento NYT sarà sempre in ulitma posizione (256).
 
 # Istruzioni per l'utilizzo  
 
@@ -256,6 +259,8 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 
 ## Velocità
 
+### Senza `ht->element_array`
+
 | Nome file                                     | Dim (kB) | Dim compr. (kB) | Comp. rate | C [s] | D [s] | C [kB/s] | D [kB/s] | 
 |-----------------------------------------------|-----------------|----------------|-----------------------|--------------------|----------------------|-------------------|---------------------| 
 | bible.txt                                     | 4347            | 2518           | -72.67%               | 7.15               | 7.68                 | 608.0             | 566.0               | 
@@ -271,6 +276,8 @@ dove l'argomento `-d` serve per eseguire il programma in decompressione e `input
 | denys.gif                                     | 25825           | 25646          | -0.70%                | 29.63              | 31.1                 | 871.6             | 830.4               | 
 
 Table: Compressione e Decompressione a confronto  
+
+### Con l'utilizzo `ht->element_array`
   
 ### Spiegazione
 L'algoritmo risulta essere molto efficiente nel caso di file lunghi e con molte ripetizioni. Questa condizione è spesso verificata in file testuali, file bitmap oppure in sequenze di numeri.  
