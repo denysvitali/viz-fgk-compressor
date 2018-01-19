@@ -396,7 +396,7 @@ Sfortunatamente il rateo di compressione non è proprio soddisfacente nel caso i
 
 ## Consumo di memoria
 ### Compressione
-Il compressore ha un consumo di memoria lineare di circa 47KiB, indipendente dalla dimensione del file.  
+Il compressore ha un consumo di memoria lineare di circa 50KiB, indipendente dalla dimensione del file.  
 Nell'esempio qui sotto è stata compressa un immagine da 2MB tramite il comando `make massif_release_intense_c`.  
   
 ![Risultato di `make massif_release_intense_c`](./images/massif-release-intense-c.jpg)
@@ -421,114 +421,16 @@ In decompressione la funzione chiamata più spesso è `decode_byte`, che a sua v
 
 ![Risultato di `make callgrind_release_d`](./images/callgrind-release-d.svg){ height=800px }
 
-# Procedure di test e problemi noti   
-
-## Problemi noti
-### Efficienza dell'algoritmo
-Come menzionato precedentemente, l'algoritmo non sembra essere molto efficiente nel comprimere qualsiasi tipo di file. È quindi sconsigliabile quale general-purpose compressor. Il compressore è però molto efficace in caso di documenti strutturati (come per esempio file SVG / HTML / JSON) oppure in documenti testuali (libri o estratti di pagine web).
-
-### Compressione "lenta"
-Nonostante il nostro algoritmo possa vantare di una velocità di compressione di circa 1208 kB/s (~1.18 MB) [^1], questo risultato non è ottimale. Con un maggiore lavoro di code optimization è sicuro possibile sfiorare la soglia di 1.5 MB/s.
-
-[^1]: Intel Core i7-6700HQ @ 8x 3.5GHz, 32GB RAM, x86_64 Linux 4.14.13-1, Spectre patch applied.
-
-## Test effettuati  
-### test_debug  
-Testa se il software è in modalità `DEBUG`.
-
-### test_create_huffman_tree  
-Testa se la funzione `create_huffman_tree` viene eseguita correttamente.
-
-### test_swap_ht_array  
-Testa la funzione `swap_nodes` e confronta il risultato con quello aspettato.
-
-### test_get_node_level
-Testa la funzione `getNodeLevel` e confronta il risultato con quello aspettato.  
-
-### test_simple_swap
-Testa la funzione `swap_node` applicandola ad un esempio semplice e confronta il risultato con quello aspettato.  
-
-### test_swap_nodes
-Testa la funzione `swap_node` in tutte le sue funzioni e confronta il risultato con quello aspettato.  
-
-### test_node_path
-Testa la funzione `node_path` e confronta il risultato con quello aspettato.
-
-### test_huffman_coding  
-Testa se la codifica di Huffman viene eseguita correttamente
-
-### test_huffman_coding_abracadabra
-Il test si assicura che l'albero generato dalla codifica di "abracadabra" corrisponda a quello aspettato.  
-
-### test_huffman_coding_abcbaaa
-Il test si assicura che l'albero generato dalla codifica di "abcbaaa" corrisponda a quello aspettato.  
-
-### test_huffman_coding_bookkeeper
-Il test si assicura che l'albero generato dalla codifica di "bookkeeper" corrisponda a quello aspettato.  
-
-![Albero risultante per "bookkeeper"](./images/graphs/bookkeeper.jpg)  
+## Valgrind
+Di seguito viene illustrato il trend di Valgrind nel corso delle build.  
+  
+![Trend di Valgrind](./images/valgrind-trend.png)  
   
 
-### test_huffman_coding_mississippi
-Il test si assicura che l'albero generato dalla codifica di "mississippi" corrisponda a quello aspettato.  
-  
-![Albero risultante per "mississippi"](./images/graphs/mississippi.jpg)  
-  
-
-### test_huffman_coding_engineering
-Il test si assicura che l'albero generato dalla codifica di "engineering" corrisponda a quello aspettato.  
-  
-![Albero risultante per "engineering"](./images/graphs/engineering.jpg)  
-  
-
-### test_huffman_coding_foobar
-Il test si assicura che l'albero generato dalla codifica di "foobar" corrisponda a quello aspettato.  
-  
-![Albero risultante per "foobar"](./images/graphs/foobar.jpg)  
-  
-
-### test_huffman_coding_aardvark
-Il test si assicura che l'albero generato dalla codifica di "aardvark" corrisponda a quello aspettato.  
-  
-![Albero risultante per "aardvark"](./images/graphs/aardvark.jpg)  
-
-
-### test_huffman_coding_sleeplessness
-Il test si assicura che l'albero generato dalla codifica di "sleeplessness" corrisponda a quello aspettato.  
-  
-![sleeplessness](./images/graphs/sleeplessness.jpg)  
-
-
-### test_bin2byte
-Testa la funzione bin2byte che converte una stringa di 0 ed 1 in un byte.
-
-### test_bin2byte2
-Estende il test di bin2byte per casi più complessi.
-
-### test_byte2bin
-Testa la funzione byte2bin che converte dei byte in una stringa di 0 ed 1.
-
-### test_filename
-Testa la funzione `get_filename(char* filepath)`.
-
-### test_create_file
-Testa la funzione di creazione di file
-
-### test_write_to_file
-Testa la funzionalità di scrittura su file
-
-### test_read_file
-Testa la lettura da file
-
-### test_file_delete
-Testa la funzionalità di eliminazione di file
-
-
-____________________________________________________________________  
+# Descrizione del codice
 ### main.c  
 Il codice seguente ci permette, nel caso ci sia un singolo parametro all'avvio, di mostrare l'utilizzo del software:  
 ```c
-    char debug_buffer[500];
     if (argc == 1) {
         usage();
         return 0;
@@ -541,7 +443,7 @@ Utilizzando il flag `-v` possiamo ricevere informazioni riguardanti la versione 
         return 0;
     }
 ```
-Utilizzando il flag `-c` entriamo in modalità compressione e andiamo a controllare se ci sono flag aggiuntive viene settata l'apposita flag. Nel caso non siano presenti 4 parametri e questo non sia dovuto per l'inserimento di una flag il software mostrerà come essere utilizzato correttamente e si bloccherà.    
+Utilizzando il flag `-c` entriamo in modalità compressione ed andiamo a controllare se ci sono flag aggiuntive viene settata l'apposito flag. Nel caso non siano presenti 4 parametri e questo non sia dovuto per l'inserimento di una flag il software mostrerà come essere utilizzato correttamente e si bloccherà.    
 ```c
     if (strcmp(argv[1], "-c") == 0) {
         int flag_overwrite = 0;
@@ -685,3 +587,137 @@ La funzione si occupa di liberare le risorse utilizzate dall' Huffman Tree.
 unsigned short* node_path(Node* node, int* length)
 ```
 Questa funzione si occupa di convertire il percorso di un nodo in un array di `unsigned short*`, di lunghezza `int* length`.
+
+# Procedure di test e problemi noti   
+
+## Problemi noti
+### Efficienza dell'algoritmo
+Come menzionato precedentemente, l'algoritmo non sembra essere molto efficiente nel comprimere qualsiasi tipo di file. È quindi sconsigliabile quale general-purpose compressor. Il compressore è però molto efficace in caso di documenti strutturati (come per esempio file SVG / HTML / JSON) oppure in documenti testuali (libri o estratti di pagine web).
+
+### ~~Compressione "lenta"~~
+~~Nonostante il nostro algoritmo possa vantare di una velocità di compressione di circa 1208 kB/s (~1.18 MB/s), questo risultato non è ottimale. Con un maggiore lavoro di code optimization è sicuro possibile sfiorare la soglia di 1.5 MB/s.~~
+
+A seguito di un ottimizzazione del codice, possiamo confermare di riuscire a raggiungere picchi di 3MB/s in compressione e decompressione. La media rimane comunque intorno a 1.5MB/s [^1].
+
+[^1]: Intel Core i7-6700HQ @ 8x 3.5GHz, 32GB RAM, x86_64 Linux 4.14.13-1, Spectre patch applied.  
+
+## Test effettuati  
+### test_debug  
+Testa se il software è in modalità `DEBUG`.
+
+### test_create_huffman_tree  
+Testa se la funzione `create_huffman_tree` viene eseguita correttamente.
+
+### test_swap_ht_array  
+Testa la funzione `swap_nodes` e confronta il risultato con quello aspettato.
+
+### test_get_node_level
+Testa la funzione `getNodeLevel` e confronta il risultato con quello aspettato.  
+
+### test_simple_swap
+Testa la funzione `swap_node` applicandola ad un esempio semplice e confronta il risultato con quello aspettato.  
+
+### test_swap_nodes
+Testa la funzione `swap_node` in tutte le sue funzioni e confronta il risultato con quello aspettato.  
+
+### test_node_path
+Testa la funzione `node_path` e confronta il risultato con quello aspettato.
+
+### test_huffman_coding  
+Testa se la codifica di Huffman viene eseguita correttamente
+
+### test_huffman_coding_abracadabra
+Il test si assicura che l'albero generato dalla codifica di "abracadabra" corrisponda a quello aspettato.  
+
+### test_huffman_coding_abcbaaa
+Il test si assicura che l'albero generato dalla codifica di "abcbaaa" corrisponda a quello aspettato.  
+
+### test_huffman_coding_bookkeeper
+Il test si assicura che l'albero generato dalla codifica di "bookkeeper" corrisponda a quello aspettato.  
+
+![Albero risultante per "bookkeeper"](./images/graphs/bookkeeper.jpg)  
+  
+
+### test_huffman_coding_mississippi
+Il test si assicura che l'albero generato dalla codifica di "mississippi" corrisponda a quello aspettato.  
+  
+![Albero risultante per "mississippi"](./images/graphs/mississippi.jpg)  
+  
+
+### test_huffman_coding_engineering
+Il test si assicura che l'albero generato dalla codifica di "engineering" corrisponda a quello aspettato.  
+  
+![Albero risultante per "engineering"](./images/graphs/engineering.jpg)  
+  
+
+### test_huffman_coding_foobar
+Il test si assicura che l'albero generato dalla codifica di "foobar" corrisponda a quello aspettato.  
+  
+![Albero risultante per "foobar"](./images/graphs/foobar.jpg)  
+  
+
+### test_huffman_coding_aardvark
+Il test si assicura che l'albero generato dalla codifica di "aardvark" corrisponda a quello aspettato.  
+  
+![Albero risultante per "aardvark"](./images/graphs/aardvark.jpg)  
+
+
+### test_huffman_coding_sleeplessness
+Il test si assicura che l'albero generato dalla codifica di "sleeplessness" corrisponda a quello aspettato.  
+  
+![sleeplessness](./images/graphs/sleeplessness.jpg)  
+
+
+### test_bin2byte
+Testa la funzione bin2byte che converte una stringa di 0 ed 1 in un byte.
+
+### test_bin2byte2
+Estende il test di bin2byte per casi più complessi.
+
+### test_byte2bin
+Testa la funzione byte2bin che converte dei byte in una stringa di 0 ed 1.
+
+### test_filename
+Testa la funzione `get_filename(char* filepath)`.
+
+### test_create_file
+Testa la funzione di creazione di file
+
+### test_write_to_file
+Testa la funzionalità di scrittura su file
+
+### test_read_file
+Testa la lettura da file
+
+### test_file_delete
+Testa la funzionalità di eliminazione di file
+
+
+____________________________________________________________________ 
+
+# Conclusione
+
+Questo progetto ci ha permesso di comprendere al meglio le difficoltà tecniche che possono insorgere durante lo sviluppo di un progetto come quello affrontato. Una gestione efficiente della memoria, l'ottimizzazione del codice ed il debugging intenso ci hanno permesso di raggiungere risultati decenti in termini di velocità di compressione e decompressione.  
+  
+Il progetto ci ha posto di fronte ad innumerevoli difficoltà che inizialmente non avevamo calcolato. Le nostre abilità di ragionamento e di logica sono state messe alla dura prova.  
+  
+Durante lo sviluppo del progetto abbiamo anche imparato a lavorare con numerosi strumenti come `git`, `valgrind` (+ memcheck, massif, callgrind), `gdb`, `gcc`, `Makefile`s, Jenkins, Pandoc, Dot, Python, Bash, LaTeX.
+  
+## Ringraziamenti
+Ringraziamo [David Huber](http://www.idsia.ch/~huber) e [Nicola Vermes](http://www.idsia.ch/~vermes) per i consigli e gli aiuti forniti durante le lezioni di laboratorio.  
+In modo particolare ringraziamo David Huber per il suo magnifico consiglio nell'uso di Valgrind - lo strumento ci è infatti stato di grandissimo aiuto durante tutto lo sviluppo e ci ha risparmiato molte ore di debugging. 
+
+## Riferimenti
+[viz-fgk-compressor on GitHub](https://github.com/denysvitali/viz-fgk-compressor)  
+[viz-fgk-compressor CI on Mastodontico's Jenkins Instance](https://jenkins.mastodonti.co/job/dvitali-algoritmi-fgk-compression/)
+
+
+## Risorse  
+[Adaptive Huffman Coding - FGK - Stringology.org](http://www.stringology.org/DataCompression/fgk/index_en.html)  
+[Adaptive Huffman Coding - Wikipedia](https://en.wikipedia.org/wiki/Adaptive_Huffman_coding)  
+[Adaptive Huffman Coding - The Data Compression Guide](https://sites.google.com/site/datacompressionguide/fgk)  
+[Adaptive Huffman Coding - cs.duke.edu](https://www.cs.duke.edu/csed/curious/compression/adaptivehuff.html)  
+[Visualizing Adaptive Huffman Coding - Ben Tanen](http://ben-tanen.com/adaptive-huffman/)  
+[Array Implementation for Complete Binary Trees](http://www.ida.liu.se/opendsa/OpenDSA/Books/OpenDSA/html/CompleteTree.html)  
+  
+[Enterprise Waterfall](https://www.youtube.com/watch?v=Mq1MD5qXI08)
