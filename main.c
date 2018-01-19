@@ -22,7 +22,12 @@ void version(){
 
 void usage(){
     version();
+#if INVERTED_COMPRESSION_FLAG
+    // ... ¯\_(ツ)_/¯
+	printf("Compress: \t viz -c inputfile output.viz\n");
+#else
 	printf("Compress: \t viz -c output.viz inputfile\n");
+#endif
 	printf("Extract: \t viz -d input.viz\n");
 }
 
@@ -917,6 +922,16 @@ int main(int argc, char *argv[]) {
 
         debug("Compression");
 
+#if INVERTED_COMPRESSION_FLAG
+        // Come on. Seriously? - D.
+        char *file_output = (char *) malloc(strlen(argv[3 + flag_shift]) + 1);
+        char *file_input = (char *) malloc(strlen(argv[2 + flag_shift]) + 1);
+
+        char file_output_tmp[strlen(argv[3 + flag_shift]) + 1 + 4]; // output.ext.tmp
+
+        strcpy(file_output, argv[3 + flag_shift]);
+        strcpy(file_input, argv[2 + flag_shift]);
+#else
         char *file_output = (char *) malloc(strlen(argv[2 + flag_shift]) + 1);
         char *file_input = (char *) malloc(strlen(argv[3 + flag_shift]) + 1);
 
@@ -924,6 +939,8 @@ int main(int argc, char *argv[]) {
 
         strcpy(file_output, argv[2 + flag_shift]);
         strcpy(file_input, argv[3 + flag_shift]);
+#endif
+
         sprintf(file_output_tmp, "%s.tmp", file_output);
 
         if (DEBUG) {
