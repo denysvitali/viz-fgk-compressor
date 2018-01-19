@@ -160,8 +160,8 @@ benchmark: release
 
 ############### DOCS ################
 docs:
-	pandoc --toc docs/README.md docs/metadata.yaml --resource-path=docs/ -s -o docs/documentation.pdf
-	pandoc README.md -s -o docs/readme.pdf
+	pandoc -s docs/metadata.yaml --toc docs/README.md --resource-path=docs/ -o docs/documentation.pdf
+	pandoc -s docs/metadata.yaml README.md -s -o docs/readme.pdf
 
 clean:
 	rm -f {viz,viz-test,viz-release,viz-profiler*} *.callgrind vgcore.* *.massif *.viz *.dot *.tmp callgrind.out.* gmon.out *.callgrind.dot

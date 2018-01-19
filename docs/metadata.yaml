@@ -8,4 +8,9 @@ papersize: a4
 fontfamily: 'helvet'
 documentclass: 'report'
 geometry: 'margin=2cm'
+header-includes:
+  - \usepackage{xcolor}
+  - \hypersetup{colorlinks=false,
+            allbordercolors = {blue},
+            pdfborderstyle={/S/U/W 1}}
 ...
