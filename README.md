@@ -79,8 +79,18 @@ You can decompress a `.viz` file with `viz -d input-file.viz`.
 
 
 ## Usage
+Depends on _INVERTED_COMPRESSION_FLAG_ (check define.h)
+  
+**INVERTED_COMPRESSION_FLAG = 1**
 ```
-VIZ compressor v0.0.1 (dad96c6-dirty)
+VIZ compressor v2.0.0 (R-2.0.0-24-g4d0dc0b-dirty)
+Compress:        viz -c inputfile output.viz
+Extract:         viz -d input.viz
+```
+
+**INVERTED_COMPRESSION_FLAG = 0**
+```
+VIZ compressor v2.0.0 (R-2.0.0-24-g4d0dc0b-dirty)
 Compress:        viz -c output.viz inputfile
 Extract:         viz -d input.viz
 ```
