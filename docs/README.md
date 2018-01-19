@@ -63,7 +63,9 @@ Questo nodo è estremamente utile in quanto nella fase di codifica e decodifica 
   
 #### Creazione di un albero
 L'algoritmo comincia con un albero iniziale contenente un solo nodo, il NYT.   
+  
 ![Albero vuoto](images/graphs/empty-tree.jpg){ width=100px } 
+  
   
 All'arrivo di un nuovo carattere (per esempio "a"), il compressore verifica se questo è già presente nell'albero. In caso contrario fa nascere dal NYT un sottoalbero con a sinistra il nuovo NYT ed a destra il nuovo elemento, come in figura.
 
@@ -291,7 +293,20 @@ Il decompressore ha un consumo di memoria lineare, intorno ai 100KiB per qualsia
 Nell'esempio qui sotto è stata utilizzata un file compresso di 2MB. L'esempio è riproducibile su un qualisasi altro sistema con il comando `make massif_release_intense_d`.
   
 ![Risultato di `make massif_release_intense_d`](./images/massif-release-intense-d.jpg)  
+
+
+## Code coverage
+Con l'ausilio della code coverage fornita da Callgrind, abbiamo potuto monitorare quale funzione era chiamata più di frequente e quindi necessitava maggiore ottimizzazione.
+
+### Compressione
+Durante la fase di compressione la funzione chiamata più spesso risulta essere `add_new_element`. È quindi importante che questa sia molto efficiente al fine di ridurre al minimo i tempi di compressione.
   
+![Risultato di `make callgrind_release_c`](./images/callgrind-release-c.svg){ height=800px }
+
+### Decompressione
+In decompressione la funzione chiamata più spesso è `decode_byte`, che a sua volta chiama `add_new_element`. Per questo motivo è molto importante che le due funzioni siano più efficienti possibili, al fine di avere tempi di decompressione minimi.
+
+![Risultato di `make callgrind_release_d`](./images/callgrind-release-d.svg){ height=800px }
 
 # Procedure di test e problemi noti   
 
