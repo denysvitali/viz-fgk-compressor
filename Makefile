@@ -26,7 +26,7 @@ RELEASE_ARGS = $(DEBUG_ARGS)
 RELEASE_ARGS_ALICE = $(DEBUG_ARGS_ALICE)
 
 COMPRESSION_ARGS = -c -f out.viz test/files/compression/provided/alice.txt
-COMPRESSION_INTENSE_ARGS = -c -f out.viz "test/files/compression/img/new-york-new-york-denvit.jpg"
+COMPRESSION_INTENSE_ARGS = -c -f out.viz "test/files/compression/img/nyny-denvit.jpg"
 DECOMPRESSION_ARGS = -d test/files/decompression/alice.viz
 DECOMPRESSION_INTENSE_ARGS = -d test/files/decompression/denvit-picture-1.viz
 
