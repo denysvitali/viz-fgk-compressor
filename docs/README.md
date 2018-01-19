@@ -709,8 +709,9 @@ In modo particolare ringraziamo David Huber per il suo magnifico consiglio nell'
 
 ## Riferimenti
 [viz-fgk-compressor on GitHub](https://github.com/denysvitali/viz-fgk-compressor)  
-[viz-fgk-compressor CI on Mastodontico's Jenkins Instance](https://jenkins.mastodonti.co/job/dvitali-algoritmi-fgk-compression/)
-
+[viz-fgk-compressor CI on Mastodontico's Jenkins Instance](https://jenkins.mastodonti.co/job/dvitali-algoritmi-fgk-compression/)  
+[Presentazione 1](https://docs.google.com/presentation/d/1myX6e-_pRy73l4Tv0IaMqmPDB22ZUa5fwh5Sihl4kec/edit?usp=sharing)  
+[Presentazione 2](https://docs.google.com/presentation/d/12faKCrzh7VxlbyvPIQgQCY-vcveLCXCV7ttngznjuUE/edit?usp=sharing)  
 
 ## Risorse  
 [Adaptive Huffman Coding - FGK - Stringology.org](http://www.stringology.org/DataCompression/fgk/index_en.html)  
