@@ -191,8 +191,6 @@ int is_compressor(HuffmanTree* ht){
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
     Node* target = find_node(ht, (unsigned int) c & 0xff);
 
-    //printf("Target: %p (%s)\n", target, getElement(target));
-
     int* length = malloc(sizeof(int));
     *length = 0;
 
@@ -322,14 +320,11 @@ int decode_byte(HuffmanTree* ht){
         return 0;
     }
 
-    //printf("Decoding 0x%02x\n", ht->partial_output[ht->decoder_byte] & 0xff);
-
     if(ht->decoder_byte >= ht->partial_output_length){
         return 0;
     }
 
     if(ht->elements == 0) {
-        //debug("[decode_byte] Adding this element directly because it's the first one");
         ht->output[ht->decoder_byte] = ht->partial_output[ht->decoder_byte];
         add_new_element(ht, ht->output[ht->output_length]);
         ht->output_length++;
