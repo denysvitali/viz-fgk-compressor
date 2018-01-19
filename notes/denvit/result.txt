@@ -1,0 +1,882 @@
+
+=====
+Name: more-a-3.txt
+Original Size: 106
+Compressed Size: 34
+Compression Rate: 67.9300
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: bibbia-lf.txt
+Original Size: 4627618
+Compressed Size: 2627376
+Compression Rate: 43.2300
+Elapsed time (C): 0:00.99
+Elapsed time (D): 0:01.39
+======
+
+=====
+Name: abcdefghi.txt
+Original Size: 10
+Compressed Size: 29
+Compression Rate: -190.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: bible.txt
+Original Size: 4451368
+Compressed Size: 2577922
+Compression Rate: 42.0900
+Elapsed time (C): 0:01.04
+Elapsed time (D): 0:01.50
+======
+
+=====
+Name: more-a-4.txt
+Original Size: 107
+Compressed Size: 34
+Compression Rate: 68.2300
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: more-a.txt
+Original Size: 104
+Compressed Size: 31
+Compression Rate: 70.2000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: aa.txt
+Original Size: 3
+Compressed Size: 15
+Compression Rate: -400.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 1000.txt
+Original Size: 3893
+Compressed Size: 1675
+Compression Rate: 56.9800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: abcdefghij.txt
+Original Size: 11
+Compressed Size: 31
+Compression Rate: -181.8100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: adaptivehuffman.txt
+Original Size: 7731
+Compressed Size: 4691
+Compression Rate: 39.3300
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: ripetizioni.txt
+Original Size: 11
+Compressed Size: 29
+Compression Rate: -163.6300
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: more-a-2.txt
+Original Size: 105
+Compressed Size: 34
+Compression Rate: 67.6200
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: a.txt
+Original Size: 72
+Compressed Size: 22
+Compression Rate: 69.4500
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: fitnessgram.txt
+Original Size: 861
+Compressed Size: 547
+Compression Rate: 36.4700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 100000.txt
+Original Size: 588895
+Compressed Size: 261841
+Compression Rate: 55.5400
+Elapsed time (C): 0:00.07
+Elapsed time (D): 0:00.14
+======
+
+=====
+Name: sinusoide.txt
+Original Size: 6241
+Compressed Size: 4093
+Compression Rate: 34.4200
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: ezgif-4-e18a967389.gif
+Original Size: 26444944
+Compressed Size: 26261563
+Compression Rate: .7000
+Elapsed time (C): 0:22.38
+Elapsed time (D): 0:24.62
+======
+
+=====
+Name: compress.gif
+Original Size: 1153194
+Compressed Size: 1152959
+Compression Rate: .0300
+Elapsed time (C): 0:01.00
+Elapsed time (D): 0:01.10
+======
+
+=====
+Name: mans-not-hot.png
+Original Size: 73967
+Compressed Size: 73989
+Compression Rate: -.0200
+Elapsed time (C): 0:00.05
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: new-york-new-york-denvit.jpg
+Original Size: 2041212
+Compressed Size: 2041246
+Compression Rate: 0
+Elapsed time (C): 0:01.79
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: ricardo-gomez-angel-180819.jpg
+Original Size: 8039927
+Compressed Size: 8033359
+Compression Rate: .0900
+Elapsed time (C): 0:06.71
+Elapsed time (D): 0:07.33
+======
+
+=====
+Name: Jenkins_logo.svg
+Original Size: 27417
+Compressed Size: 16986
+Compression Rate: 38.0500
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.01
+======
+
+=====
+Name: immagine.tiff
+Original Size: 3352968
+Compressed Size: 3246109
+Compression Rate: 3.1900
+Elapsed time (C): 0:02.73
+Elapsed time (D): 0:03.41
+======
+
+=====
+Name: ff_ff_ff
+Original Size: 3
+Compressed Size: 16
+Compression Rate: -433.3300
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: empty
+Original Size: 0
+Compressed Size: 11
+Compression Rate: 
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: alice.txt
+Original Size: 167518
+Compressed Size: 98251
+Compression Rate: 41.3500
+Elapsed time (C): 0:00.03
+Elapsed time (D): 0:00.04
+======
+
+=====
+Name: 32k_random
+Original Size: 32768
+Compressed Size: 32784
+Compression Rate: -.0400
+Elapsed time (C): 0:00.03
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 32k_ff
+Original Size: 32768
+Compressed Size: 4109
+Compression Rate: 87.4700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 20170217.mp3
+Original Size: 8350135
+Compressed Size: 8276048
+Compression Rate: .8900
+Elapsed time (C): 0:07.20
+Elapsed time (D): 0:07.77
+======
+
+=====
+Name: bbc-radio1-ibiza-1.mp3
+Original Size: 595591
+Compressed Size: 593912
+Compression Rate: .2900
+Elapsed time (C): 0:00.57
+Elapsed time (D): 0:00.59
+======
+
+=====
+Name: It Is Wednesday My Dudes.ogg
+Original Size: 116090
+Compressed Size: 109405
+Compression Rate: 5.7600
+Elapsed time (C): 0:00.09
+Elapsed time (D): 0:00.09
+======
+
+=====
+Name: Never Gonna Give You Up.flac
+Original Size: 153875545
+Compressed Size: 153875579
+Compression Rate: 0
+Elapsed time (C): 2:04.79
+Elapsed time (D): 0:00.12
+======
+
+=====
+Name: file-2.bin
+Original Size: 13
+Compressed Size: 29
+Compression Rate: -123.0700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: file-1.bin
+Original Size: 36
+Compressed Size: 52
+Compression Rate: -44.4400
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: file-3.bin
+Original Size: 36
+Compressed Size: 52
+Compression Rate: -44.4400
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: DejaVu.webm
+Original Size: 10044998
+Compressed Size: 10033950
+Compression Rate: .1100
+Elapsed time (C): 0:08.23
+Elapsed time (D): 0:08.94
+======
+
+=====
+Name: TavInterFlip.wmv
+Original Size: 15221721
+Compressed Size: 15196238
+Compression Rate: .1700
+Elapsed time (C): 0:12.13
+Elapsed time (D): 0:13.15
+======
+
+=====
+Name: It Is Wednesday My Dudes Vine-du-TY1GUFGk.mp4
+Original Size: 719792
+Compressed Size: 719843
+Compression Rate: 0
+Elapsed time (C): 0:00.63
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 20
+Compressed Size: 32
+Compression Rate: -60.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 5
+Compressed Size: 17
+Compression Rate: -240.0000
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.90
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.92
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.89
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.85
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.86
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.87
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.88
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.85
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.85
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 1048576
+Compressed Size: 1048588
+Compression Rate: 0
+Elapsed time (C): 0:00.85
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.01
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.01
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.01
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.01
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 10240
+Compressed Size: 10252
+Compression Rate: -.1100
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 2048
+Compressed Size: 2060
+Compression Rate: -.5800
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 07.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 04.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 08.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 06.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 10.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 01.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 09.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 03.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 02.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
+
+=====
+Name: 05.bin
+Original Size: 1024
+Compressed Size: 1036
+Compression Rate: -1.1700
+Elapsed time (C): 0:00.00
+Elapsed time (D): 0:00.00
+======
