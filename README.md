@@ -22,6 +22,8 @@ The output will be a `viz` binary, that can be called with `./viz`.
 
 ## Make Targets
 
+**Warning: massif, valgrind and valgrind WON'T work if INVERTED_COMPRESSION_FLAG is set to 1 (check the define.h file)**
+
 ### all
 Compiles the `debug` version of Viz (`viz`).
 
