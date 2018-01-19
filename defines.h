@@ -18,7 +18,7 @@
 #ifndef TEST
     #define TEST 0
 #endif
-#define VERSION "2.1.0"
+#define VERSION "3.0.0"
 
 #ifndef GIT_VERSION
 #define GIT_VERSION "NO GIT VERSION PROVIDED!"
@@ -30,8 +30,8 @@
 #define MAGIC_NUMBER "\x51\x7D\x3C\xDE"
 #define NYT_ELEMENT 256
 
-#define UTILITIES_PRINT_CHARS 1
-#define INVERTED_COMPRESSION_FLAG 0
+#define UTILITIES_PRINT_CHARS 0
+#define INVERTED_COMPRESSION_FLAG 1
 
 #define FORCE_COMPRESSION 0
 
