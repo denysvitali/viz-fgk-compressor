@@ -189,8 +189,9 @@ int is_compressor(HuffmanTree* ht){
 }
 
 HuffmanTree* add_new_element(HuffmanTree* ht, char c){
-    Node* node = ht->root;
-    Node* target = find_node(node, c);
+    Node* target = find_node(ht, (unsigned int) c & 0xff);
+
+    //printf("Target: %p (%s)\n", target, getElement(target));
 
     int* length = malloc(sizeof(int));
     *length = 0;
@@ -249,6 +250,21 @@ HuffmanTree* add_new_element(HuffmanTree* ht, char c){
         ht->tree[new_char->node_number] = new_char;
 
         target = old_nyt;
+
+        ht->element_array[(unsigned int) c&0xff] = new_char;
+        ht->element_array[NYT_ELEMENT] = ht->nyt;
+
+#if DEBUG
+
+        printf("ht->element_array elements:\n");
+        int i=0;
+        for(i=0; i<HUFFMAN_SYMBOLS; i++){
+            printf("%d: ", i);
+            printf("%s\n", getElement(ht->element_array[i]));
+        }
+        printf("\n\n");
+#endif
+
     }
 
     free(path);
@@ -486,39 +502,8 @@ int is_internal_node(Node *pNode){
     return 0;
 }
 
-Node* find_node(Node *root, int c){
-    if(root == NULL){
-        return NULL;
-    }
-    //printf("Node: %p\n", root);
-    if(root->left == NULL && root->right == NULL){
-        // Leaf, our root is an element
-        if(root->element == c){
-            return root;
-        }
-        return NULL;
-    }
-
-    if(root->left == root || root->right == root){
-        error("[find_node] Circular reference!");
-        return NULL;
-    }
-
-    Node* res;
-    if(root->left != NULL){
-        res = find_node(root->left, c);
-        if(res != NULL)
-            return res;
-    }
-    else {
-        return NULL;
-    }
-    if(root->right != NULL){
-        res = find_node(root->right, c);
-        if(res != NULL)
-            return res;
-    }
-    return NULL;
+Node* find_node(HuffmanTree* ht, int c){
+    return ht->element_array[c];
 }
 
 Node* create_nyt(int i) {
@@ -566,7 +551,12 @@ HuffmanTree* create_huffman_tree(){
         ht->partial_output[i] = 0;
     }
 
+    for(i = 0; i<HUFFMAN_SYMBOLS; i++){
+        ht->element_array[i] = NULL;
+    }
+
     ht->tree[HUFFMAN_ARRAY_SIZE - 1] = ht->root;
+    ht->element_array[NYT_ELEMENT] = ht->nyt;
     return ht;
 }
 

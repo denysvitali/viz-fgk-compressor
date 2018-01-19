@@ -24,6 +24,7 @@ typedef struct Node {
 typedef struct{
     Node* root;
     Node* tree[HUFFMAN_ARRAY_SIZE]; // 514
+    Node* element_array[HUFFMAN_SYMBOLS];
     Node* nyt;
 
     char* output;
@@ -43,7 +44,7 @@ typedef struct{
 HuffmanTree* add_new_element(HuffmanTree* ht, char c);
 HuffmanTree* create_huffman_tree();
 void free_huffman(HuffmanTree *ht);
-Node* find_node(Node *root, int c);
+Node* find_node(HuffmanTree* ht, int c);
 Node* create_nyt(int i);
 Node* create_node(int node_number, int weight, int element, Node *left, Node *right, Node *parent);
 Node* find_nyt(Node *root);
